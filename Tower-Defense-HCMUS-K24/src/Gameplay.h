@@ -2,7 +2,7 @@
 #ifndef GAMEPLAY_H
 #define GAMEPLAY_H
 
-#include "Entity.h"
+#include "EntityManager.h"
 #include <vector>
 #include <memory>
 using namespace std;

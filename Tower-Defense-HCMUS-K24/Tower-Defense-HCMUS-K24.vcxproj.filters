@@ -3,10 +3,18 @@
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Gameplay.cpp" />
-    <ClCompile Include="src\Entity.cpp" />
+    <ClCompile Include="src\EntityManager.cpp" />
+    <ClCompile Include="src\Component.cpp" />
+    <ClCompile Include="src\ComponentManager.cpp" />
+    <ClCompile Include="src\SystemManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Gameplay.h" />
-    <ClInclude Include="src\Entity.h" />
+    <ClInclude Include="src\EntityManager.h" />
+    <ClInclude Include="src\Component.h" />
+    <ClInclude Include="src\ComponentManager.h" />
+    <ClInclude Include="src\System.h" />
+    <ClInclude Include="src\World.h" />
+    <ClInclude Include="src\SystemManager.h" />
   </ItemGroup>
 </Project>
