@@ -1,46 +1,52 @@
-#include "EntityManager.h"
+#include "../header/Managers/EntityManager.h"
 
 EntityManager::EntityManager() noexcept
 {
-    m_availableEntities.reserve(MAX_ENTITIES);  // Pre-allocate memory
+    availableEntities.reserve(MAX_ENTITIES);  // Pre-allocate memory
     for (EntityID id = 0; id < MAX_ENTITIES; ++id) 
     {
-        m_availableEntities.push_back(id);
+        availableEntities.push_back(id);
     }
-    m_livingEntity = 0;
+    livingEntity = 0;
 }
 
 EntityID EntityManager::createEntity()
 {
-    assert(!m_availableEntities.empty() && "Too many entities");
-    EntityID id = m_availableEntities.back();  
-    m_availableEntities.pop_back();
-    ++m_livingEntity;
+    assert(!availableEntities.empty() && "Too many entities");
+    EntityID id = availableEntities.back();  
+    availableEntities.pop_back();
+    ++livingEntity;
     return id;
 }
 
 void EntityManager::destroyEntity(EntityID entity)
 {
     assert(entity < MAX_ENTITIES && "Entity out of range");
-    m_signatures[entity].reset();
-    m_availableEntities.push_back(entity); 
-    --m_livingEntity;
+    signatures[entity].reset();
+    availableEntities.push_back(entity); 
+    --livingEntity;
+}
+
+void EntityManager::addComponent(EntityID entity, ComponentID component)
+{
+    assert(entity < MAX_ENTITIES && "Entity out of range");
+	signatures[entity].set(component);
 }
 
 void EntityManager::setSignature(EntityID entity, Signature signature)
 {
     assert(entity < MAX_ENTITIES && "Entity out of range");
-    m_signatures[entity] = signature;
+    signatures[entity] = signature;
 }
 
 Signature EntityManager::getSignature(EntityID entity) const
 {
     assert(entity < MAX_ENTITIES && "Entity out of range");
-    return m_signatures[entity];
+    return signatures[entity];
 }
 
 uint32_t EntityManager::getLivingEntityCount() const noexcept
 {
-	return m_livingEntity;
+	return livingEntity;
 }
 

@@ -1,78 +1,59 @@
-#include "ComponentManager.h"
+#include "../header/Managers/ComponentManager.h"
 
-template<typename T>
-void ComponentArray<T>::insertData(EntityID entity, T component)
+using std::unordered_map;
+using std::make_unique;
+using std::type_index;
+
+template <typename T>
+inline void ComponentManager::registerComponent()
 {
-	assert(m_componentArray.find(entity) == m_componentArray.end() && "Component added to same entity more than once.");
-	size_t newIndex = m_size;
-
-	m_entityToIndexMap[entity] = newIndex; // Map entity to index
-	m_indexToEntityMap[newIndex] = entity;  // Map index to entity
-	m_componentArray[newIndex] = component;
-	++m_size;
+	auto typeId = type_index(typeid(T));
+	assert(componentTypes.find(typeId) == componentTypes.end() && "Component type already registered.");
+	componentTypes[typeId] = nextType++;
+	componentArrays[typeId] = make_unique<ComponentArray<T>>();
 }
 
 template<typename T>
-void ComponentArray<T>::removeData(EntityID entity)
+inline ComponentID ComponentManager::getComponentType() const
 {
-	assert(m_entityToIndexMap.find(entity) != m_entityToIndexMap.end() && "Removing non-existent component.");
-	size_t deleteIndexEntity = m_entityToIndexMap[entity];
-	size_t lastIndexElement = --m_size;
-
-	m_componentArray[deleteIndexEntity] = m_componentArray[lastIndexElement]; // Move last element to deleted index
-	EntityID lastElementEntity = m_indexToEntityMap[lastIndexElement];  // Get the entity of the last element
-	m_entityToIndexMap[lastElementEntity] = deleteIndexEntity; // Update the entity to index map
-	m_indexToEntityMap[deleteIndexEntity] = lastElementEntity;
-
-	m_entityToIndexMap.erase(entity);  // Remove the entity from the map
-	m_indexToEntityMap.erase(lastIndexElement);
-	--m_size;
+	return componentTypes.at(type_index(typeid(T)));
 }
 
 template<typename T>
-T& ComponentArray<T>::getData(EntityID entity)
+inline ComponentArray<T>& ComponentManager::getComponentArray()
 {
-	assert(m_entityToIndexMap.find(entity) != m_entityToIndexMap.end() && "Retrieving non-existent component.");
-	return *m_componentArray[m_entityToIndexMap[entity]];
+	auto typeId = type_index(typeid(T));
+	auto it = componentArrays.find(typeId);
+	assert(it != componentArrays.end() && "Component not registered.");
+	return *static_cast<ComponentArray<T>*>(it->second.get());
 }
 
-template<typename T>
-bool ComponentArray<T>::containData(EntityID entity) const
+template <typename T>
+inline const ComponentArray<T>& ComponentManager::getComponentArray() const
 {
-	return m_entityToIndexMap.find(entity) != m_entityToIndexMap.end();
+	auto typeId = type_index(typeid(T));
+	auto it = componentArrays.find(typeId);
+	assert(it != componentArrays.end() && "Component not registered");
+	return *static_cast<const ComponentArray<T>*>(it->second.get());
 }
 
-template<typename T>
-void ComponentArray<T>::entityDestroyed(EntityID entity)
+template <typename T>
+inline void ComponentManager::addComponent(EntityID entityID, const T& component)
 {
-	if (m_componentArray.find(entity) != m_componentArray.end())
+	getComponentArray<T>.insertData(entityID, component);
+}
+
+template <typename T>
+inline void ComponentManager::removeComponent(EntityID entityID)
+{
+	auto& componentArray = getComponentArray<T>();  
+	componentArray.removeData(entityID);
+}
+
+void ComponentManager::removeEntityComponent(EntityID entity)
+{
+	for (auto& des : componentArrays)
 	{
-		RemoveData(entity);
+		des.second->entityDestroyed(entity);
 	}
 }
-
-template<typename T>
-T* ComponentArray<T>::getComponentArray()
-{
-	return m_componentArray.data();
-}
-
-template<typename T>
-const unordered_map<EntityID, size_t>& ComponentArray<T>::GetEntityToIndexMap() const
-{
-	return m_entityToIndexMap;
-}
-
-template<typename T>
-size_t ComponentArray<T>::getSize() const
-{
-	return m_size;
-}
-
-
-
-
-
-
-
-
