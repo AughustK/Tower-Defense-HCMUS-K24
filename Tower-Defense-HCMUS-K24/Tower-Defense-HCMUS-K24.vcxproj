@@ -125,13 +125,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\OOP - Project\SFML-2.6.2\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\THIS PC\Desktop\SFML-2.6.2\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>E:\OOP - Project\SFML-2.6.2\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\THIS PC\Desktop\SFML-2.6.2\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-window-d.lib;sfml-graphics-d.lib;sfml-system-d.lib;sfml-audio-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -143,29 +143,31 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\OOP - Project\SFML-2.6.2\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\THIS PC\Desktop\SFML-2.6.2\include</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>E:\OOP - Project\SFML-2.6.2\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\THIS PC\Desktop\SFML-2.6.2\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-window.lib;sfml-graphics.lib;sfml-system.lib;sfml-audio.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameState.cpp" />
     <ClCompile Include="header\Components\HealthComponent.cpp" />
     <ClCompile Include="header\Managers\CollisionSystem.cpp" />
     <ClCompile Include="header\Managers\PhysicSystem.cpp" />
     <ClCompile Include="header\Managers\World.cpp" />
     <ClCompile Include="header\System.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="src\Component.cpp" />
     <ClCompile Include="src\ComponentArray.cpp" />
     <ClCompile Include="src\ComponentManager.cpp" />
     <ClCompile Include="src\EntityManager.cpp" />
-    <ClCompile Include="src\Gameplay.cpp" />
-    <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GamePlay.h" />
     <ClInclude Include="header\Components\CircleComponent.h" />
     <ClInclude Include="header\Components\HealthComponent.h" />
     <ClInclude Include="header\Components\PositionComponent.h" />
@@ -176,11 +178,20 @@
     <ClInclude Include="header\Managers\ComponentArray.h" />
     <ClInclude Include="header\Managers\ComponentManager.h" />
     <ClInclude Include="header\Managers\EntityManager.h" />
-    <ClInclude Include="header\Gameplay.h" />
+    <ClInclude Include="header\Managers\GameState.h" />
     <ClInclude Include="header\Managers\PhysicSystem.h" />
     <ClInclude Include="header\Managers\TowerSystem.h" />
     <ClInclude Include="header\Managers\World.h" />
     <ClInclude Include="header\System.h" />
+    <ClInclude Include="header\UIComponents\UISpriteComponent.h" />
+    <ClInclude Include="header\UIComponents\UITextComponent.h" />
+    <ClInclude Include="header\UISystems\SpriteRenderSystem.h" />
+    <ClInclude Include="header\UISystems\UIClickSystem.h" />
+    <ClInclude Include="header\UISystems\UIHoverSystem.h" />
+    <ClInclude Include="header\UISystems\TextRenderSystem.h" />
+    <ClInclude Include="LoadScreen.h" />
+    <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="Paused.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

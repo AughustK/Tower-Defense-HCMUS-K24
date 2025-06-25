@@ -20,24 +20,6 @@ void SystemManager::init(EntityManager* em)
 	entityManager = em;
 }
 
-template<typename T>
-inline shared_ptr<T> SystemManager::registerSystem()
-{
-	const type_index typeName = type_index(typeid(T));
-	assert(systems.find(typeName.name()) == systems.end() && "System already registered.");
-	auto system = make_shared<T>();
-	systems.insert({ typeName.name(), system });
-	return system;
-}
-
-template<typename T>
-inline void SystemManager::setSystemSignature(Signature signature)
-{
-	auto typeName = type_index(typeid(T));
-	assert(systems.count(typeName) == 0 && "Already registered");
-	systems[typeName] = make_shared<T>();
-}
-
 void SystemManager::removeEntitySystem(EntityID entityID)
 {
 	for (auto& [typeName, system] : systems)
@@ -55,6 +37,8 @@ void SystemManager::entitySignatureChanged(EntityID entityID, Signature entitySi
 			const Signature& systemSignature = it->second;
 			if ((systemSignature & entitySignature) == systemSignature)
 			{
+				std::cout << "[SystemManager] Adding entity " << entityID
+					<< " to system: " << typeName.name() << '\n';
 				system->addEntity(entityID);
 			}
 			else {

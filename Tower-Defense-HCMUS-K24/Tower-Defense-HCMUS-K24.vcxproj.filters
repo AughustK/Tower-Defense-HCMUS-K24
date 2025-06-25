@@ -1,33 +1,122 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Gameplay.cpp" />
-    <ClCompile Include="src\EntityManager.cpp" />
-    <ClCompile Include="src\Component.cpp" />
-    <ClCompile Include="src\ComponentArray.cpp" />
-    <ClCompile Include="header\Components\HealthComponent.cpp" />
-    <ClCompile Include="header\Managers\PhysicSystem.cpp" />
-    <ClCompile Include="header\Managers\CollisionSystem.cpp" />
-    <ClCompile Include="src\ComponentManager.cpp" />
     <ClCompile Include="header\System.cpp" />
-    <ClCompile Include="header\Managers\World.cpp" />
+    <ClCompile Include="header\Components\HealthComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="header\Managers\CollisionSystem.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="header\Managers\PhysicSystem.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="header\Managers\World.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Component.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ComponentArray.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ComponentManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EntityManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="GameState.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\System.h" />
-    <ClInclude Include="header\Components\HealthComponent.h" />
-    <ClInclude Include="header\Managers\ComponentArray.h" />
-    <ClInclude Include="header\Managers\EntityManager.h" />
-    <ClInclude Include="header\Gameplay.h" />
-    <ClInclude Include="header\Components\PositionComponent.h" />
-    <ClInclude Include="header\Components\VelocityComponent.h" />
-    <ClInclude Include="header\Components\CircleComponent.h" />
-    <ClInclude Include="header\Managers\PhysicSystem.h" />
-    <ClInclude Include="header\Managers\CollisionSystem.h" />
-    <ClInclude Include="header\Components\ProjectileComponent.h" />
-    <ClInclude Include="header\Components\TowerComponent.h" />
-    <ClInclude Include="header\Managers\TowerSystem.h" />
-    <ClInclude Include="header\Managers\World.h" />
-    <ClInclude Include="header\Managers\ComponentManager.h" />
+    <ClInclude Include="header\Components\VelocityComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Components\TowerComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Components\PositionComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Components\ProjectileComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Components\CircleComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Components\HealthComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Managers\CollisionSystem.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Managers\ComponentArray.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Managers\ComponentManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Managers\EntityManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Managers\PhysicSystem.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Managers\TowerSystem.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Managers\World.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadScreen.h">
+      <Filter>GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePlay.h">
+      <Filter>GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="Paused.h">
+      <Filter>GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="header\Managers\GameState.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="header\UIComponents\UISpriteComponent.h" />
+    <ClInclude Include="header\UIComponents\UITextComponent.h" />
+    <ClInclude Include="header\UISystems\UIClickSystem.h">
+      <Filter>UISystems</Filter>
+    </ClInclude>
+    <ClInclude Include="header\UISystems\UIHoverSystem.h">
+      <Filter>UISystems</Filter>
+    </ClInclude>
+    <ClInclude Include="header\UISystems\TextRenderSystem.h">
+      <Filter>UISystems</Filter>
+    </ClInclude>
+    <ClInclude Include="header\UISystems\SpriteRenderSystem.h">
+      <Filter>UISystems</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Components">
+      <UniqueIdentifier>{bef12e0e-c487-4450-9a89-c9a933823c9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers">
+      <UniqueIdentifier>{93bd8016-0f31-4dfc-8fd0-95f1447853d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{5ee1f1f3-17e3-44b1-91fc-d1049167638d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameStates">
+      <UniqueIdentifier>{0f7e16de-4834-4947-8a1f-590ef1d84a2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UISystems">
+      <UniqueIdentifier>{0c0d01fb-1d79-4314-8152-7d4dfb4cff6b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
