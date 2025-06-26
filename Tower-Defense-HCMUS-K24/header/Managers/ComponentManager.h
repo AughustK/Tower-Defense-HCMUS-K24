@@ -58,6 +58,16 @@ public:
 	{
 		return componentTypes.at(type_index(typeid(T)));
 	}
+
+	template <typename T>
+	std::vector<EntityID> getEntitiesWithComponent() {
+		std::vector<EntityID> result;
+		auto& componentArray = getComponentArray<T>();
+		for (const auto& pair : componentArray.getEntityToIndexMap()) {
+			result.push_back(pair.first);  // pair.first là EntityID
+		}
+		return result;
+	}
 }; 
 
 

@@ -2,6 +2,7 @@
 #include "..\UIComponents\UITextComponent.h"
 #include "..\UIComponents\UISpriteComponent.h"
 #include "..\UISystems\SpriteRenderSystem.h"
+#include "..\UISystems\TextRenderSystem.h"
 #include "..\System.h"
 #include <iostream>
 
@@ -16,14 +17,19 @@ void World::init() {
     std::cout << "Init called\n";
     systemManager.init(&entityManager);
 
+    //set up for sprite
     registerComponent<SpriteComponent>();
-
-    auto renderSystem = registerSystem<SpriteRenderSystem>();
-
+    auto spriteRenderSystem = registerSystem<SpriteRenderSystem>();
     Signature renderSig0;
     renderSig0.set(getComponentID<SpriteComponent>(), true);
-
     setSystemSignature<SpriteRenderSystem>(renderSig0);
+
+    //set up for text
+    registerComponent<TextComponent>();
+    auto textRenderSystem = registerSystem<TextRenderSystem>();
+    Signature renderSig1;
+    renderSig1.set(getComponentID<TextComponent>(), true);
+    setSystemSignature<TextRenderSystem>(renderSig1);
 }
 
 EntityID World::createEntity()

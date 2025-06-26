@@ -94,6 +94,8 @@ public:
 
     // Update each time frame
     void update(float deltaTime);
+
+
     
     // Calling UI function
     void setState(std::unique_ptr<GameState> state) {
@@ -124,11 +126,17 @@ public:
         return systemManager.getSystem<T>();
     }
 
+    template <typename T>
+    std::vector<EntityID> getEntitiesWithComponent() {
+        return componentManager.getEntitiesWithComponent<T>();
+    }
+
     EntityManager getEntityManager();
     SystemManager getSystemManager();
 
     void requestClose() { shouldClose = true; }
     bool isRunning() const { return window.isOpen() && !shouldClose; }
+
 
 };
 
