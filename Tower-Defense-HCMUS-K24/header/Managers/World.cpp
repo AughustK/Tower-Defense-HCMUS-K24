@@ -1,84 +1,114 @@
 #include "World.h"
+#include "../Components/UITextComponent.h"
+#include "../Components/UISpriteComponent.h"
+#include "../Systems/SpriteRenderSystem.h"
+#include "../Systems/TextRenderSystem.h"
+#include "../Systems/System.h"
+#include <iostream>
 
-using std::shared_ptr;
+// Reserve 512KB for per-frame transient storage
+static uint8_t gTransientStorage[512 * 1024];
+Arena World::transientArena;
 
-World::World()
+
+World::World() : window(sf::VideoMode(1920, 1080), "Tower Defense")
 {
-	systemManager.init(&entityManager);
+    // Initialize the bump allocator
+    transientArena.init(gTransientStorage, sizeof(gTransientStorage));
+    systemManager.init(&entityManager);
+}
+
+void World::init()
+{
+    std::cout << "Init called\n";
+    systemManager.init(&entityManager);
+
+    //set up for sprite
+    registerComponent<SpriteComponent>();
+    auto spriteRenderSystem = registerSystem<SpriteRenderSystem>();
+    Signature renderSig0;
+    renderSig0.set(getComponentType<SpriteComponent>(), true);
+    setSystemSignature<SpriteRenderSystem>(renderSig0);
+
+    //set up for text
+    registerComponent<TextComponent>();
+    auto textRenderSystem = registerSystem<TextRenderSystem>();
+    Signature renderSig1;
+    renderSig1.set(getComponentType<TextComponent>(), true);
+    setSystemSignature<TextRenderSystem>(renderSig1);
 }
 
 EntityID World::createEntity()
 {
-	return entityManager.createEntity();
+    return entityManager.createEntity();
 }
 
 void World::destroyEntity(EntityID entityID)
 {
-	entityManager.destroyEntity(entityID);
-	componentManager.removeEntityComponent(entityID);
-	systemManager.removeEntitySystem(entityID);
+    entityManager.destroyEntity(entityID);
+    componentManager.removeEntityComponent(entityID);
+    systemManager.removeEntitySystem(entityID);
 }
 
-template <typename T>
-void World::registerComponent()
+void World::setState(std::unique_ptr<GameState> state)
 {
-    componentManager.registerComponent();
+    std::cout << "[World] Switching state to: " << typeid(*state).name() << '\n';
+    if (currentState)
+    {
+        currentState->onExit(*this);
+    }
+    currentState = std::move(state);
+
+    if (currentState)
+    {
+        currentState->onEnter(*this);
+    }
 }
 
-template<typename T>
-void World::addComponent(EntityID entityID, const T& component) 
+void World::handleEvent(sf::Event& event)
 {
-    componentManager.addComponent<T>(entityID, component);
-
-    // Update entity signature
-    ComponentID compID = componentManager.getComponentType<T>();
-    Signature signature = entityManager.getSignature(entityID);
-    signature.set(compID, true);
-    entityManager.setSignature(entity, signature);
-
-    // Notify systems that this entity’s signature changed
-    systemManager.entitySignatureChanged(entity, signature);
+    if (currentState) currentState->handleEvent(*this, event);
 }
 
-template<typename T>
-void World::removeComponent(EntityID entity) 
+void World::render()
 {
-    componentManager.removeComponent<T>(entity);
-
-    ComponentID compID = componentManager.getComponentType<T>();
-    Signature signature = entityManager.getSignature(entity);
-    signature.set(compID, false);
-    entityManager.setSignature(entity, signature);
-
-    systemManager.entitySignatureChanged(entity, signature);
+    if (currentState) currentState->render(*this, window);
 }
 
-template<typename T>
-T& World::getComponent(EntityID entity) {
-    return componentManager.getComponentArray<T>().getData(entity);
-}
-
-template<typename T>
-shared_ptr<T> World::registerSystem() 
+const std::unique_ptr<GameState>& World::getCurrentState() const
 {
-    return systemManager.registerSystem<T>();
+    return currentState;
 }
 
-template<typename T>
-void World::setSystemSignature(Signature signature) 
+EntityManager World::getEntityManager()
 {
-    systemManager.setSignature<T>(signature);
+    return entityManager;
 }
 
-void World::update(float deltaTime) 
+SystemManager World::getSystemManager()
 {
-    for (auto const& pair : systemManager.getSystems()) 
+    return systemManager;
+}
+
+void World::update(float deltaTime)
+{
+    // Reset transient arena at the start of each frame
+    transientArena.reset();
+
+    for (auto const& pair : systemManager.getSystems())
     {
         pair.second->update(deltaTime);
     }
 }
 
+void World::requestClose()
+{
+    shouldClose = true;
+}
 
-
+bool World::isRunning() const
+{
+    return window.isOpen() && !shouldClose;
+}
 
 

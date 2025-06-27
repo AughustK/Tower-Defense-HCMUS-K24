@@ -153,34 +153,48 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="header\Components\HealthComponent.cpp" />
-    <ClCompile Include="header\Managers\CollisionSystem.cpp" />
+    <ClCompile Include="src\SrcComponents\HealthComponent.cpp" />
+    <ClCompile Include="src\SrcGameStates\MainMenu.cpp" />
+    <ClCompile Include="src\SrcSystem\CollisionSystem.cpp" />
     <ClCompile Include="header\Managers\PhysicSystem.cpp" />
+    <ClCompile Include="src\SrcSystem\TextRenderSystem.cpp" />
+    <ClCompile Include="src\SrcSystem\TowerSystem.cpp" />
     <ClCompile Include="header\Managers\World.cpp" />
-    <ClCompile Include="header\System.cpp" />
-    <ClCompile Include="src\Component.cpp" />
-    <ClCompile Include="src\ComponentArray.cpp" />
-    <ClCompile Include="src\ComponentManager.cpp" />
-    <ClCompile Include="src\EntityManager.cpp" />
-    <ClCompile Include="src\Gameplay.cpp" />
+    <ClCompile Include="src\SrcSystem\System.cpp" />
+    <ClCompile Include="src\SrcManager\ComponentManager.cpp" />
+    <ClCompile Include="src\SrcManager\EntityManager.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\SrcGameStates\GameState.cpp" />
+    <ClCompile Include="src\SrcSystem\SpriteRenderSystem.cpp" />
+    <ClCompile Include="src\SrcComponents\UISpriteComponent.cpp" />
+    <ClCompile Include="src\SrcComponents\UITextComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="header\Components\Buffs.h" />
+    <ClInclude Include="header\GameStates\GamePlay.h" />
+    <ClInclude Include="header\GameStates\MainMenu.h" />
+    <ClInclude Include="header\Components\TowerDef.h" />
+    <ClInclude Include="header\Components\UISpriteComponent.h" />
+    <ClInclude Include="header\Components\UITextComponent.h" />
+    <ClInclude Include="header\GameStates\GameState.h" />
+    <ClInclude Include="header\Systems\TextRenderSystem.h" />
+    <ClInclude Include="header\Utils\Math.h" />
+    <ClInclude Include="header\Managers\TransientArena.h" />
     <ClInclude Include="header\Components\CircleComponent.h" />
     <ClInclude Include="header\Components\HealthComponent.h" />
     <ClInclude Include="header\Components\PositionComponent.h" />
     <ClInclude Include="header\Components\ProjectileComponent.h" />
     <ClInclude Include="header\Components\TowerComponent.h" />
     <ClInclude Include="header\Components\VelocityComponent.h" />
-    <ClInclude Include="header\Managers\CollisionSystem.h" />
+    <ClInclude Include="header\Systems\CollisionSystem.h" />
     <ClInclude Include="header\Managers\ComponentArray.h" />
     <ClInclude Include="header\Managers\ComponentManager.h" />
     <ClInclude Include="header\Managers\EntityManager.h" />
-    <ClInclude Include="header\Gameplay.h" />
-    <ClInclude Include="header\Managers\PhysicSystem.h" />
-    <ClInclude Include="header\Managers\TowerSystem.h" />
+    <ClInclude Include="header\Systems\PhysicSystem.h" />
+    <ClInclude Include="header\Systems\TowerSystem.h" />
     <ClInclude Include="header\Managers\World.h" />
-    <ClInclude Include="header\System.h" />
+    <ClInclude Include="header\Systems\System.h" />
+    <ClInclude Include="header\Systems\SpriteRenderSystem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

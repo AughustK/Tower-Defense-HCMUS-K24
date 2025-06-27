@@ -1,23 +1,33 @@
-#include "Gameplay.h"
-#include "SFML/Graphics.hpp"
-using namespace std;
+#include "../header/Managers/World.h"
+#include "../header/GameStates/MainMenu.h"
+#include "../header/Managers/EntityManager.h"
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(1920, 1200), "Tower Defense");
-	Gameplay game;
+    World world;
 
-	while (window.isOpen())
-	{
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window.close();
-		}
-		window.clear();
-		window.display();
-	}
-	
-	return 0;
+    world.init(); //
+    world.setState(std::make_unique<MainMenu>());  //
+
+    sf::Clock clock;
+
+    while (world.isRunning())
+    {
+        sf::Event event;
+        while (world.window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                world.requestClose();
+
+            world.handleEvent(event);
+        }
+
+        float deltaTime = clock.restart().asSeconds();
+        world.update(deltaTime);
+
+        world.window.clear(sf::Color::Black);
+        world.render();
+        world.window.display();
+    }
+    return 0;
 }
