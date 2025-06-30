@@ -12,7 +12,7 @@ using std::string;
 
 class SpriteRenderSystem;
 
-class MainMenu : public GameState {
+class Help : public GameState {
 public:
     void handleEvent(World& world, sf::Event& event) override;
     void update(World& world, float dt) override;

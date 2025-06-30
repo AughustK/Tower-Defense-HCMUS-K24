@@ -1,7 +1,8 @@
 #include <iostream>
 #include "../../header/Components/UITextComponent.h"
 
-TextComponent::TextComponent(const string& str, int n, const string& fontPath, Color color, const Vector2f& position)
+TextComponent::TextComponent(const string& str, int n, const string& fontPath, Color color, const Vector2f& position, bool hover)
+	:isHover(hover)
 {
 	txt.setString(str);
 	txt.setCharacterSize(n);
@@ -11,6 +12,7 @@ TextComponent::TextComponent(const string& str, int n, const string& fontPath, C
 		std::cerr << "Failed to load font: " << fontPath << '\n';
 	}
 	txt.setFont(*font);
+	originColor = color;
 	txt.setFillColor(color);
 	txt.setPosition(position);
 	bound = txt.getGlobalBounds();
@@ -29,4 +31,11 @@ void TextComponent::tryClick(Vector2f mousePos, EntityID entityId, World& world)
 	{
 		onClick(entityId, world);
 	}
+}
+
+void TextComponent::tryHover(Vector2f mousePos, EntityID entityId, World& world) {
+	if (contains(mousePos)&&isHover)
+		txt.setFillColor(Color::Cyan);
+	else
+		txt.setFillColor(originColor);
 }

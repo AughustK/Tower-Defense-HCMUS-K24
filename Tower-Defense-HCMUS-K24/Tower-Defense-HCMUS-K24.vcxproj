@@ -125,13 +125,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\OOP - Project\SFML-2.6.2\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\THIS PC\Desktop\SFML-2.6.2\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>E:\OOP - Project\SFML-2.6.2\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\THIS PC\Desktop\SFML-2.6.2\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-window-d.lib;sfml-graphics-d.lib;sfml-system-d.lib;sfml-audio-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -143,17 +143,20 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\OOP - Project\SFML-2.6.2\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\THIS PC\Desktop\SFML-2.6.2\include</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>E:\OOP - Project\SFML-2.6.2\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\THIS PC\Desktop\SFML-2.6.2\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-window.lib;sfml-graphics.lib;sfml-system.lib;sfml-audio.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\SrcComponents\HealthComponent.cpp" />
+    <ClCompile Include="src\SrcGameStates\Credit.cpp" />
+    <ClCompile Include="src\SrcGameStates\Help.cpp" />
     <ClCompile Include="src\SrcGameStates\MainMenu.cpp" />
     <ClCompile Include="src\SrcSystem\CollisionSystem.cpp" />
     <ClCompile Include="header\Managers\PhysicSystem.cpp" />
@@ -171,12 +174,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Components\Buffs.h" />
+    <ClInclude Include="header\Components\MusicComponent.h" />
+    <ClInclude Include="header\Components\SoundComponent.h" />
+    <ClInclude Include="header\GameStates\Credit.h" />
     <ClInclude Include="header\GameStates\GamePlay.h" />
+    <ClInclude Include="header\GameStates\Help.h" />
     <ClInclude Include="header\GameStates\MainMenu.h" />
     <ClInclude Include="header\Components\TowerDef.h" />
     <ClInclude Include="header\Components\UISpriteComponent.h" />
     <ClInclude Include="header\Components\UITextComponent.h" />
     <ClInclude Include="header\GameStates\GameState.h" />
+    <ClInclude Include="header\Systems\MusicSystem.h" />
+    <ClInclude Include="header\Systems\SoundSystem.h" />
     <ClInclude Include="header\Systems\TextRenderSystem.h" />
     <ClInclude Include="header\Utils\Math.h" />
     <ClInclude Include="header\Managers\TransientArena.h" />

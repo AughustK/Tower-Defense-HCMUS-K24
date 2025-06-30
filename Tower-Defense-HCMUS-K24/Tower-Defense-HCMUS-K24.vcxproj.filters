@@ -16,6 +16,8 @@
     <ClCompile Include="src\SrcGameStates\GameState.cpp" />
     <ClCompile Include="src\SrcSystem\TextRenderSystem.cpp" />
     <ClCompile Include="src\SrcGameStates\MainMenu.cpp" />
+    <ClCompile Include="src\SrcGameStates\Credit.cpp" />
+    <ClCompile Include="src\SrcGameStates\Help.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Systems\System.h" />
@@ -43,5 +45,11 @@
     <ClInclude Include="header\GameStates\GameState.h" />
     <ClInclude Include="header\GameStates\GamePlay.h" />
     <ClInclude Include="header\Systems\TextRenderSystem.h" />
+    <ClInclude Include="header\Components\SoundComponent.h" />
+    <ClInclude Include="header\Systems\SoundSystem.h" />
+    <ClInclude Include="header\GameStates\Credit.h" />
+    <ClInclude Include="header\GameStates\Help.h" />
+    <ClInclude Include="header\Components\MusicComponent.h" />
+    <ClInclude Include="header\Systems\MusicSystem.h" />
   </ItemGroup>
 </Project>

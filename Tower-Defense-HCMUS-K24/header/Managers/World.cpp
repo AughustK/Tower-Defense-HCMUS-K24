@@ -4,6 +4,10 @@
 #include "../Systems/SpriteRenderSystem.h"
 #include "../Systems/TextRenderSystem.h"
 #include "../Systems/System.h"
+#include "../Systems/SoundSystem.h"
+#include "../Components/SoundComponent.h"
+#include "../Systems/MusicSystem.h"
+#include "../Components/MusicComponent.h"
 #include <iostream>
 
 // Reserve 512KB for per-frame transient storage
@@ -36,6 +40,20 @@ void World::init()
     Signature renderSig1;
     renderSig1.set(getComponentType<TextComponent>(), true);
     setSystemSignature<TextRenderSystem>(renderSig1);
+
+    //set up for sound
+    registerComponent<SoundComponent>();
+    auto soundSystem = registerSystem<SoundSystem>();
+    Signature soundSig;
+    soundSig.set(getComponentType<SoundComponent>(), true);
+    setSystemSignature<SoundSystem>(soundSig);
+
+    //set up for music
+    registerComponent<MusicComponent>();
+    auto musicSystem = registerSystem<MusicSystem>();
+    Signature musicSig;
+    musicSig.set(getComponentType<MusicComponent>(), true);
+    setSystemSignature<MusicSystem>(musicSig);
 }
 
 EntityID World::createEntity()
@@ -80,21 +98,25 @@ const std::unique_ptr<GameState>& World::getCurrentState() const
     return currentState;
 }
 
-EntityManager World::getEntityManager()
+EntityManager& World::getEntityManager()
 {
     return entityManager;
 }
 
-SystemManager World::getSystemManager()
+SystemManager& World::getSystemManager()
 {
     return systemManager;
+}
+
+ComponentManager& World::getComponentManager() {
+    return componentManager;
 }
 
 void World::update(float deltaTime)
 {
     // Reset transient arena at the start of each frame
     transientArena.reset();
-
+    currentState->update(*this, deltaTime);
     for (auto const& pair : systemManager.getSystems())
     {
         pair.second->update(deltaTime);

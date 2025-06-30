@@ -118,8 +118,9 @@ public:
     void render();
     const std::unique_ptr<GameState>& getCurrentState() const;
 
-    EntityManager getEntityManager();
-    SystemManager getSystemManager();
+    EntityManager& getEntityManager();
+    SystemManager& getSystemManager();
+    ComponentManager& getComponentManager();
 
     // Update each time frame
     void update(float deltaTime);
