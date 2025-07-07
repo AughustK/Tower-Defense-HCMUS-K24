@@ -6,9 +6,11 @@
 #include <memory>
 #include <typeinfo>
 #include <cassert>
+#include <iostream>
 
 using std::array;
 using std::unordered_map;
+using std::cout;
 
 class IComponentArray
 {
@@ -29,6 +31,7 @@ private:
 public:
 	void insertData(EntityID entity, const T& component)
 	{
+		std::cout << "[ComponentArray] insertData: " << entity << '\n';
 		assert(entityToIndexMap.find(entity) == entityToIndexMap.end() && "Component added to same entity more than once.");
 		uint32_t newIndex = size;
 

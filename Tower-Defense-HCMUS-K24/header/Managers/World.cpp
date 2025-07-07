@@ -8,6 +8,8 @@
 #include "../Components/SoundComponent.h"
 #include "../Systems/MusicSystem.h"
 #include "../Components/MusicComponent.h"
+#include "../Components/UISliderComponent.h"
+#include "../Systems/UISliderSystem.h"
 #include <iostream>
 
 // Reserve 512KB for per-frame transient storage
@@ -54,6 +56,13 @@ void World::init()
     Signature musicSig;
     musicSig.set(getComponentType<MusicComponent>(), true);
     setSystemSignature<MusicSystem>(musicSig);
+
+    //set up for volume
+    registerComponent<SliderComponent>();
+    auto sliderSystem = registerSystem<SliderSystem>();
+    Signature sliderSig;
+    sliderSig.set(getComponentType<SliderComponent>(), true);
+    setSystemSignature<SliderSystem>(sliderSig);
 }
 
 EntityID World::createEntity()
@@ -70,7 +79,6 @@ void World::destroyEntity(EntityID entityID)
 
 void World::setState(std::unique_ptr<GameState> state)
 {
-    std::cout << "[World] Switching state to: " << typeid(*state).name() << '\n';
     if (currentState)
     {
         currentState->onExit(*this);

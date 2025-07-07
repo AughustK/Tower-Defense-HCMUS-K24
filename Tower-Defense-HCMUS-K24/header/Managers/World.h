@@ -7,6 +7,7 @@
 #include "TransientArena.h"
 #include "../GameStates/GameState.h"
 
+
 class System;                        
 
 class World
@@ -44,6 +45,7 @@ public:
     template <typename T>
     void addComponent(EntityID entityID, const T& component)
     {
+        std::cout << "[World] addComponent: " << typeid(T).name() << " to Entity " << entityID << '\n';
         componentManager.addComponent<T>(entityID, component);
 
         // Update entity signature
@@ -111,6 +113,11 @@ public:
     shared_ptr<T> getSystem() 
     {
         return systemManager.getSystem<T>();
+    }
+
+    template<typename T>
+    bool hasComponent(EntityID entityID) {
+        return componentManager.getComponentArray<T>().containData(entityID);
     }
 
     void setState(std::unique_ptr<GameState> state);

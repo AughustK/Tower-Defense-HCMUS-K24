@@ -11,6 +11,7 @@ void Help::onEnter(World& world)
     const string soundPath = "assets/SFX/MouseClick.mp3";
     const string musicPath = "assets/SFX/HelpBGM.mp3";
     SoundComponent soundComp(soundPath, false);
+    soundComp.sound->setVolume(world.getSystem<SoundSystem>()->globalVolume);
     MusicComponent musicComp(musicPath);
 
     //bg

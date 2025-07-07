@@ -10,7 +10,6 @@
     <ClCompile Include="src\SrcSystem\System.cpp" />
     <ClCompile Include="header\Managers\World.cpp" />
     <ClCompile Include="src\SrcSystem\TowerSystem.cpp" />
-    <ClCompile Include="src\SrcComponents\UISpriteComponent.cpp" />
     <ClCompile Include="src\SrcComponents\UITextComponent.cpp" />
     <ClCompile Include="src\SrcSystem\SpriteRenderSystem.cpp" />
     <ClCompile Include="src\SrcGameStates\GameState.cpp" />
@@ -18,6 +17,9 @@
     <ClCompile Include="src\SrcGameStates\MainMenu.cpp" />
     <ClCompile Include="src\SrcGameStates\Credit.cpp" />
     <ClCompile Include="src\SrcGameStates\Help.cpp" />
+    <ClCompile Include="src\SrcGameStates\Setting.cpp" />
+    <ClCompile Include="src\SrcSystem\UISliderSystem.cpp" />
+    <ClCompile Include="src\SrcComponents\UISpriteComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Systems\System.h" />
@@ -51,5 +53,8 @@
     <ClInclude Include="header\GameStates\Help.h" />
     <ClInclude Include="header\Components\MusicComponent.h" />
     <ClInclude Include="header\Systems\MusicSystem.h" />
+    <ClInclude Include="header\Components\UISliderComponent.h" />
+    <ClInclude Include="header\GameStates\Setting.h" />
+    <ClInclude Include="header\Systems\UISliderSystem.h" />
   </ItemGroup>
 </Project>

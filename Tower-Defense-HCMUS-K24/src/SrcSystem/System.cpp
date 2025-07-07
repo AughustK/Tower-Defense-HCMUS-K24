@@ -37,6 +37,7 @@ void SystemManager::entitySignatureChanged(EntityID entityID, Signature entitySi
 			const Signature& systemSignature = it->second;
 			if ((systemSignature & entitySignature) == systemSignature)
 			{
+				std::cout << " | entitySig = " << entitySignature << ", systemSig = " << systemSignature << '\n';
 				system->addEntity(entityID);
 			}
 			else {

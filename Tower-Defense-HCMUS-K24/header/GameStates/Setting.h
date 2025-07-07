@@ -10,8 +10,7 @@
 
 using std::string;
 
-
-class Help : public GameState {
+class Setting : public GameState {
 public:
     void handleEvent(World& world, sf::Event& event) override;
     void update(World& world, float dt) override;

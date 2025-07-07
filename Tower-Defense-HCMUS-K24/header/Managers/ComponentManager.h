@@ -6,10 +6,12 @@
 #include <memory>
 #include <typeindex>
 #include <cassert>
+#include <iostream>
 
 using std::unordered_map;
 using std::unique_ptr;
 using std::type_index;
+using std::cout;
 
 
 class ComponentManager
@@ -50,6 +52,7 @@ public:
 	template <typename T>
 	void addComponent(EntityID entityID, const T& component)
 	{
+		std::cout << "[ComponentManager] Adding component " << typeid(T).name() << " to entity " << entityID << '\n';
 		getComponentArray<T>().insertData(entityID, component);
 	}
 

@@ -6,6 +6,7 @@
 #include "../../header/Components/MusicComponent.h"
 #include "../../header/Systems/MusicSystem.h"
 #include "../../header/Managers/World.h"
+#include "../../header/GameStates/Setting.h"
 
 void MainMenu::handleEvent(World& world, sf::Event& event)
 {
@@ -25,6 +26,8 @@ void MainMenu::handleEvent(World& world, sf::Event& event)
         }
         for (EntityID e : entities1)
         {
+            if (!world.hasComponent<SpriteComponent>(e)) continue;
+
             auto& spriteComp = world.getComponent<SpriteComponent>(e);
             spriteComp.tryClick(mousePos, e, world);
         }
@@ -58,12 +61,13 @@ void MainMenu::onEnter(World& world)
     const string soundPath = "assets/SFX/MouseClick.mp3";
     const string musicPath = "assets/SFX/MainMenuBGM.mp3";
     SoundComponent soundComp(soundPath, false);
+    soundComp.sound->setVolume(world.getSystem<SoundSystem>()->globalVolume);
     MusicComponent musicComp(musicPath);
 
     //bg
     EntityID background = world.createEntity();
     registerEntity(background);
-    const string bgPath = "assets/Bg/MenuV2-1.png";
+    const string bgPath = "assets/Bg/MenuV3.png";
     SpriteComponent spriteComp(bgPath, { 0.f, 0.f }, { 1.f, 1.f });
     world.addComponent(background, spriteComp);
     world.addComponent(background, musicComp);
@@ -71,16 +75,16 @@ void MainMenu::onEnter(World& world)
     //Text
     EntityID title = world.createEntity();
     registerEntity(title);
-    const string str0 = "TOWER DEFENSE";
-    const string fontPath0 = "assets/Font/KarmaFuture.ttf";
-    TextComponent textComp0(str0, 140, fontPath0, Color::Yellow, { 1920 / 2, 330 }, false);
+    const string str0 = "Tower  Defense";
+    const string fontPath0 = "assets/Font/Pixel Game.otf";
+    TextComponent textComp0(str0, 180, fontPath0, Color::Yellow, { 1920 / 2, 330 }, false, sf::Color::Black, 15.f);
     world.addComponent(title, textComp0);
 
     EntityID playTxt = world.createEntity();
     registerEntity(playTxt);
     const string str1 = "Play";
     const string fontPath1 = "assets/Font/Minecraft-Regular.otf";
-    TextComponent textComp1(str1, 90, fontPath1, Color::White, { 1920 / 2, 460 + 50 }, true);
+    TextComponent textComp1(str1, 70, fontPath1, Color::White, { 1920 / 2, 460 + 80 }, true, sf::Color::Black, 5.f);
     textComp1.onClick = [](EntityID entityId, World& world)
     {
         std::cout << "[Play Button] Clicked\n";
@@ -93,7 +97,7 @@ void MainMenu::onEnter(World& world)
     EntityID continueTxt = world.createEntity();
     registerEntity(continueTxt);
     const string str2 = "Continue";
-    TextComponent textComp2(str2, 90, fontPath1, Color::White, { 1920 / 2, 360 + 50 + 30 + 200 }, true);
+    TextComponent textComp2(str2, 70, fontPath1, Color::White, { 1920 / 2, 360 + 50 + 30 + 200 }, true, sf::Color::Black, 5.f);
     textComp2.onClick = [](EntityID entityId, World& world)
         {
             std::cout << "[Continue Button] Clicked\n";
@@ -106,7 +110,7 @@ void MainMenu::onEnter(World& world)
     EntityID exitTxt = world.createEntity();
     registerEntity(exitTxt);
     const string str3 = "Exit";
-    TextComponent textComp3(str3, 90, fontPath1, Color::White, { 1920 / 2, 360 + 3 * 100 + 2 * 30 + 50 }, true);
+    TextComponent textComp3(str3, 70, fontPath1, Color::White, { 1920 / 2, 360 + 3 * 100 + 2 * 30 + 20 }, true, sf::Color::Black, 5.f);
     textComp3.onClick = [](EntityID entityId, World& world)
         {
             std::cout << "[Exit Button] Clicked\n";
@@ -128,6 +132,7 @@ void MainMenu::onEnter(World& world)
             std::cout << "[Setting Button] Clicked\n";
             auto& sound = world.getComponent<SoundComponent>(entityId);
             sound.sound->play();
+            world.setState(std::make_unique<Setting>());
 
         };
     world.addComponent(setting, soundComp);

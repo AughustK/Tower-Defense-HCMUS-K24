@@ -7,8 +7,9 @@
 using std::cout;
 
 class SoundSystem : public System {
-
+    
 public:
+    float globalVolume = 100.f;
     SoundSystem() = default;
 
     void update(float deltaTime) override {
@@ -18,6 +19,11 @@ public:
     void play(World& world) {
         for (EntityID entity : entities) {
             auto& soundComp = world.getComponent<SoundComponent>(entity);
+
+            if (soundComp.sound) {
+                soundComp.sound->setVolume(globalVolume);
+            }
+
             if (soundComp.triggered) {
                 if (soundComp.sound->getStatus() != sf::Sound::Playing) {
                     soundComp.sound->play();
