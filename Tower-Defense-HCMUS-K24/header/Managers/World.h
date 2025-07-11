@@ -12,7 +12,7 @@ class System;
 class World
 {
 private:
-    EntityManager    entityManager;       
+    EntityManager entityManager;       
     ComponentManager componentManager;    
     SystemManager systemManager;
 
@@ -81,6 +81,12 @@ public:
         return componentManager.getEntitiesWithComponent<T>();
     }
 
+    template <typename T>
+    ComponentArray<T>& getComponentArray()
+    {
+        return componentManager.getComponentArray<T>();
+    }
+
     // System register, signature assignment
     template<typename T>
     shared_ptr<T> registerSystem()
@@ -111,6 +117,12 @@ public:
     shared_ptr<T> getSystem() 
     {
         return systemManager.getSystem<T>();
+    }
+
+    template<typename T>
+    bool hasComponent(EntityID entityID)
+    {
+        return componentManager.getComponentArray<T>().containData(entityID);
     }
 
     void setState(std::unique_ptr<GameState> state);

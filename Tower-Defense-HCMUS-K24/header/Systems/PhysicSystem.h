@@ -1,13 +1,19 @@
 #pragma once
 
 #include "System.h"
-#include "../Managers/EntityManager.h"        
-#include "../Managers/ComponentArray.h"     
-#include "../Components/VelocityComponent.h"    
+#include "../Managers/World.h"
+#include "../Managers/ComponentArray.h"
 #include "../Components/PositionComponent.h"
+#include "../Components/VelocityComponent.h"
+
 
 class PhysicSystem : public System
 {
 public:
-	void update(float deltaTime, ComponentArray<PositionComponent>& posArr, ComponentArray<VelocityComponent>& velArr);
+    PhysicSystem() = default;
+    virtual ~PhysicSystem() = default;
+
+    void update(float deltaTime) override;
+    void update(float deltaTime, World& world);
+    void update(float deltaTime, ComponentArray<PositionComponent>& positionArray, ComponentArray<VelocityComponent>& velocityArray);
 };

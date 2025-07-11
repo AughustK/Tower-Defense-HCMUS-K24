@@ -13,12 +13,13 @@ using std::string;
 
 class SpriteRenderSystem;
 
-class MainMenu : public GameState {
+class MainMenu : public GameState 
+{
 public:
     void handleEvent(World& world, sf::Event& event) override;
     void update(World& world, float dt) override;
     void render(World& world, sf::RenderWindow& window) override;
     void onEnter(World& world) override;
-    void onExit(World& world) override;
 };
+
 

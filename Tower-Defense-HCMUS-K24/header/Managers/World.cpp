@@ -1,9 +1,29 @@
 #include "World.h"
 #include "../Components/UITextComponent.h"
 #include "../Components/UISpriteComponent.h"
+#include "../Components/SoundComponent.h"
+#include "../Components/MusicComponent.h"
+#include "../Components/UISliderComponent.h"
+#include "../Components/VelocityComponent.h"
+#include "../Components/PositionComponent.h"
+#include"../Components/ClickComponent.h"
+#include "../Components/PathfindingComponent.h"
+#include "../Components/HealthComponent.h"
+#include "../Components/Buffs.h"
+#include "../Components/CircleComponent.h"
+
 #include "../Systems/SpriteRenderSystem.h"
 #include "../Systems/TextRenderSystem.h"
 #include "../Systems/System.h"
+#include "../Systems/SoundSystem.h"
+#include "../Systems/UISliderSystem.h"
+#include "../Systems/MusicSystem.h"
+#include"../Systems/PhysicSystem.h"
+#include "../Systems/PathFindingSystem.h"
+#include "../Systems/InitializeEnemy.h"
+#include "../Systems/InitializeProjectile.h"
+#include "../Systems/CollisionSystem.h"
+
 #include <iostream>
 
 // Reserve 512KB for per-frame transient storage
@@ -36,6 +56,79 @@ void World::init()
     Signature renderSig1;
     renderSig1.set(getComponentType<TextComponent>(), true);
     setSystemSignature<TextRenderSystem>(renderSig1);
+
+    //set up for sound
+    registerComponent<SoundComponent>();
+    auto soundSystem = registerSystem<SoundSystem>();
+    Signature soundSig;
+    soundSig.set(getComponentType<SoundComponent>(), true);
+    setSystemSignature<SoundSystem>(soundSig);
+
+    //set up for music
+    registerComponent<MusicComponent>();
+    auto musicSystem = registerSystem<MusicSystem>();
+    Signature musicSig;
+    musicSig.set(getComponentType<MusicComponent>(), true);
+    setSystemSignature<MusicSystem>(musicSig);
+
+    //set up for volume
+    registerComponent<SliderComponent>();
+    auto sliderSystem = registerSystem<SliderSystem>();
+    Signature sliderSig;
+    sliderSig.set(getComponentType<SliderComponent>(), true);
+    setSystemSignature<SliderSystem>(sliderSig);
+
+    //set up for physic
+    registerComponent<PositionComponent>();
+    registerComponent<VelocityComponent>();
+    auto physicSystem = registerSystem<PhysicSystem>();
+    Signature physicSig;
+    physicSig.set(getComponentType<PositionComponent>(), true);
+    physicSig.set(getComponentType<VelocityComponent>(), true);
+    setSystemSignature<PhysicSystem>(physicSig);
+
+    //set up for click
+    registerComponent<ClickComponent>();
+
+    //set up for enemy spawning
+    registerComponent<EnemyComponent>();
+    registerComponent<PathComponent>();
+    auto spawnSystem = registerSystem<EnemySpawnSystem>();
+    Signature spawnSig;
+    spawnSig.set(getComponentType<EnemyComponent>(), true);
+    spawnSig.set(getComponentType<PathComponent>(), true);
+    setSystemSignature<EnemySpawnSystem>(spawnSig);
+
+    //set up for projectile spawning
+    registerComponent<ProjectileComponent>();
+    auto projSystem = registerSystem<ProjectilePoolSystem>();
+    Signature projSig;
+    projSig.set(getComponentType<ProjectileComponent>(), true);
+    setSystemSignature<ProjectilePoolSystem>(projSig);
+
+    //set up for path system
+    auto pathSystem = registerSystem<PathFollowingSystem>();
+    Signature pathSig;
+    pathSig.set(getComponentType<PathComponent>(), true);
+    pathSig.set(getComponentType<PositionComponent>(), true);
+    pathSig.set(getComponentType<VelocityComponent>(), true);
+    setSystemSignature<PathFollowingSystem>(pathSig);
+
+    //set up for collision
+    registerComponent<HealthComponent>();
+    registerComponent<BuffComponent>();
+    registerComponent<CircleComponent>();
+    registerComponent<TowerComponent>();
+
+    auto colSystem = registerSystem<CollisionSystem>();
+    Signature colSig;
+    colSig.set(getComponentType<VelocityComponent>(), true);
+    colSig.set(getComponentType<CircleComponent>(), true);
+    colSig.set(getComponentType<ProjectileComponent>(), true);
+    colSig.set(getComponentType<TowerComponent>(), true);
+    colSig.set(getComponentType<HealthComponent>(), true);
+    colSig.set(getComponentType<BuffComponent>(), true);
+    setSystemSignature<CollisionSystem>(colSig);
 }
 
 EntityID World::createEntity()
@@ -94,7 +187,7 @@ void World::update(float deltaTime)
 {
     // Reset transient arena at the start of each frame
     transientArena.reset();
-
+    currentState->update(*this, deltaTime);
     for (auto const& pair : systemManager.getSystems())
     {
         pair.second->update(deltaTime);

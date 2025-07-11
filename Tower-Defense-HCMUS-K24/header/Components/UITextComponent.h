@@ -8,15 +8,19 @@
 using namespace std;
 using namespace sf;
 
-struct TextComponent 
+struct TextComponent
 {
 	Text txt;
 	std::shared_ptr<sf::Font> font;
 	FloatRect bound;
+	Color originColor;
+	bool isHover;
+
 
 	TextComponent() = default;
 	function<void(EntityID, World&)> onClick;
-	TextComponent(const string& str, int n, const string& fontPath, Color color, const Vector2f& position);
+	TextComponent(const string& str, int n, const string& fontPath, Color color, const Vector2f& position, bool hover, sf::Color outline, float thickness);
 	bool contains(Vector2f point) const;
-	void tryClick(Vector2f mousePos, EntityID entityId, World& world);
+	bool tryClick(Vector2f mousePos, EntityID entityId, World& world);
+	void tryHover(Vector2f mousePos, EntityID entityId, World& world);
 };

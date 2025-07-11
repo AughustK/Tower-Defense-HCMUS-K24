@@ -1,6 +1,8 @@
 #pragma once
 #include "TowerComponent.h"
 
+
+
 /// Data-driven definition for each tower, including base (level 0) and upgraded (level 1) stats
 struct TowerDef 
 {

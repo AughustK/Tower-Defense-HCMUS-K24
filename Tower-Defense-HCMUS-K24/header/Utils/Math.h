@@ -4,7 +4,8 @@
 
 using std::array;
 
-namespace Math {
+namespace Math 
+{
 
     // Simple 2D vector
     struct Vec2 { float x, y; };

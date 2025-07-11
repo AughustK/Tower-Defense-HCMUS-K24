@@ -1,4 +1,6 @@
 #include "../../header/Components/UISpriteComponent.h"
+#include "../../header/Managers/EntityManager.h"
+#include "../../header/Managers/World.h"
 
 SpriteComponent::SpriteComponent(const std::string& path, const sf::Vector2f& position, const sf::Vector2f& scale)
 {
@@ -14,11 +16,13 @@ bool SpriteComponent::contains(const sf::Vector2f& point) const
     return sprite.getGlobalBounds().contains(point);
 }
 
-void SpriteComponent::tryClick(const sf::Vector2f& mousePos, int entityId)
+bool SpriteComponent::tryClick(Vector2f mousePos, EntityID entityId, World& world)
 {
-    if (contains(mousePos) && onClick) 
+    if (contains(mousePos) && onClick)
     {
-        onClick(entityId);
+        onClick(entityId, world);
+        return true;
     }
+    return false;
 }
 
