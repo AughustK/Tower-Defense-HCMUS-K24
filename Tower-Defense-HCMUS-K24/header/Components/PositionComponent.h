@@ -8,7 +8,11 @@ struct PositionComponent
 
 	PositionComponent() : x(0.0f), y(0.0f), type(Type::Enemy) {}
 
-	PositionComponent(float xPos, float yPos, Type t) : x(xPos), y(yPos), type(t) {}
+	PositionComponent(float xPos, float yPos, Type t)
+		: x(xPos),
+		y(yPos), 
+		type(t) 
+	{}
 };
 
 

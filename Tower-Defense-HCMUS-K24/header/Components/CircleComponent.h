@@ -11,7 +11,7 @@ struct CircleComponent
 	enum class CollisionType { Enemy, TowerRange, Projectile };
 	CollisionType tag;
 
-	CircleComponent() : x(0.0f), y(0.0f), radius(0.0f), owner(0), tag(CollisionType::Enemy) {}
+	CircleComponent() : x(0.0f), y(0.0f), radius(0.0f), owner(0), tag(CollisionType::Projectile) {}
 
 	CircleComponent(float xPos, float yPos, float cRadius, EntityID cOwner, CollisionType cTag) 
 		: x(xPos), y(yPos), radius(cRadius), owner(cOwner), tag(cTag) {}

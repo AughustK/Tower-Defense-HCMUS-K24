@@ -11,6 +11,7 @@ using std::unordered_map;
 using std::unique_ptr;
 using std::type_index;
 
+
 class ComponentManager
 {
 private:
@@ -20,24 +21,59 @@ private:
 	ComponentID nextType = 0;
 public:
 	template <typename T>
-	inline void registerComponent();
+	void registerComponent()
+	{
+		auto typeId = type_index(typeid(T));
+		assert(componentTypes.find(typeId) == componentTypes.end() && "Component type already registered.");
+		componentTypes[typeId] = nextType++;
+		componentArrays[typeId] = std::make_unique<ComponentArray<T>>();
+	}
+
+	template<typename T>
+	ComponentArray<T>& getComponentArray()
+	{
+		auto typeId = type_index(typeid(T));
+		auto it = componentArrays.find(typeId);
+		assert(it != componentArrays.end() && "Component not registered.");
+		return *static_cast<ComponentArray<T>*>(it->second.get());
+	}
 
 	template <typename T>
-	inline void addComponent(EntityID entityID, const T& component);
+	ComponentArray<T>& getComponentArray() const
+	{
+		auto typeId = type_index(typeid(T));
+		auto it = componentArrays.find(typeId);
+		assert(it != componentArrays.end() && "Component not registered");
+		return *static_cast<ComponentArray<T>*>(it->second.get());
+	}
 
 	template <typename T>
-	inline void removeComponent(EntityID entityID);
+	void addComponent(EntityID entityID, const T& component)
+	{
+		getComponentArray<T>().insertData(entityID, component);
+	}
 
 	template <typename T>
-	inline ComponentArray<T>& getComponentArray();
-
-	template <typename T>
-	inline const ComponentArray<T>& getComponentArray() const;
+	void removeComponent(EntityID entityID);
 
 	void removeEntityComponent(EntityID entity);
 
 	template<typename T>
-	inline ComponentID getComponentType() const;
+	ComponentID getComponentType() const
+	{
+		return componentTypes.at(type_index(typeid(T)));
+	}
+
+	template<typename T>
+	vector<EntityID> getEntitiesWithComponent() 
+	{
+		vector<EntityID> result;
+		auto& componentArray = getComponentArray<T>();
+		for (const auto& pair : componentArray.getEntityToIndexMap()) {
+			result.push_back(pair.first);  // EntityID
+		}
+		return result;
+	}
 }; 
 
 

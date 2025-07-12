@@ -1,20 +1,29 @@
 #pragma once
 #include <cstdint>
-
 using EntityID = uint32_t;
 
 struct ProjectileComponent
 {
-	float speed; 
-	float damage; 
-	float range;
-	EntityID owner;  // ID of entity that shoots this projectile
+    enum class ProjectileType { Arrow, MagicCircle, CannonBall };
 
-	ProjectileComponent() 
-		: speed(0.0f), damage(0.0f), range(0.0f), owner(0) {}
+    float x, y;
+    float radius;
 
-	ProjectileComponent(float pSpeed, float pDamage, float pRange, EntityID pOwner) 
-		: speed(pSpeed), damage(pDamage), range(pRange), owner(pOwner) {}
+    ProjectileType tag;
+    EntityID owner;
 
+    // Only used by arrows: for OBB
+    float arrowLength;
 
+    ProjectileComponent()
+        : x(0.0f), y(0.0f), radius(0.0f),
+        tag(ProjectileType::Arrow),
+        owner(0),
+        arrowLength(0.0f)
+    {}
+
+    ProjectileComponent(float xPos, float yPos, float r, ProjectileType type, EntityID cOwner, float length = 0.0f)
+        : x(xPos), y(yPos), radius(r),
+        tag(type), owner(cOwner), arrowLength(length)
+    {}
 };

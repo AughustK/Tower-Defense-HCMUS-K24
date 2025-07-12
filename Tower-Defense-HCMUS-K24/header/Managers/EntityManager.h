@@ -13,6 +13,7 @@ using std::bitset;
 
 using EntityID = uint32_t;
 using ComponentID = uint8_t;
+inline constexpr EntityID INVALID_ENTITY = std::numeric_limits<EntityID>::max();
 
 constexpr EntityID MAX_ENTITIES = 2000;
 constexpr ComponentID MAX_COMPONENTS = 32;
