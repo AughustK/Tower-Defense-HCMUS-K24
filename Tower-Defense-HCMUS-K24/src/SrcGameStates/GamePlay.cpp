@@ -32,6 +32,13 @@ void GamePlay::onEnter(World& world)
 {
     std::cout << "[Gameplay] onEnter called\n";
 
+    auto musicEntities = world.getEntitiesWithComponent<MusicComponent>();
+    for (EntityID id : musicEntities)
+    {
+        std::cout << id << endl;
+        world.destroyEntity(id);
+    }
+
     std::string fullPath = "assets/" + mapFilename + "/" + mapFilename + ".txt";
     MapLoader::loadFromFile(fullPath, pathWaypoints);
     bool ok = MapLoader::loadFromFile(fullPath, pathWaypoints);
@@ -52,6 +59,7 @@ void GamePlay::onEnter(World& world)
 
     //bg
     EntityID background = world.createEntity();
+    std::cout << background << endl;
     registerEntity(background);
     const string bgPath = "assets/" + mapFilename + "/" + mapFilename + ".png";
     SpriteComponent spriteComp0(bgPath, { 0.f, 0.f }, { 1.f, 1.f });
@@ -60,6 +68,7 @@ void GamePlay::onEnter(World& world)
 
     //button
     EntityID exitButton = world.createEntity();
+    std::cout << exitButton << endl;
     registerEntity(exitButton);
     const string buttonPath = "assets/Icon/Left/B_Button68.png";
     SpriteComponent spriteComp1(buttonPath, { 0.f, 0.f }, { 5.f, 5.f });
@@ -174,3 +183,19 @@ void GamePlay::render(World& world, sf::RenderWindow& window)
     }
 }
 
+void GamePlay::onExit(World& world) {
+    auto musicEntities = world.getEntitiesWithComponent<MusicComponent>();
+    for (EntityID id : musicEntities)
+    {
+        auto& musicComp = world.getComponent<MusicComponent>(id);
+        if (musicComp.music && musicComp.music->getStatus() == sf::Music::Playing) {
+            musicComp.music->stop();
+        }
+    }
+    for (EntityID id : createdEntities)
+    {
+        world.destroyEntity(id);
+    }
+    createdEntities.clear();
+    cout << "[Gameplay] Exit state and free memory successfully.\n";
+}

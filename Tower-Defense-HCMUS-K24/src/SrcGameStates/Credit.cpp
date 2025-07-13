@@ -9,11 +9,9 @@ void Credit::onEnter(World& world)
     std::cout << "[Credit] onEnter called\n";
 
     const string soundPath = "assets/SFX/MouseClick.mp3";
-    const string musicPath = "assets/SFX/CreditBGM.mp3";
     const string fontPath = "assets/Font/Minecraft-Regular.otf";
     SoundComponent soundComp(soundPath, false);
     soundComp.sound->setVolume(world.getSystem<SoundSystem>()->globalVolume);
-    MusicComponent musicComp(musicPath);
 
     sf::Color outlineColor(0, 0, 0);
     sf::Color textColor(230, 230, 230);
@@ -25,7 +23,6 @@ void Credit::onEnter(World& world)
     const string bgPath = "assets/Bg/CreditBg.jpg";
     SpriteComponent spriteComp0(bgPath, { 0.f, 0.f }, { 5.f, 5.f });
     world.addComponent(background, spriteComp0);
-    world.addComponent(background, musicComp);
 
     //button
     EntityID exitButton = world.createEntity();

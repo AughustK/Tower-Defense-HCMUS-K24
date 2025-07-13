@@ -19,7 +19,6 @@ private:
 
     std::string                 mapFilename;
     std::vector<sf::Vector2f>   pathWaypoints;
-    std::vector<EntityID>   createdEntities;
 
     // enemy‐wave control
     std::vector<int>            waveSizes = { 5, 10, 15 };
@@ -36,4 +35,5 @@ public:
     void handleEvent(World& world, sf::Event& event) override;
     void update(World& world, float dt) override;
     void render(World& world, sf::RenderWindow& window) override;
+    void onExit(World& world) override;
 };

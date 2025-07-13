@@ -17,10 +17,8 @@ void Lobby::onEnter(World& world)
     std::cout << "[Lobby] onEnter called\n";
 
     const string soundPath = "assets/SFX/MouseClick.mp3";
-    const string musicPath = "assets/SFX/Music/Main/Main_Final.mp3";
     SoundComponent soundComp(soundPath, false);
     soundComp.sound->setVolume(world.getSystem<SoundSystem>()->globalVolume);
-    MusicComponent musicComp(musicPath);
 
     //bg
     EntityID background = world.createEntity();
@@ -28,7 +26,6 @@ void Lobby::onEnter(World& world)
     const string bgPath = "assets/Bg/Lobby.jpg";
     SpriteComponent spriteComp0(bgPath, { 0.f, 0.f }, { 1.f, 1.f });
     world.addComponent(background, spriteComp0);
-    world.addComponent(background, musicComp);
 
     //button
     EntityID exitButton = world.createEntity();

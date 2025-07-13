@@ -25,7 +25,12 @@ void ChooseMap::onEnter(World& world)
     const string bgPath = "assets/Bg/ChooseMap.png";
     SpriteComponent spriteComp0(bgPath, { 0.f, 0.f }, { 1.f, 1.f });
     world.addComponent(background, spriteComp0);
-    world.addComponent(background, musicComp);
+
+    if ((world.getSystem<MusicSystem>()->getEntity()).size() == 0) {
+        EntityID bgm = world.createEntity();
+        registerEntity(bgm);
+        world.addComponent(bgm, musicComp);
+    }
 
     //hellmap flag
     EntityID blackFlag = world.createEntity();

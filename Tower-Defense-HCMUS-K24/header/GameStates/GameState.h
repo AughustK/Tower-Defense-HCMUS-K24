@@ -10,7 +10,7 @@ protected:
     std::vector<EntityID> createdEntities;
 public:
     virtual ~GameState() = default;
-    void registerEntity(EntityID id) 
+    virtual void registerEntity(EntityID id) 
     {
         createdEntities.push_back(id);
     }

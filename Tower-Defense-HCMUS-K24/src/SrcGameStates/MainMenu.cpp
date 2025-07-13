@@ -77,7 +77,13 @@ void MainMenu::onEnter(World& world)
     const string bgPath = "assets/Bg/MenuV3.png";
     SpriteComponent spriteComp(bgPath, { 0.f, 0.f }, { 1.f, 1.f });
     world.addComponent(background, spriteComp);
-    world.addComponent(background, musicComp);
+
+    //bgm
+    if ((world.getSystem<MusicSystem>()->getEntity()).size() == 0) {
+        EntityID bgm = world.createEntity();
+        registerEntity(bgm);
+        world.addComponent(bgm, musicComp);
+    }
 
     //Text
     EntityID title = world.createEntity();

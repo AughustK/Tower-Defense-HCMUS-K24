@@ -35,9 +35,7 @@ void Setting::onEnter(World& world) {
     std::cout << "[Setting] onEnter called\n";
 
     const string soundPath = "assets/SFX/MouseClick.mp3";
-    const string musicPath = "assets/SFX/Music/Main/Main_Final.mp3";
     SoundComponent soundComp(soundPath, false);
-    MusicComponent musicComp(musicPath);
 
     //slider
     EntityID soundSlider = world.createEntity();
@@ -58,7 +56,6 @@ void Setting::onEnter(World& world) {
     const string bgPath = "assets/Bg/SettingBg.jpg";
     SpriteComponent spriteComp0(bgPath, { 0.f, 0.f }, { 1.f, 1.f });
     world.addComponent(background, spriteComp0);
-    world.addComponent(background, musicComp);
 
     //button
     EntityID exitButton = world.createEntity();
