@@ -1,0 +1,122 @@
+{
+    "1_enemies_1_hurt_000.png": {
+        "x": 0,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_hurt_001.png": {
+        "x": 294,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_hurt_002.png": {
+        "x": 588,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_hurt_003.png": {
+        "x": 882,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_hurt_004.png": {
+        "x": 1176,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_hurt_005.png": {
+        "x": 1470,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_hurt_006.png": {
+        "x": 1764,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_hurt_007.png": {
+        "x": 2058,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_hurt_008.png": {
+        "x": 2352,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_hurt_009.png": {
+        "x": 2646,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_hurt_010.png": {
+        "x": 2940,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_hurt_011.png": {
+        "x": 3234,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_hurt_012.png": {
+        "x": 3528,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_hurt_013.png": {
+        "x": 3822,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_hurt_014.png": {
+        "x": 4116,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_hurt_015.png": {
+        "x": 4410,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_hurt_016.png": {
+        "x": 4704,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_hurt_017.png": {
+        "x": 4998,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_hurt_018.png": {
+        "x": 5292,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_hurt_019.png": {
+        "x": 5586,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    }
+}

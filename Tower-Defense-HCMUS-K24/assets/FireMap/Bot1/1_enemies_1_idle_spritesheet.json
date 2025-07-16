@@ -1,0 +1,122 @@
+{
+    "1_enemies_1_idle_000.png": {
+        "x": 0,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_idle_001.png": {
+        "x": 294,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_idle_002.png": {
+        "x": 588,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_idle_003.png": {
+        "x": 882,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_idle_004.png": {
+        "x": 1176,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_idle_005.png": {
+        "x": 1470,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_idle_006.png": {
+        "x": 1764,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_idle_007.png": {
+        "x": 2058,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_idle_008.png": {
+        "x": 2352,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_idle_009.png": {
+        "x": 2646,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_idle_010.png": {
+        "x": 2940,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_idle_011.png": {
+        "x": 3234,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_idle_012.png": {
+        "x": 3528,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_idle_013.png": {
+        "x": 3822,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_idle_014.png": {
+        "x": 4116,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_idle_015.png": {
+        "x": 4410,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_idle_016.png": {
+        "x": 4704,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_idle_017.png": {
+        "x": 4998,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_idle_018.png": {
+        "x": 5292,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    },
+    "1_enemies_1_idle_019.png": {
+        "x": 5586,
+        "y": 0,
+        "width": 294,
+        "height": 275
+    }
+}

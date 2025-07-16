@@ -1,8 +1,7 @@
 # FireMap waypoint list (x y in pixels)
 # blank/comment lines are ignored
 
-1400 900
--50 700
+1300 850
 250 700
 250 550
 550 550

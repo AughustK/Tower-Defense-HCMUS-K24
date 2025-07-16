@@ -12,5 +12,6 @@ public:
     SpriteRenderSystem() = default;
 
     void update(float deltaTime) override;
+    void updateAnimation(float deltaTime, World &world);
     void render(World& world);
 };
