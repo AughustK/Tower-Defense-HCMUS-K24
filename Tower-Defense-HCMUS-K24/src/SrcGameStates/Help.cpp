@@ -4,12 +4,11 @@
 #include "../../header/GameStates/MainMenu.h"
 #include "../../header/Systems/MusicSystem.h"
 
-void Help::onEnter(World& world)                           
+void Help::onEnter(World& world)
 {
     std::cout << "[Help] onEnter called\n";
 
     const string soundPath = "assets/SFX/MouseClick.mp3";
-    const string musicPath = "assets/SFX/Music/Main/Main_Final.mp3";
     const vector<string> slidePaths = {
             "assets/HelpSlides/slide1.png",
             "assets/HelpSlides/slide2.png",
@@ -23,7 +22,6 @@ void Help::onEnter(World& world)
     soundComp.sound->setVolume(world.getSystem<SoundSystem>()->globalVolume);
 
     float volume = world.getSystem<SoundSystem>()->globalVolume;
-    MusicComponent musicComp(musicPath);
 
     //bg
     EntityID background = world.createEntity();
@@ -31,7 +29,6 @@ void Help::onEnter(World& world)
     const string bgPath = "assets/Bg/HelpBg.jpg";
     SpriteComponent spriteTotalBG(bgPath, { 0.f, 0.f }, { 1.f, 1.f });
     world.addComponent(background, spriteTotalBG);
-    world.addComponent(background, musicComp);
 
     //slide
     EntityID slide = world.createEntity();

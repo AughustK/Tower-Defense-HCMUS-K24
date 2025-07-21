@@ -3,7 +3,7 @@
 struct PositionComponent
 {
 	float x, y;
-	enum class Type { Enemy, TowerRange, Projectile };  // Type of position component, using an enum class for better type safety
+	enum class Type { Enemy, Tower, Projectile, Icon };  // Type of position component, using an enum class for better type safety
 	Type type;
 
 	PositionComponent() : x(0.0f), y(0.0f), type(Type::Enemy) {}

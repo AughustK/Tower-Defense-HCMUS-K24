@@ -37,28 +37,41 @@ void Setting::onEnter(World& world) {
     const string soundPath = "assets/SFX/MouseClick.mp3";
     const string musicPath = "assets/SFX/Music/Main/Main_Final.mp3";
     SoundComponent soundComp(soundPath, false);
-    MusicComponent musicComp(musicPath);
+
+    auto winSize = world.window.getSize();
+    float centerX = static_cast<float>(winSize.x) / 2.f;
+
+
+    float sliderWidth = 600.f;
+    float sliderX = centerX - sliderWidth / 2.f;
 
     //slider
     EntityID soundSlider = world.createEntity();
     registerEntity(soundSlider);
     float soundVolume = world.getSystem<SoundSystem>()->globalVolume;
-    SliderComponent sliderComp0(600, 660.f, 460.f, "SFX:", soundVolume);
+    SliderComponent sliderComp0(sliderWidth, sliderX, 480.f, "SFX:", soundVolume);
     world.addComponent(soundSlider, sliderComp0);
 
     EntityID musicSlider = world.createEntity();
     registerEntity(musicSlider);
     float musicVolume = world.getSystem<MusicSystem>()->globalVolume;
-    SliderComponent sliderComp1(600, 660.f, 580.f, "Music:", musicVolume);
+    SliderComponent sliderComp1(sliderWidth, sliderX, 600.f, "Music:", musicVolume);
     world.addComponent(musicSlider, sliderComp1);
 
     //bg
     EntityID background = world.createEntity();
     registerEntity(background);
-    const string bgPath = "assets/Bg/SettingBg.jpg";
+    const string bgPath = "assets/Bg/SettingBg.png";
     SpriteComponent spriteComp0(bgPath, { 0.f, 0.f }, { 1.f, 1.f });
     world.addComponent(background, spriteComp0);
-    world.addComponent(background, musicComp);
+
+
+    ////frame
+    //EntityID frame = world.createEntity();
+    //registerEntity(frame);
+    //const string framePath = "assets/Bg/FrameForAudioSettingV2.png";
+    //SpriteComponent spriteFrame(framePath, { 50.f, 50.f }, { 1.f, 1.f });
+    //world.addComponent(frame, spriteFrame);
 
     //button
     EntityID exitButton = world.createEntity();

@@ -3,8 +3,6 @@
 #include "../../header/Components/PositionComponent.h"
 #include "../../header/Components/VelocityComponent.h"
 
-void PhysicSystem::update(float deltaTime){}
-
 void PhysicSystem::update(float deltaTime, World& world)
 {
 	auto& posArr = world.getComponentArray<PositionComponent>();

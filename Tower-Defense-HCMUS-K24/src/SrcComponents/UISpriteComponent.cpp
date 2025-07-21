@@ -11,6 +11,14 @@ SpriteComponent::SpriteComponent(const std::string& path, const sf::Vector2f& po
     sprite.setScale(scale);
 }
 
+SpriteComponent::SpriteComponent(const sf::Texture& texture, const sf::Vector2f& position, const sf::Vector2f& scale)
+{
+    this->texture = std::make_shared<sf::Texture>(texture);
+    sprite.setTexture(*this->texture);
+    sprite.setPosition(position);
+    sprite.setScale(scale);
+}
+
 bool SpriteComponent::contains(const sf::Vector2f& point) const
 {
     return sprite.getGlobalBounds().contains(point);

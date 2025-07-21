@@ -11,6 +11,8 @@
 #include "../Components/HealthComponent.h"
 #include "../Components/Buffs.h"
 #include "../Components/CircleComponent.h"
+#include "../Components/TowerComponent.h"
+#include "../Components/ShopComponent.h"
 
 #include "../Systems/SpriteRenderSystem.h"
 #include "../Systems/TextRenderSystem.h"
@@ -23,6 +25,8 @@
 #include "../Systems/InitializeEnemy.h"
 #include "../Systems/InitializeProjectile.h"
 #include "../Systems/CollisionSystem.h"
+
+#include "../GameStates/GamePlay.h"
 
 #include <iostream>
 
@@ -129,6 +133,9 @@ void World::init()
     colSig.set(getComponentType<HealthComponent>(), true);
     colSig.set(getComponentType<BuffComponent>(), true);
     setSystemSignature<CollisionSystem>(colSig);
+
+    //set up fpr tower spawning
+    registerComponent<TowerIconComponent>();
 }
 
 EntityID World::createEntity()
@@ -203,5 +210,7 @@ bool World::isRunning() const
 {
     return window.isOpen() && !shouldClose;
 }
+
+
 
 

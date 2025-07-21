@@ -3,6 +3,7 @@
 #include <limits>
 #include <string>
 #include "../Managers/EntityManager.h"  // for EntityID, INVALID_ENTITY
+using std::string;
 
 struct EnemyDef;  // forward–decl
 
@@ -20,8 +21,8 @@ struct EnemyComponent {
         loadStats();
     }
 
-    void loadStats();  // only *declared* here
+    void loadStats();  
 
     static const EnemyDef& getEnemyDef(EnemyType t); 
-    static std::string getSpritePath(EnemyType t, int mapId);
+    static std::string getSpritePath(EnemyType t, const string& map);
 };

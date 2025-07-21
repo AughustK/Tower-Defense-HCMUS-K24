@@ -13,9 +13,7 @@ public:
     float globalVolume = 100.f;
     SoundSystem() = default;
 
-    void update(float deltaTime) override {
-
-    }
+    void update(float deltaTime) override {}
 
     void play(World& world) {
         for (EntityID entity : entities) {

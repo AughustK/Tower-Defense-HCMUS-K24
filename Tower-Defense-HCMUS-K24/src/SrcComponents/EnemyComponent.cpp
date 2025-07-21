@@ -13,6 +13,24 @@ const EnemyDef& EnemyComponent::getEnemyDef(EnemyType t) {
     return ENEMY_DEFS[0];
 }
 
+std::string EnemyComponent::getSpritePath(EnemyType t, const std::string& map)
+{
+    std::string prefix;
+    switch (t) {
+    case EnemyType::Normal:
+        prefix = "Normal";
+        break;
+    case EnemyType::Boss:
+        prefix = "Boss"; 
+        break;
+    default:
+        return ""; 
+    }
+
+    // Build the path
+    return "assets/" + map + "/" + prefix + ".png";
+}
+
 void EnemyComponent::loadStats() {
     const EnemyDef& d = getEnemyDef(type);
     health = d.health;
@@ -20,17 +38,4 @@ void EnemyComponent::loadStats() {
     damage = d.damage;
 }
 
-std::string EnemyComponent::getSpritePath(EnemyType t, int mapId)
-{
-    const std::string base = "assets/maps/"
-        + std::to_string(mapId)
-        + "/";
-    switch (t) {
-    case EnemyType::Normal:
-        return base + "enemy_normal.png";
-    case EnemyType::Boss:
-        return base + "enemy_boss.png";
-    }
-    // fallback
-    return base + "enemy_unknown.png";
-}
+

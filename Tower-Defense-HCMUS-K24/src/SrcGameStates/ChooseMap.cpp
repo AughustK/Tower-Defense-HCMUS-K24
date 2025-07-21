@@ -25,7 +25,12 @@ void ChooseMap::onEnter(World& world)
     const string bgPath = "assets/Bg/ChooseMap.png";
     SpriteComponent spriteComp0(bgPath, { 0.f, 0.f }, { 1.f, 1.f });
     world.addComponent(background, spriteComp0);
-    world.addComponent(background, musicComp);
+
+    if ((world.getSystem<MusicSystem>()->getEntity()).size() == 0) {
+        EntityID bgm = world.createEntity();
+        registerEntity(bgm);
+        world.addComponent(bgm, musicComp);
+    }
 
     //hellmap flag
     EntityID blackFlag = world.createEntity();
@@ -51,7 +56,7 @@ void ChooseMap::onEnter(World& world)
     SpriteComponent spriteComp3(blueFlagPath, { 1380.f, 400.f }, { 0.5f, 0.5f });
     spriteComp3.onClick = [](EntityID entityId, World& world)
         {
-            std::cout << "[ChooseMap][IcelMap] Clicked\n";
+            std::cout << "[ChooseMap][IceMap] Clicked\n";
             auto& sound = world.getComponent<SoundComponent>(entityId);
             sound.sound->play();
             sf::sleep(sf::seconds(0.5f));
@@ -138,7 +143,7 @@ void ChooseMap::handleEvent(World& world, sf::Event& event)
         {
             auto& clickComp = world.getComponent<ClickComponent>(e);
             if (clickComp.tryClick(mousePos, e, world)) {
-                return;   
+                return;
             }
         }
     }

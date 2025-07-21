@@ -1,4 +1,4 @@
-﻿#include "../../header/Managers/World.h"
+﻿    #include "../../header/Managers/World.h"
 #include "../../header/Components/SoundComponent.h"
 #include "../../header/Components/MusicComponent.h"
 #include "../../header/Components/ClickComponent.h"
@@ -17,10 +17,8 @@ void Lobby::onEnter(World& world)
     std::cout << "[Lobby] onEnter called\n";
 
     const string soundPath = "assets/SFX/MouseClick.mp3";
-    const string musicPath = "assets/SFX/Music/Main/Main_Final.mp3";
     SoundComponent soundComp(soundPath, false);
     soundComp.sound->setVolume(world.getSystem<SoundSystem>()->globalVolume);
-    MusicComponent musicComp(musicPath);
 
     //bg
     EntityID background = world.createEntity();
@@ -28,7 +26,6 @@ void Lobby::onEnter(World& world)
     const string bgPath = "assets/Bg/Lobby.jpg";
     SpriteComponent spriteComp0(bgPath, { 0.f, 0.f }, { 1.f, 1.f });
     world.addComponent(background, spriteComp0);
-    world.addComponent(background, musicComp);
 
     //button
     EntityID exitButton = world.createEntity();
@@ -63,7 +60,7 @@ void Lobby::onEnter(World& world)
             sf::sleep(sf::seconds(0.5f));
             world.setState(std::make_unique<ChooseMap>());
         }
-    });
+        });
 
     //resource item - zone
     EntityID resourceZone = world.createEntity();
@@ -108,21 +105,21 @@ void Lobby::handleEvent(World& world, sf::Event& event)
     if (event.type == sf::Event::MouseButtonPressed &&
         event.mouseButton.button == sf::Mouse::Left)
     {
-        sf::Vector2f mousePos = world.window.mapPixelToCoords({event.mouseButton.x, event.mouseButton.y});
+        sf::Vector2f mousePos = world.window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y });
 
         for (EntityID e : world.getEntitiesWithComponent<SpriteComponent>())
         {
             auto& sc = world.getComponent<SpriteComponent>(e);
             if (sc.tryClick(mousePos, e, world))
-                return;  
+                return;
         }
 
-        for (EntityID e : world.getEntitiesWithComponent<ClickComponent>()) 
+        for (EntityID e : world.getEntitiesWithComponent<ClickComponent>())
         {
             auto& cc = world.getComponent<ClickComponent>(e);
-            if (cc.tryClick(mousePos, e, world)) 
+            if (cc.tryClick(mousePos, e, world))
             {
-                return;  
+                return;
             }
         }
     }

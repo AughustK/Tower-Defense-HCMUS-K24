@@ -168,6 +168,7 @@
     <ClCompile Include="src\SrcGameStates\Setting.cpp" />
     <ClCompile Include="src\SrcManager\MapLoad.cpp" />
     <ClCompile Include="src\SrcSystem\CollisionSystem.cpp" />
+    <ClCompile Include="src\SrcSystem\InitializeProjectile.cpp" />
     <ClCompile Include="src\SrcSystem\PhysicSystem.cpp" />
     <ClCompile Include="src\SrcSystem\PathFindingSystem.cpp" />
     <ClCompile Include="src\SrcSystem\TextRenderSystem.cpp" />
@@ -185,12 +186,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="assets\json.hpp" />
+    <ClInclude Include="header\Components\AnimationComponent.h" />
     <ClInclude Include="header\Components\Buffs.h" />
     <ClInclude Include="header\Components\ClickComponent.h" />
     <ClInclude Include="header\Components\EnemyComponent.h" />
     <ClInclude Include="header\Components\EnemyDef.h" />
     <ClInclude Include="header\Components\MusicComponent.h" />
     <ClInclude Include="header\Components\PathfindingComponent.h" />
+    <ClInclude Include="header\Components\ShopComponent.h" />
     <ClInclude Include="header\Components\SoundComponent.h" />
     <ClInclude Include="header\Components\UISliderComponent.h" />
     <ClInclude Include="header\GameStates\ChooseMap.h" />
@@ -205,6 +208,7 @@
     <ClInclude Include="header\GameStates\GameState.h" />
     <ClInclude Include="header\GameStates\Resource.h" />
     <ClInclude Include="header\GameStates\Setting.h" />
+    <ClInclude Include="header\Managers\AnimationLoad.h" />
     <ClInclude Include="header\Managers\MapLoad.h" />
     <ClInclude Include="header\Systems\InitializeEnemy.h" />
     <ClInclude Include="header\Systems\InitializeProjectile.h" />

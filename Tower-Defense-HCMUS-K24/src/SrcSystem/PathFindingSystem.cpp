@@ -20,6 +20,8 @@ void PathFollowingSystem::update(float deltaTme, World& world)
 
             if (distance < threshold) 
             {
+                positionComponent.x = target.x;
+                positionComponent.y = target.y;
                 ++pathComponent.currentIndex;
                 velComponent.x = velComponent.y = 0.f;
             }

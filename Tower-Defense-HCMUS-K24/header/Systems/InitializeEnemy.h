@@ -12,5 +12,6 @@ private:
 
 public:
 	void update(float deltaTime) override;
-	void spawnWave(World& world, const std::vector<sf::Vector2f>& path, std::size_t count);
+	void spawnWave(World& world, const std::vector<sf::Vector2f>& path, std::size_t count, const string& map, EnemyComponent::EnemyType t);
+	void destroyAllEnemies(World& world);
 };

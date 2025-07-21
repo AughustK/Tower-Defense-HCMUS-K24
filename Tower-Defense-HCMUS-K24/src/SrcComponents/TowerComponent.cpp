@@ -33,16 +33,16 @@ std::string TowerComponent::getSpritePath(TowerType t, uint8_t lvl)
     {
     case TowerType::Archer:
         return (lvl == 0)
-            ? "assets/towers/archer_base.png"
-            : "assets/towers/archer_up.png";
+            ? "assets/heroes/archer_base.png"
+            : "assets/heroes/archer_up.png";
     case TowerType::Mage:
         return (lvl == 0)
-            ? "assets/towers/mage_base.png"
-            : "assets/towers/mage_up.png";
+            ? "assets/heroes/mage_base.png"
+            : "assets/heroes/mage_up.png";
     case TowerType::Cannon:
         return (lvl == 0)
-            ? "assets/towers/cannon_base.png"
-            : "assets/towers/cannon_up.png";
+            ? "assets/heroes/cannon_base.png"
+            : "assets/heroes/cannon_up.png";
     }
     return {};
 }

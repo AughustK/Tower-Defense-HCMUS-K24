@@ -11,6 +11,6 @@ class SpriteRenderSystem : public System
 public:
     SpriteRenderSystem() = default;
 
-    void update(float deltaTime) override;
+    void update(float deltaTime) {}
     void render(World& world);
 };

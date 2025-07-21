@@ -33,5 +33,5 @@ public:
         EntityManager& entityManager
     );  
     void update(float deltaTime, World& world);
-    void update(float deltaTime) {};
+    void update(float deltaTime) {}
 };

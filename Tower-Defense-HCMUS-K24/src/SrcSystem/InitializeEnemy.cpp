@@ -6,14 +6,14 @@
 
 void EnemySpawnSystem::update(float deltaTime){}
 
-void EnemySpawnSystem::spawnWave(World& world, const std::vector<sf::Vector2f>& path, std::size_t count)
+void EnemySpawnSystem::spawnWave(World& world, const std::vector<sf::Vector2f>& path, std::size_t count, const string& map, EnemyComponent::EnemyType t)
 {
     for (std::size_t i = 0; i < count; ++i)
     {
         auto e = world.createEntity();
 
         PositionComponent posComp{};
-        posComp.x = path.front().x;
+        posComp.x = path.front().x + i; 
         posComp.y = path.front().y;
         world.addComponent(e, posComp);
 
@@ -27,14 +27,40 @@ void EnemySpawnSystem::spawnWave(World& world, const std::vector<sf::Vector2f>& 
         pathComp.speed = 10.0;
         world.addComponent(e, pathComp);
 
-        // 4) Health or Enemy tag
-        HealthComponent hp{ /* starting HP */ };
+        EnemyComponent enemy;
+        
+        enemy.type = t;
+        enemy.loadStats(); // Set health, speed, etc...
+        pathComp.speed = enemy.speed;
+        world.addComponent(e, enemy);
+
+        HealthComponent hp{ static_cast<int>(enemy.health) };
         world.addComponent(e, hp);
 
-        // (Optionally) Add a sprite so you can see them
-        SpriteComponent sprite{ /* texture key, layer, etc. */ };
-        world.addComponent(e, sprite);
+        
+		std::string spritePath = EnemyComponent::getSpritePath(enemy.type, map);
+		
+        float enemyScale = 0.3f;
+        if(enemy.type == EnemyComponent::EnemyType::Boss && map == "FireMap")
+        {
+            enemyScale = 1.8f; 
+		}
 
-        createdEnemies.push_back(e);
+        SpriteComponent spriteE(spritePath, { posComp.x, posComp.y }, { enemyScale, enemyScale });
+        // Set origin to center
+        sf::FloatRect bounds = spriteE.sprite.getLocalBounds();
+        spriteE.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+        world.addComponent(e, spriteE);
+		createdEnemies.push_back(e);
     }
+}
+
+void EnemySpawnSystem::destroyAllEnemies(World& world)
+{
+    for (EntityID enemy : createdEnemies)
+    {
+		cout << "Destroying enemy entity: " << enemy << "\n";
+        world.destroyEntity(enemy);
+    }
+	createdEnemies.clear();
 }
