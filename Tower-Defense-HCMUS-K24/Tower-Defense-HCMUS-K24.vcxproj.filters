@@ -351,6 +351,10 @@
     <Image Include="assets\Bg\HelpBg.jpg" />
     <Image Include="assets\Bg\MenuV3.png" />
     <Image Include="assets\Bg\SettingBg.jpg" />
+    <Image Include="assets\ResourceSlides\slide1.png" />
+    <Image Include="assets\ResourceSlides\slide2.png" />
+    <Image Include="assets\ResourceSlides\slide3.png" />
+    <Image Include="assets\ResourceSlides\slide4.png" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="assets\Font\KarmaFuture.ttf" />
