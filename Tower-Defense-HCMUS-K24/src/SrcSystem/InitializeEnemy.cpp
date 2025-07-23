@@ -34,6 +34,12 @@ void EnemySpawnSystem::spawnWave(World& world, const std::vector<sf::Vector2f>& 
         pathComp.speed = enemy.speed;
         world.addComponent(e, enemy);
 
+        cout << "Enemy stat: " << "Type: " << static_cast<int>(enemy.type)
+             << ", Health: " << enemy.health
+             << ", Speed: " << enemy.speed
+             << ", Damage: " << enemy.damage
+			<< "\n";
+
         HealthComponent hp{ static_cast<int>(enemy.health) };
         world.addComponent(e, hp);
 

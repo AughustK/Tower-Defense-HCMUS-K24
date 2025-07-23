@@ -21,8 +21,7 @@ std::string EnemyComponent::getSpritePath(EnemyType t, const std::string& map)
         prefix = "Normal";
         break;
     case EnemyType::Boss:
-        prefix = "Boss"; 
-        break;
+        prefix = "Boss";        break;
     default:
         return ""; 
     }

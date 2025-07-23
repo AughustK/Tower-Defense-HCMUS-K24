@@ -109,6 +109,39 @@ void GamePlay::onEnter(World& world)
     world.addComponent(exitButton, soundComp);
     world.addComponent(exitButton, spriteComp1);
 
+	//pause button
+	EntityID pauseButton = world.createEntity();
+	registerEntity(pauseButton);
+	const string pauseButtonPath = "assets/Icon/Pause/A_Pause2.png";
+	SpriteComponent pauseSprite(pauseButtonPath, { 1650.f, 975.f }, { 4.35f, 4.35f });
+    pauseSprite.onClick = [](EntityID entityId, World& world)
+        {
+            std::cout << "[Pause Button] Clicked\n";
+            auto& sound = world.getComponent<SoundComponent>(entityId);
+            sound.sound->play();
+            sf::sleep(sf::seconds(0.5f));
+			world.setState(std::make_unique<ChooseMap>());
+		};
+	world.addComponent(pauseButton, soundComp);
+	world.addComponent(pauseButton, pauseSprite);
+
+    //setting button
+	EntityID settingButton = world.createEntity();
+	registerEntity(settingButton);
+	const string settingButtonPath = "assets/Icon/Settings/A_Settings2.png";
+	SpriteComponent settingSprite(settingButtonPath, { 1800.f, 975.f }, { 4.35f, 4.35f });
+    settingSprite.onClick = [](EntityID entityId, World& world)
+        {
+            std::cout << "[Setting Button] Clicked\n";
+            auto& sound = world.getComponent<SoundComponent>(entityId);
+            sound.sound->play();
+            sf::sleep(sf::seconds(0.5f));
+            /*world.setState(std::make_unique<Setting>());*/
+        };
+	world.addComponent(settingButton, soundComp);
+	world.addComponent(settingButton, settingSprite);
+
+
 
     spawnInitialEntities(world);
     //Ensure our enemy‐spawn timer is reset
@@ -152,13 +185,32 @@ void GamePlay::handleEvent(World& world, sf::Event& event)
     {
         Vector2f mousePos = world.window.mapPixelToCoords(
             { event.mouseButton.x, event.mouseButton.y });
+        // First, check if any UI element was clicked
         for (EntityID e : entities)
         {
             auto& spriteComp = world.getComponent<SpriteComponent>(e);
             if (spriteComp.tryClick(mousePos, e, world))
             {
-                return;
+                return; // UI was clicked, so don't place a tower
             }
+        }
+        // If in placement mode, place the tower
+        if (isPlacingTower)
+        {
+            // Create the tower entity at mousePos
+            EntityID tower = world.createEntity();
+            TowerComponent towerComp(mousePos.x, mousePos.y, placingType, placingLevel);
+            world.addComponent(tower, towerComp);
+            // Add a sprite for the tower
+            std::string spritePath = TowerComponent::getSpritePath(placingType, placingLevel);
+            const TowerDef& def = TowerComponent::getTowerDef(placingType);
+            float scale = def.scale[placingLevel];
+            SpriteComponent towerSprite(spritePath, mousePos, {scale, scale}); 
+            sf::FloatRect bounds = towerSprite.sprite.getLocalBounds();
+            towerSprite.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+            world.addComponent(tower, towerSprite);
+            isPlacingTower = false; // Exit placement mode
+            std::cout << "Placed tower at: " << mousePos.x << ", " << mousePos.y << std::endl;
         }
     }
 }
@@ -208,6 +260,26 @@ void GamePlay::update(World& world, float dt)
 
     auto colSys = world.getSystem<CollisionSystem>();
     colSys->update(dt, world);
+
+    // --- Tower sprite facing logic ---
+    for (EntityID towerId : world.getEntitiesWithComponent<TowerComponent>()) 
+    {
+        auto& tower = world.getComponent<TowerComponent>(towerId);
+        if (tower.target != INVALID_ENTITY &&
+            world.hasComponent<PositionComponent>(towerId) &&
+            world.hasComponent<PositionComponent>(tower.target) &&
+            world.hasComponent<SpriteComponent>(towerId))
+        {
+            auto& towerPos = world.getComponent<PositionComponent>(towerId);
+            auto& enemyPos = world.getComponent<PositionComponent>(tower.target);
+            float dx = enemyPos.x - towerPos.x;
+            float dy = enemyPos.y - towerPos.y;
+            float angleRad = std::atan2(dy, dx);
+            float angleDeg = angleRad * 180.f / 3.141'59265f;
+            auto& sprite = world.getComponent<SpriteComponent>(towerId);
+            sprite.sprite.setRotation(angleDeg);
+        }
+    }
 }
 
 void GamePlay::spawnWave(World& world)
@@ -313,10 +385,17 @@ void GamePlay::spawnTowerIcons(World& world)
 
             string iconPath = TowerComponent::getSpritePath(def.type, lv);
             iconComp.sprite = SpriteComponent(iconPath, pos, { iconScale, iconScale });
+            iconComp.sprite.onClick = [this, def, lv](EntityID entityId, World& world) 
+                {
+                    cout << "true";
+                    this->isPlacingTower = true;
+                    this->placingType = def.type;
+                    this->placingLevel = lv;
+                    std::cout << "Selected tower: " << int(def.type) << " level: " << lv << std::endl;
+                };
             world.addComponent(iconEntity, iconComp);
-            world.addComponent(iconEntity,
-                SpriteComponent(iconPath, pos, { iconScale,iconScale })
-            );
+            world.addComponent(iconEntity, iconComp.sprite); // This sprite has the onClick handler!
+
         }
         ++idx;
     }
