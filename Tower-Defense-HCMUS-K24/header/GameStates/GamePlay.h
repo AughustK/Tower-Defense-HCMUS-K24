@@ -12,6 +12,10 @@
 #include "../../header/Components/ProjectileComponent.h"
 #include "../../header/Components/TowerComponent.h"
 
+#include <unordered_map>
+#include <vector>
+#include <string>
+
 
 class GamePlay : public GameState 
 {
@@ -37,6 +41,11 @@ private:
     float enemySpawnTimer = 0.0f;
     float enemySpawnInterval = 1.2f; // seconds between enemies
     std::vector<sf::Vector2f> currentWavePath;
+    std::unordered_map<std::string, std::vector<sf::Vector2f>> validTowerSpotsPerMap;
+
+    EntityID notificationEntity;
+    bool notificationActive = false;
+    float notificationTimer = 0.f;
 
 public:
     // construct by map filename or by index

@@ -31,8 +31,54 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <optional>
 
-GamePlay::GamePlay(const std::string& mapFilename) : mapFilename(mapFilename) {}
+std::optional<sf::Vector2f> getValidPlacementSpot(
+    const sf::Vector2f& mousePos,
+    const std::unordered_map<std::string, std::vector<sf::Vector2f>>& spotData,
+    const std::string& mapName,
+    float snapRadius)
+{
+    auto it = spotData.find(mapName);
+    if (it == spotData.end()) return std::nullopt;
+
+    const auto& spots = it->second;
+    for (const auto& spot : spots) {
+        float dx = mousePos.x - spot.x;
+        float dy = mousePos.y - spot.y;
+        float distSq = dx * dx + dy * dy;
+        if (distSq <= snapRadius * snapRadius) {
+            std::cout << spot.x << " " << spot.y << endl;
+            return spot;
+        }
+    }
+    return std::nullopt;
+}
+
+GamePlay::GamePlay(const std::string& mapFilename) : mapFilename(mapFilename) {
+    //GRID
+    /*for (int row = 0; row < 16; ++row) {
+        for (int col = 0; col < 30; ++col) {
+            float x = col * 64 ;
+            float y = row * 64 ;
+            validTowerSpotsPerMap["ParadiseMap"].emplace_back(x, y);
+        }
+    }*/
+
+    validTowerSpotsPerMap["FireMap"] = { {510, 330}, {760, 330}, \
+    {992, 236}, { 828, 430 }, { 995, 430 }, { 580, 525 }, \
+    {788, 630}, { 1027, 630 } };
+
+    validTowerSpotsPerMap["HellMap"] = { {807 , 508}, {1034, 515},\
+    {463, 586}, { 410, 753 }, { 800, 748 } };
+
+    validTowerSpotsPerMap["ParadiseMap"] = { {296, 315},{557, 369},\
+    {808, 315}, { 482, 544 }, { 778, 461 }, { 1007, 640 }, { 1159, 805 } };
+
+    validTowerSpotsPerMap["IceMap"] = { {328, 448}, {628, 364}, \
+    {916, 320}, { 916, 512 }, { 929, 734 }, { 433, 660 }, { 1088, 909 } };
+
+}
 
 
 void GamePlay::onEnter(World& world)
@@ -86,7 +132,7 @@ void GamePlay::onEnter(World& world)
 	EntityID towerHeader = world.createEntity();
 	registerEntity(towerHeader);
 	const string headerText = "Heroes Shop";
-	TextComponent towerHeaderText(headerText, 32, fontPath, sf::Color::White, { 1750.f, 120.f }, true, sf::Color::Black, 5.f);
+	TextComponent towerHeaderText(headerText, 32, fontPath, sf::Color::White, { 1760.f, 120.f }, true, sf::Color::Black, 5.f);
 	world.addComponent(towerHeader, towerHeaderText);
 
     //tower icon
@@ -141,7 +187,13 @@ void GamePlay::onEnter(World& world)
 	world.addComponent(settingButton, soundComp);
 	world.addComponent(settingButton, settingSprite);
 
-
+    //Notify invalid placement
+    EntityID noti = world.createEntity();
+    notificationEntity = noti;
+    registerEntity(noti);
+    const string str = "";
+    TextComponent textComp0(str, 50, fontPath, Color(255, 215, 0), {768, 100}, false, sf::Color::Black, 7.f);
+    world.addComponent(noti, textComp0);
 
     spawnInitialEntities(world);
     //Ensure our enemy‐spawn timer is reset
@@ -197,21 +249,73 @@ void GamePlay::handleEvent(World& world, sf::Event& event)
         // If in placement mode, place the tower
         if (isPlacingTower)
         {
-            // Create the tower entity at mousePos
+            std::cout << "isPlacingCalled\n";
+            auto snappedPosOpt = getValidPlacementSpot(
+                mousePos,
+                validTowerSpotsPerMap,
+                mapFilename,
+                50.f
+            );
+
+            if (!snappedPosOpt.has_value()) {
+                auto& notifText = world.getComponent<TextComponent>(notificationEntity).txt;
+                notifText.setString("TOWER MUST BE PLACED ON TILES");
+                
+                sf::FloatRect bounds = notifText.getLocalBounds();
+                notifText.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+                
+                notifText.setPosition(768.f, 100.f);
+
+                notificationActive = true;
+                notificationTimer = 0.f;
+                isPlacingTower = false;
+
+                return;
+            }
+
+            sf::Vector2f snappedPos = *snappedPosOpt;
+
+            // Kiểm tra vị trí đó có bị trùng với trụ khác không
+            auto existingTowers = world.getEntitiesWithComponent<TowerComponent>();
+            for (EntityID t : existingTowers)
+            {
+                auto& tc = world.getComponent<TowerComponent>(t);
+                if (std::abs(tc.x - snappedPos.x) < 1.0f && std::abs(tc.y - snappedPos.y) < 1.0f) {
+                    std::cout << "Already has tower.\n";
+                    auto& notifText = world.getComponent<TextComponent>(notificationEntity).txt;
+                    notifText.setString("THIS TILE ALREADY HAS TOWER");
+
+                    sf::FloatRect bounds = notifText.getLocalBounds();
+                    notifText.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+
+                    notifText.setPosition(768.f, 100.f);
+
+                    notificationActive = true;
+                    notificationTimer = 0.f;
+                    isPlacingTower = false;
+                    isPlacingTower = false;
+                    return;
+                }
+            }
+
+            // Create the tower entity
             EntityID tower = world.createEntity();
-            TowerComponent towerComp(mousePos.x, mousePos.y, placingType, placingLevel);
+            TowerComponent towerComp(snappedPos.x, snappedPos.y, placingType, placingLevel);
             world.addComponent(tower, towerComp);
-            // Add a sprite for the tower
+
             std::string spritePath = TowerComponent::getSpritePath(placingType, placingLevel);
             const TowerDef& def = TowerComponent::getTowerDef(placingType);
             float scale = def.scale[placingLevel];
-            SpriteComponent towerSprite(spritePath, mousePos, {scale, scale}); 
+
+            SpriteComponent towerSprite(spritePath, snappedPos, { scale, scale });
             sf::FloatRect bounds = towerSprite.sprite.getLocalBounds();
             towerSprite.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
             world.addComponent(tower, towerSprite);
-            isPlacingTower = false; // Exit placement mode
-            std::cout << "Placed tower at: " << mousePos.x << ", " << mousePos.y << std::endl;
+
+            isPlacingTower = false;
+            std::cout << "Đã đặt trụ tại: " << snappedPos.x << ", " << snappedPos.y << std::endl;
         }
+
     }
 }
 
@@ -219,6 +323,15 @@ void GamePlay::update(World& world, float dt)
 {
     auto musicSystem = world.getSystem<MusicSystem>();
     if (musicSystem) musicSystem->play(world);
+
+    if (notificationActive) {
+        notificationTimer += dt;
+        if (notificationTimer >= 1.f) {
+            auto& notif = world.getComponent<TextComponent>(notificationEntity);
+            notif.txt.setString("");
+            notificationActive = false;
+        }
+    }
 
     //Spawn next wave?
     spawnTimer += dt;
@@ -307,6 +420,18 @@ void GamePlay::render(World& world, sf::RenderWindow& window)
     {
         debugDot.setPosition(wp.x, wp.y);
         window.draw(debugDot);
+    }
+
+    //
+    if (validTowerSpotsPerMap.count(mapFilename)) {
+        sf::CircleShape dot(10.f); 
+        dot.setOrigin(10.f, 10.f); // đặt tâm vào giữa hình tròn
+        dot.setFillColor(sf::Color::Red);
+
+        for (const auto& spot : validTowerSpotsPerMap[mapFilename]) {
+            dot.setPosition(spot.x, spot.y);
+            window.draw(dot);
+        }
     }
 }
 
