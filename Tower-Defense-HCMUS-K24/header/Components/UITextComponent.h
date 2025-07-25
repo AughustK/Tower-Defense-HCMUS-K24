@@ -23,4 +23,5 @@ struct TextComponent
 	bool contains(Vector2f point) const;
 	bool tryClick(Vector2f mousePos, EntityID entityId, World& world);
 	void tryHover(Vector2f mousePos, EntityID entityId, World& world);
+	void setString(string newTxt);
 };

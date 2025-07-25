@@ -21,7 +21,9 @@ void Resource::onEnter(World& world)
             "assets/ResourceSlides/slide1.png",
             "assets/ResourceSlides/slide2.png",
             "assets/ResourceSlides/slide3.png",
-            "assets/ResourceSlides/slide4.png"
+            "assets/ResourceSlides/slide4.png",
+            "assets/ResourceSlides/slide5.png",
+            "assets/ResourceSlides/slide6.png"
     };
 
     currentSlide = 0;
@@ -69,7 +71,11 @@ void Resource::onEnter(World& world)
             std::cout << "[Left Button] Clicked\n";
             auto& sound = world.getComponent<SoundComponent>(entityID);
             sound.sound->play();
-            if (currentSlide > 0) currentSlide--;
+            if (currentSlide <= 0) currentSlide = slides.size() - 1;
+            else
+            {
+                currentSlide--;
+            }
             updateSlide(world);
         };
     world.addComponent(leftButton, spriteLeftButton);
@@ -85,7 +91,11 @@ void Resource::onEnter(World& world)
             std::cout << "[Right Button] Clicked\n";
             auto& sound = world.getComponent<SoundComponent>(entityID);
             sound.sound->play();
-            if (currentSlide < slides.size() - 1) currentSlide++;
+            if (currentSlide >= slides.size() - 1) currentSlide = 0;
+            else
+            {
+                currentSlide++;
+            }
             updateSlide(world);
         };
     world.addComponent(rightButton, spriteRightButton);

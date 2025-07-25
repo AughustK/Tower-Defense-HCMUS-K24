@@ -10,7 +10,6 @@ struct TowerDef;
 struct TowerComponent 
 {
     enum class TowerType : uint8_t { Archer = 0, Mage, Cannon };
-
     // Upgrade level: 0 = base, 1 = upgraded
     uint8_t     level = 0;
     TowerType   type = TowerType::Archer;
@@ -27,6 +26,7 @@ struct TowerComponent
     float       projectileRadius = 0.0f;
     float       projectileLength = 0.0f;
     float       lastShotTimer = 0.0f;
+    int         cost = 0;
 
     // Current target (entity ID)
     EntityID    target = INVALID_ENTITY;

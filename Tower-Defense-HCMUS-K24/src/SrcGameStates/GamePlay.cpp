@@ -31,6 +31,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+EntityID moneyTextId = INVALID_ENTITY;
 
 GamePlay::GamePlay(const std::string& mapFilename) : mapFilename(mapFilename) {}
 
@@ -89,6 +90,23 @@ void GamePlay::onEnter(World& world)
 	TextComponent towerHeaderText(headerText, 32, fontPath, sf::Color::White, { 1750.f, 120.f }, true, sf::Color::Black, 5.f);
 	world.addComponent(towerHeader, towerHeaderText);
 
+    //money
+   
+    moneyTextId = world.createEntity();
+    registerEntity(moneyTextId);
+
+    std::string moneyStr = std::to_string(money);
+    TextComponent moneyText(moneyStr,70, fontPath, sf::Color::Yellow, { 95.f, 20.f }, true, sf::Color::Black, 4.f);
+    world.addComponent(moneyTextId, moneyText);
+
+    // coin Icon
+    EntityID coinIcon = world.createEntity();
+    registerEntity(coinIcon);
+    const string coinPath = "assets/Icon/Coin.png";
+    SpriteComponent coinSprite(coinPath, { 0.f, 5.f }, { 0.28f, 0.28f });
+    world.addComponent(coinIcon, coinSprite);
+
+
     //tower icon
     spawnTowerIcons(world);
     
@@ -97,7 +115,7 @@ void GamePlay::onEnter(World& world)
     EntityID exitButton = world.createEntity();
     registerEntity(exitButton);
     const string buttonPath = "assets/Icon/Left/B_Button68.png";
-    SpriteComponent spriteComp1(buttonPath, { 0.f, 0.f }, { 5.f, 5.f });
+    SpriteComponent spriteComp1(buttonPath, { 0.f, 980.f }, { 5.f, 5.f });
     spriteComp1.onClick = [](EntityID entityId, World& world)
         {
             std::cout << "[Exit Button] Clicked\n";
@@ -201,16 +219,24 @@ void GamePlay::handleEvent(World& world, sf::Event& event)
             EntityID tower = world.createEntity();
             TowerComponent towerComp(mousePos.x, mousePos.y, placingType, placingLevel);
             world.addComponent(tower, towerComp);
-            // Add a sprite for the tower
-            std::string spritePath = TowerComponent::getSpritePath(placingType, placingLevel);
-            const TowerDef& def = TowerComponent::getTowerDef(placingType);
-            float scale = def.scale[placingLevel];
-            SpriteComponent towerSprite(spritePath, mousePos, {scale, scale}); 
-            sf::FloatRect bounds = towerSprite.sprite.getLocalBounds();
-            towerSprite.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
-            world.addComponent(tower, towerSprite);
-            isPlacingTower = false; // Exit placement mode
-            std::cout << "Placed tower at: " << mousePos.x << ", " << mousePos.y << std::endl;
+            if (money >= towerComp.cost)
+            {
+                // Add a sprite for the tower
+                std::string spritePath = TowerComponent::getSpritePath(placingType, placingLevel);
+                const TowerDef& def = TowerComponent::getTowerDef(placingType);
+                float scale = def.scale[placingLevel];
+                SpriteComponent towerSprite(spritePath, mousePos, { scale, scale });
+                sf::FloatRect bounds = towerSprite.sprite.getLocalBounds();
+                towerSprite.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+                world.addComponent(tower, towerSprite);
+                money -= towerComp.cost;
+                isPlacingTower = false; // Exit placement mode
+                std::cout << "Placed tower at: " << mousePos.x << ", " << mousePos.y << std::endl;
+            }
+            else
+            {
+                //Caution ??
+            }
         }
     }
 }
@@ -225,6 +251,7 @@ void GamePlay::update(World& world, float dt)
     if (enemiesToSpawn == 0 && currentWave < static_cast<int>(waveSizes.size()) && spawnTimer >= waveInterval)
     {
         spawnWave(world);
+        money += moneyPerWave;
 		cout << "[GamePlay] Spawning wave " << currentWave << " with " << waveSizes[currentWave] << " enemies.\n";
         
     }
@@ -279,6 +306,12 @@ void GamePlay::update(World& world, float dt)
             auto& sprite = world.getComponent<SpriteComponent>(towerId);
             sprite.sprite.setRotation(angleDeg);
         }
+    }
+
+    // update money
+    if (world.hasComponent<TextComponent>(moneyTextId)) {
+        auto& text = world.getComponent<TextComponent>(moneyTextId);
+        text.setString(std::to_string(money));
     }
 }
 
@@ -348,7 +381,9 @@ void GamePlay::spawnTowerIcons(World& world)
     {
         for (int lv = 0; lv < 2; ++lv)
         {
-
+            // Add cost for each tower
+            string cost = "20";
+            //
             EntityID iconEntity = world.createEntity();
             registerEntity(iconEntity);
 
@@ -359,30 +394,51 @@ void GamePlay::spawnTowerIcons(World& world)
             if(def.type == TowerComponent::TowerType::Archer && lv == 1)
             {
                 iconScale = 3.0f;
+                cost = "30";
 			}
 
             if (def.type == TowerComponent::TowerType::Mage && lv == 0)
             {
                 iconScale = 3.9f;
+                cost = "30";
             }
 
             if (def.type == TowerComponent::TowerType::Mage && lv == 1)
             {
                 iconScale = 2.6f;
+                cost = "40";
 			}
 
             if (def.type == TowerComponent::TowerType::Cannon && lv == 0)
             {
                 iconScale = 1.0f;
+                cost = "40";
             }
 
             if (def.type == TowerComponent::TowerType::Cannon && lv == 1)
             {
                 iconScale = 1.4f;
+                cost = "50";
             }
 
-            sf::Vector2f pos{ frameX + paddingX + spacingX * float(lv), frameY + paddingY + spacingY * float(idx) };
+            
 
+            // add cost sprite for each tower
+            sf::Vector2f posCost{ frameX + paddingX + spacingX * float(lv) + 55, frameY + paddingY + spacingY * float(idx) + 135 };
+            EntityID costTextId = world.createEntity();
+            registerEntity(costTextId);
+            const string fontPath = "assets/Font/Minecraft-Regular.otf";
+            TextComponent costText(cost, 28, fontPath, sf::Color::Yellow, posCost, true, sf::Color::Black, 2.5f);
+            world.addComponent(costTextId, costText);
+
+            sf::Vector2f posCoin{ frameX + paddingX + spacingX * float(lv) + 7, frameY + paddingY + spacingY * float(idx) + 128 };
+            EntityID coinIcon = world.createEntity();
+            registerEntity(coinIcon);
+            const string coinPath = "assets/Icon/Coin.png";
+            SpriteComponent coinSprite(coinPath, posCoin, { 0.12f, 0.12f });
+            world.addComponent(coinIcon, coinSprite);
+            //
+            sf::Vector2f pos{ frameX + paddingX + spacingX * float(lv), frameY + paddingY + spacingY * float(idx) };
             string iconPath = TowerComponent::getSpritePath(def.type, lv);
             iconComp.sprite = SpriteComponent(iconPath, pos, { iconScale, iconScale });
             iconComp.sprite.onClick = [this, def, lv](EntityID entityId, World& world) 

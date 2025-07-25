@@ -38,6 +38,13 @@ private:
     float enemySpawnInterval = 1.2f; // seconds between enemies
     std::vector<sf::Vector2f> currentWavePath;
 
+
+
+    //money control
+    int money = 0;
+    int moneyPerWave = 100;
+
+
 public:
     // construct by map filename or by index
     explicit GamePlay(const std::string& mapFilename);

@@ -43,3 +43,9 @@ void TextComponent::tryHover(Vector2f mousePos, EntityID entityId, World& world)
 	else
 		txt.setFillColor(originColor);
 }
+
+void TextComponent::setString(string newTxt)
+{
+	this->txt.setString(newTxt);
+}
+

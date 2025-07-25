@@ -507,6 +507,12 @@
     <Image Include="assets\Icon\Up\C_Buttons29.png" />
     <Image Include="assets\Icon\Up\C_Buttons30.png" />
     <Image Include="assets\Lavamap\20250526_1052_Hellish Pixel Defense Map_simple_compose_01jw5bf3bkes5tj65rvrhyc1p0.png" />
+    <Image Include="assets\ResourceSlides\slide1.png" />
+    <Image Include="assets\ResourceSlides\slide2.png" />
+    <Image Include="assets\ResourceSlides\slide3.png" />
+    <Image Include="assets\ResourceSlides\slide4.png" />
+    <Image Include="assets\ResourceSlides\slide5.png" />
+    <Image Include="assets\ResourceSlides\slide6.png" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="assets\Font\Blockstepped.ttf" />
