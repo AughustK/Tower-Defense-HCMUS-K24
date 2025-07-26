@@ -208,6 +208,9 @@ void GamePlay::update(World& world, float dt)
 
     auto colSys = world.getSystem<CollisionSystem>();
     colSys->update(dt, world);
+
+    auto spriteSys = world.getSystem<SpriteRenderSystem>();
+    spriteSys->updateAnimation(dt, world);
 }
 
 void GamePlay::spawnWave(World& world)

@@ -31,6 +31,22 @@ std::string EnemyComponent::getSpritePath(EnemyType t, const std::string& map)
     return "assets/" + map + "/" + prefix + ".png";
 }
 
+std::string EnemyComponent::getAnimationPath(EnemyType t, const std::string& map) {
+    std::string prefix;
+    switch (t) {
+    case EnemyType::Normal:
+        prefix = "Normal";
+        break;
+    case EnemyType::Boss:
+        prefix = "Boss";
+        break;
+    default:
+        return "";
+    }
+    
+    return "assets/" + map + "/" + prefix + "Spritesheet/" + "run.png";
+}
+
 void EnemyComponent::loadStats() {
     const EnemyDef& d = getEnemyDef(type);
     health = d.health;

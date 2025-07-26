@@ -38,15 +38,23 @@ void EnemySpawnSystem::spawnWave(World& world, const std::vector<sf::Vector2f>& 
         world.addComponent(e, hp);
 
         
-		std::string spritePath = EnemyComponent::getSpritePath(enemy.type, map);
+		std::string spritePath = EnemyComponent::getAnimationPath(enemy.type, map);
 		
         float enemyScale = 0.3f;
-        if(enemy.type == EnemyComponent::EnemyType::Boss && map == "FireMap")
+        if(enemy.type == EnemyComponent::EnemyType::Boss)
         {
             enemyScale = 1.8f; 
 		}
 
         SpriteComponent spriteE(spritePath, { posComp.x, posComp.y }, { enemyScale, enemyScale });
+        
+        if (spriteE.texture && spriteE.texture->getSize().x > 0)
+        {
+            const int FRAME_COUNT = 4;
+            int frameWidth = spriteE.texture->getSize().x / FRAME_COUNT;
+            spriteE.sprite.setTextureRect(sf::IntRect(0, 0, frameWidth, spriteE.texture->getSize().y));
+        }
+        
         // Set origin to center
         sf::FloatRect bounds = spriteE.sprite.getLocalBounds();
         spriteE.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
