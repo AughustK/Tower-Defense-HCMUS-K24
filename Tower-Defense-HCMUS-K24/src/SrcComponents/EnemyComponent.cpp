@@ -13,7 +13,7 @@ const EnemyDef& EnemyComponent::getEnemyDef(EnemyType t) {
     return ENEMY_DEFS[0];
 }
 
-std::string EnemyComponent::getSpritePath(EnemyType t, const std::string& map)
+std::string EnemyComponent::getAnimationPath(EnemyType t, const string& map)
 {
     std::string prefix;
     switch (t) {
@@ -21,13 +21,13 @@ std::string EnemyComponent::getSpritePath(EnemyType t, const std::string& map)
         prefix = "Normal";
         break;
     case EnemyType::Boss:
-        prefix = "Boss";        break;
+        prefix = "Boss";
+        break;
     default:
-        return ""; 
+        return "";
     }
 
-    // Build the path
-    return "assets/" + map + "/" + prefix + ".png";
+    return "assets/" + map + "/" + prefix + "Spritesheet/" + "run.png";
 }
 
 void EnemyComponent::loadStats() {

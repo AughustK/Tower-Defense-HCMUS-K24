@@ -37,6 +37,28 @@ private:
     float enemySpawnTimer = 0.0f;
     float enemySpawnInterval = 1.2f; // seconds between enemies
     std::vector<sf::Vector2f> currentWavePath;
+    std::unordered_map<std::string, std::vector<sf::Vector2f>> validTowerSpotsPerMap;
+
+    EntityID notificationEntity;
+    bool notificationActive = false;
+    float notificationTimer = 0.f;
+
+    int money = 0;
+    int moneyPerWave = 100;
+
+    // Tower interaction variables
+    EntityID selectedTower = INVALID_ENTITY;
+    EntityID upgradeButton = INVALID_ENTITY;
+    EntityID deleteButton = INVALID_ENTITY;
+    std::vector<EntityID> towerOptionEntities; // Track all option entities
+    bool towerOptionsVisible = false;
+
+    // Tower interaction helper functions
+    EntityID findTowerAtPosition(World& world, const sf::Vector2f& mousePos);
+    void showTowerOptions(World& world, EntityID towerId, const sf::Vector2f& mousePos);
+    void hideTowerOptions(World& world);
+    void upgradeTower(World& world, EntityID towerId);
+    void deleteTower(World& world, EntityID towerId);
 
 public:
     // construct by map filename or by index

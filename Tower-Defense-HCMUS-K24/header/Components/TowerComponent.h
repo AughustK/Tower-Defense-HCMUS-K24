@@ -28,6 +28,7 @@ struct TowerComponent
     float       projectileLength = 0.0f;
     float       lastShotTimer = 0.0f;
 
+	int cost = 0; 
     // Current target (entity ID)
     EntityID    target = INVALID_ENTITY;
 

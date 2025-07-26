@@ -25,7 +25,7 @@
 #include "../Systems/InitializeEnemy.h"
 #include "../Systems/InitializeProjectile.h"
 #include "../Systems/CollisionSystem.h"
-
+#include "../Systems/TowerSystem.h"
 #include "../GameStates/GamePlay.h"
 
 #include <iostream>
@@ -134,8 +134,19 @@ void World::init()
     colSig.set(getComponentType<BuffComponent>(), true);
     setSystemSignature<CollisionSystem>(colSig);
 
-    //set up fpr tower spawning
+    //set up for tower spawning
     registerComponent<TowerIconComponent>();
+
+    //tower system
+	auto towerSystem = registerSystem<TowerSystem>();
+    Signature towerSig;
+	towerSig.set(getComponentType<TowerComponent>(), true);
+	towerSig.set(getComponentType<PositionComponent>(), true);
+	towerSig.set(getComponentType<VelocityComponent>(), true);
+	towerSig.set(getComponentType<ProjectileComponent>(), true);
+	towerSig.set(getComponentType<CircleComponent>(), true);
+
+    setSystemSignature<TowerSystem>(towerSig);
 }
 
 EntityID World::createEntity()
@@ -148,6 +159,8 @@ void World::destroyEntity(EntityID entityID)
     entityManager.destroyEntity(entityID);
     componentManager.removeEntityComponent(entityID);
     systemManager.removeEntitySystem(entityID);
+    // Now it's safe to make the entity ID available for reuse
+    entityManager.makeEntityAvailableForReuse(entityID);
 }
 
 void World::setState(std::unique_ptr<GameState> state)

@@ -17,3 +17,4 @@ struct CircleComponent
 		: x(xPos), y(yPos), radius(cRadius), owner(cOwner), tag(cTag) {}
 };
 
+ 

@@ -4,7 +4,7 @@
 
 
 /// Data-driven definition for each tower, including base (level 0) and upgraded (level 1) stats
-struct TowerDef 
+struct TowerDef
 {
     TowerComponent::TowerType type;
 
@@ -18,12 +18,15 @@ struct TowerDef
     float projectileRadius;    // for circle collision
     float projectileLength;    // for OBB (arrows)
     float scale[2];
+
+    //cost
+    int cost[2];
 };
 
-static constexpr TowerDef TOWER_DEFS[] = 
+static constexpr TowerDef TOWER_DEFS[] =
 {
-    //           type                 fireRate       projSpeed        damage         range       projRad  projLen
-    { TowerComponent::TowerType::Archer, {1.0f, 1.2f},  {300.0f, 350.0f},  {10.0f, 15.0f}, {200.0f, 220.0f}, 5.0f,    14.0f, {3.5f, 2.5f} },
-    { TowerComponent::TowerType::Mage,   {0.8f, 1.0f},  {250.0f, 300.0f},  {20.0f, 30.0f}, {180.0f, 200.0f}, 6.0f,     0.0f, {2.5f, 2.5f} },
-    { TowerComponent::TowerType::Cannon, {0.5f, 0.7f},  {200.0f, 250.0f},  {50.0f, 75.0f}, {220.0f, 240.0f}, 8.0f,     0.0f, {1.0f, 1.0f} },
+    //           type                 fireRate       projSpeed        damage         range       projRad              projLen                   cost
+    { TowerComponent::TowerType::Archer, {1.0f, 1.2f},  {300.0f, 350.0f},  {10.0f, 15.0f}, {200.0f, 220.0f}, 5.0f,    14.0f, {3.5f, 2.5f},      {20, 30} },
+    { TowerComponent::TowerType::Mage,   {0.8f, 1.0f},  {250.0f, 300.0f},  {20.0f, 30.0f}, {180.0f, 200.0f}, 6.0f,     0.0f, {2.5f, 2.5f},      {30, 40} },
+    { TowerComponent::TowerType::Cannon, {0.5f, 0.7f},  {200.0f, 250.0f},  {50.0f, 75.0f}, {220.0f, 240.0f}, 8.0f,     0.0f, {1.0f, 1.0f},      {40, 50} },
 };

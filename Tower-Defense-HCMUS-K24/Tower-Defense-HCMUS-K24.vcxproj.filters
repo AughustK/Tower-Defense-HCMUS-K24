@@ -31,6 +31,7 @@
     <ClCompile Include="src\SrcComponents\EnemyComponent.cpp" />
     <ClCompile Include="src\SrcGameStates\Resource.cpp" />
     <ClCompile Include="src\SrcSystem\InitializeProjectile.cpp" />
+    <ClCompile Include="src\SrcGameStates\Story.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Systems\System.h" />
@@ -83,6 +84,7 @@
     <ClInclude Include="header\Components\ShopComponent.h" />
     <ClInclude Include="header\Managers\AnimationLoad.h" />
     <ClInclude Include="header\Components\AnimationComponent.h" />
+    <ClInclude Include="header\GameStates\Story.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\Bg\CreditBackground2Fixed.png" />

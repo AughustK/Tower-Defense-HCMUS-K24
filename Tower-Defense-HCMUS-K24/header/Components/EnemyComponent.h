@@ -24,5 +24,5 @@ struct EnemyComponent {
     void loadStats();  
 
     static const EnemyDef& getEnemyDef(EnemyType t); 
-    static std::string getSpritePath(EnemyType t, const string& map);
+    static std::string getAnimationPath(EnemyType t, const string& map);
 };

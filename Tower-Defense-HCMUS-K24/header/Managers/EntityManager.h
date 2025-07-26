@@ -31,6 +31,7 @@ public:
 	EntityManager() noexcept;
 	EntityID createEntity(); 
 	void destroyEntity(EntityID entity);
+	void makeEntityAvailableForReuse(EntityID entity);
 	void addComponent(EntityID entity, ComponentID component);
 	void setSignature(EntityID entity, Signature signature);
 	Signature getSignature(EntityID entity) const;

@@ -183,6 +183,7 @@
     <ClCompile Include="src\SrcComponents\UISpriteComponent.cpp" />
     <ClCompile Include="src\SrcComponents\UITextComponent.cpp" />
     <ClCompile Include="src\SrcSystem\UISliderSystem.cpp" />
+    <ClCompile Include="src\SrcGameStates\Story.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="assets\json.hpp" />
@@ -235,6 +236,7 @@
     <ClInclude Include="header\Systems\System.h" />
     <ClInclude Include="header\Systems\SpriteRenderSystem.h" />
     <ClInclude Include="header\Utils\PathFinding.h" />
+    <ClInclude Include="header\GameStates\Story.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\Bg\CreditBackground2Fixed.png" />

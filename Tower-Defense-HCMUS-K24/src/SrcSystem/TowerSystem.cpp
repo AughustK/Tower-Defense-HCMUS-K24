@@ -6,29 +6,28 @@
 #include "../../header/Components/ProjectileComponent.h"
 #include "../../header/Components/CircleComponent.h"
 
-void TowerSystem::initializePool(long long poolSize)
+void TowerSystem::initializePool(long long poolSize, World& world) 
 {
     projectilePool.clear();
     projectilePool.reserve(poolSize);
-
-    for (long long i = 0; i < poolSize; i++)
-    {
-        EntityID projectile = entityManager.createEntity();
-        componentManager.addComponent<PositionComponent>(projectile, PositionComponent());
-        componentManager.addComponent<VelocityComponent>(projectile, VelocityComponent());
-        componentManager.addComponent<ProjectileComponent>(projectile, ProjectileComponent());
-        componentManager.addComponent<CircleComponent>(projectile, CircleComponent());
+    for (long long i = 0; i < poolSize; i++) {
+        EntityID projectile = world.createEntity();
+        world.addComponent(projectile, PositionComponent());
+        world.addComponent(projectile, VelocityComponent());
+        world.addComponent(projectile, ProjectileComponent());
+        world.addComponent(projectile, CircleComponent());
         projectilePool.push_back(projectile);
     }
 }
 
-void TowerSystem::update(float deltaTime,
-    ComponentArray<TowerComponent>& towerArray,
-    ComponentArray<CircleComponent>& circleArray,
-    ComponentArray<ProjectileComponent>& projectileArray,
-    ComponentArray<VelocityComponent>& velocityArray,
-    ComponentArray<PositionComponent>& positionArray)
+void TowerSystem::update(float deltaTime, World& world) 
 {
+    auto& towerArray = world.getComponentArray<TowerComponent>();
+    auto& circleArray = world.getComponentArray<CircleComponent>();
+    auto& projectileArray = world.getComponentArray<ProjectileComponent>();
+    auto& velocityArray = world.getComponentArray<VelocityComponent>();
+    auto& positionArray = world.getComponentArray<PositionComponent>();
+
     for (auto const& [towerEnt, _] : towerArray.getEntityToIndexMap())
     {
         auto& T = towerArray.getData(towerEnt);
@@ -51,15 +50,21 @@ void TowerSystem::update(float deltaTime,
             auto& C = circleArray.getData(e);
             if (C.tag != CircleComponent::CollisionType::Enemy) continue;
             float dx = C.x - T.x;
+			std::cout << "[DEBUG] Checking enemy at " << dx << std::endl;
             float dy = C.y - T.y;
+			std::cout << "[DEBUG] Checking enemy at " << dy << std::endl;
             float dist2 = dx * dx + dy * dy;
             if (dist2 <= bestDist2)
             {
                 bestDist2 = dist2;
                 target = e;
+				std::cout << "[DEBUG] Found target: " << target << " at distance " << std::sqrt(dist2) << std::endl;
             }
         }
         if (!target) continue;
+
+        // Debug: print when tower fires
+        std::cout << "[DEBUG] Tower " << towerEnt << " (type=" << int(T.type) << ", level=" << T.level << ") fires at Enemy " << target << std::endl;
 
         // Recycle next projectile from the pool
         EntityID P = projectilePool[nextProjectile];
@@ -114,4 +119,8 @@ void TowerSystem::update(float deltaTime,
         // Ready for next shot
         T.lastShotTimer = 0.0f;
     }
+}
+
+void TowerSystem::update(float dt)
+{
 }

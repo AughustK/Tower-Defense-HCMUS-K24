@@ -20,6 +20,7 @@ void TowerComponent::loadStats()
     projectileRadius = def.projectileRadius;
     projectileLength = def.projectileLength;
     lastShotTimer = 0.0f;
+    cost = def.cost[level];
 }
 
 const TowerDef& TowerComponent::getTowerDef(TowerType t)

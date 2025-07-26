@@ -16,6 +16,6 @@ public:
 
     void update(float deltaTime) {}
 
-    //void initPool(World& world, std::size_t count);
+    void initPool(World& world, std::size_t count);
     EntityID spawn(World& world, float startX, float startY, const sf::Vector2f& velocity, ProjectileComponent::ProjectileType type);
 };

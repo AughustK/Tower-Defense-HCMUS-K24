@@ -23,8 +23,15 @@ void EntityManager::destroyEntity(EntityID entity)
 {
     assert(entity < MAX_ENTITIES && "Entity out of range");
     signatures[entity].reset();
-    availableEntities.push_back(entity); 
+    // Don't immediately make entity available for reuse
+    // This will be done by a separate call to makeEntityAvailableForReuse()
     --livingEntity;
+}
+
+void EntityManager::makeEntityAvailableForReuse(EntityID entity)
+{
+    assert(entity < MAX_ENTITIES && "Entity out of range");
+    availableEntities.push_back(entity);
 }
 
 void EntityManager::addComponent(EntityID entity, ComponentID component)

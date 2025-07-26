@@ -11,6 +11,10 @@ class SpriteRenderSystem : public System
 public:
     SpriteRenderSystem() = default;
 
-    void update(float deltaTime) {}
+    std::unordered_map<EntityID, float> animationTimers;
+    std::unordered_map<EntityID, int> currentFrames;
+
+    void update(float deltaTime);
     void render(World& world);
+    void updateAnimation(float deltaTime, World& world);
 };

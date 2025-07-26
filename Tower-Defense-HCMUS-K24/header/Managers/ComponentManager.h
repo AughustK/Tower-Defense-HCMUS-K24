@@ -54,7 +54,10 @@ public:
 	}
 
 	template <typename T>
-	void removeComponent(EntityID entityID);
+	void removeComponent(EntityID entityID)
+	{
+		getComponentArray<T>().removeData(entityID);
+	}
 
 	void removeEntityComponent(EntityID entity);
 

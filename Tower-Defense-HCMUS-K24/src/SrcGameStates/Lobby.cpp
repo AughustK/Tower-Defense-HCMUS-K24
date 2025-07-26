@@ -80,12 +80,46 @@ void Lobby::onEnter(World& world)
             world.setState(std::make_unique<Resource>());
         }
         });
+
+
+	//story zone
+    EntityID storyZone = world.createEntity();
+    registerEntity(storyZone);
+    sf::FloatRect storyRect{ 0.0f, 450.f, 500.f, 450.f };
+    SoundComponent zoneSound2(soundPath, false);
+    zoneSound2.sound->setVolume(world.getSystem<SoundSystem>()->globalVolume);
+    world.addComponent(storyZone, zoneSound2);
+    world.addComponent<ClickComponent>(storyZone, ClickComponent{
+        storyRect,
+        [soundPath, storyZone](EntityID entityId, World& world)
+        {
+            std::cout << "[Lobby][Story Zone] Clicked!\n";
+            auto& sound = world.getComponent<SoundComponent>(entityId);
+            sound.sound->play();
+            sf::sleep(sf::seconds(0.5f));
+            //world.setState(std::make_unique<Story>());
+        }
+		});
 }
 
 void Lobby::render(World& world, sf::RenderWindow& window)
 {
     auto spriteSystem = world.getSystem<SpriteRenderSystem>();
     spriteSystem->render(world);
+
+    for (EntityID e : world.getEntitiesWithComponent<ClickComponent>())
+    {
+        auto& cc = world.getComponent<ClickComponent>(e);
+        sf::RectangleShape zoneShape;
+        zoneShape.setPosition(0.0f, 450.f);
+        zoneShape.setSize({ 500.f, 450.f });
+        zoneShape.setOutlineColor(sf::Color::Green);
+        zoneShape.setOutlineThickness(2.f);
+        zoneShape.setFillColor(sf::Color(0, 255, 0, 50)); // semi-transparent green
+        window.draw(zoneShape);
+    }
+
+
 }
 
 void Lobby::handleEvent(World& world, sf::Event& event)

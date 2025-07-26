@@ -4,6 +4,7 @@
 #include "../../header/Components/TowerDef.h"
 #include "../../header/Components/Buffs.h"
 #include <cmath>
+#include <iostream> // Added for debug output
 
 float CollisionSystem::computeDistanceOfTwoPoint(float dX, float dY) const
 {
@@ -78,6 +79,7 @@ void CollisionSystem::updateCheck(
                     if (ec.tag != CircleComponent::CollisionType::Enemy) continue;
                     if (Math::rectangleCircleSAT(cc.x, cc.y, halfLen, halfTh, angle, ec.x, ec.y, ec.radius))
                     {
+                        std::cout << "[DEBUG] Arrow collision: Projectile " << projectile << " hit Enemy " << en << std::endl;
                         if (healthArray.containData(en))
                         {
                             auto& health = healthArray.getData(en);
@@ -102,6 +104,7 @@ void CollisionSystem::updateCheck(
                     float dy = cc.y - ec.y;
                     if (dx * dx + dy * dy <= (pr + ec.radius) * (pr + ec.radius))
                     {
+                        std::cout << "[DEBUG] MagicCircle collision: Projectile " << projectile << " hit Enemy " << en << std::endl;
                         if (healthArray.containData(en))
                         {
                             auto& health = healthArray.getData(en);
@@ -111,6 +114,7 @@ void CollisionSystem::updateCheck(
                         }
                         // Apply stun buff
                         applyBuff(en, BuffType::Stun);
+						std::cout << "[DEBUG] Applied Stun buff to Enemy " << en << std::endl;
                         toDestroy[destroyCount++] = projectile;
                         break;
                     }
@@ -128,6 +132,7 @@ void CollisionSystem::updateCheck(
                     float dy = cc.y - ec.y;
                     if (dx * dx + dy * dy <= (pr + ec.radius) * (pr + ec.radius))
                     {
+                        std::cout << "[DEBUG] CannonBall collision: Projectile " << projectile << " hit Enemy " << en << std::endl;
                         if (healthArray.containData(en))
                         {
                             auto& health = healthArray.getData(en);
