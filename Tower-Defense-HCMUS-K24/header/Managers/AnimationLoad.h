@@ -1,5 +1,5 @@
 #pragma once
-
+#include "../../header/Components/AnimationComponent.h"
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <string>
