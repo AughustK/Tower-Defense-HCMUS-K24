@@ -6,10 +6,10 @@
 #include "../Components/PositionComponent.h"
 #include "../Components/UISpriteComponent.h"
 
-class ProjectilePoolSystem : public System 
+class ProjectilePoolSystem : public System
 {
 private:
-    std::vector<EntityID> createdProjectile;
+    std::vector<EntityID> pool;
     std::size_t nextIndex = 0;
 
 public:
@@ -17,5 +17,13 @@ public:
     void update(float deltaTime) {}
 
     void initPool(World& world, std::size_t count);
-    EntityID spawn(World& world, float startX, float startY, const sf::Vector2f& velocity, ProjectileComponent::ProjectileType type);
+    EntityID spawn(World& world,
+        float startX,
+        float startY,
+        const sf::Vector2f& velocity,
+        ProjectileComponent::ProjectileType type,
+        int level,
+        EntityID owner);
+    void clearPool(World& world);
+    void hideUsedProj(World& world, EntityID en);
 };

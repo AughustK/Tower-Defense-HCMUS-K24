@@ -3,8 +3,8 @@
 
 // define the table exactly once
 static const EnemyDef ENEMY_DEFS[] = {
-    { EnemyComponent::EnemyType::Normal, 150.f, 80.f,  5.f },
-    { EnemyComponent::EnemyType::Boss,   2000.f,40.f, 20.f }
+    { EnemyComponent::EnemyType::Normal, 20.f, 80.f,  5.f },
+    { EnemyComponent::EnemyType::Boss,   200.f,40.f, 20.f }
 };
 
 const EnemyDef& EnemyComponent::getEnemyDef(EnemyType t) {

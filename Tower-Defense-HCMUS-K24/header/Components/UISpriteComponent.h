@@ -19,4 +19,5 @@ struct SpriteComponent
     SpriteComponent(const sf::Texture& texture, const sf::Vector2f& position, const sf::Vector2f& scale);
     bool contains(const sf::Vector2f& point) const;
     bool tryClick(Vector2f mousePos, EntityID entityId, World& world);
+    void setTxt(string path);
 };

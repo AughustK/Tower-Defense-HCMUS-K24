@@ -34,3 +34,9 @@ bool SpriteComponent::tryClick(Vector2f mousePos, EntityID entityId, World& worl
     return false;
 }
 
+void SpriteComponent::setTxt(string path) {
+    texture = make_shared<Texture>();
+    texture->loadFromFile(path);
+    sprite.setTexture(*texture);
+}
+

@@ -3,6 +3,8 @@
 #include "../../header/Utils/Math.h"
 #include "../../header/Components/TowerDef.h"
 #include "../../header/Components/Buffs.h"
+#include "../../header/Components/UISpriteComponent.h"
+#include "../../header/Systems/InitializeProjectile.h"
 #include <cmath>
 #include <iostream> // Added for debug output
 
@@ -18,15 +20,18 @@ void CollisionSystem::updateCheck(
     ComponentArray<TowerComponent>& towerArray,
     ComponentArray<HealthComponent>& healthArray,
     ComponentArray<BuffComponent>& buffArray,
-    EntityManager& entityManager)
+    World& world)
 {
     const auto& circles = circleArray.getEntityToIndexMap();
 
     // Allocate a transient buffer for projectiles to destroy
-    EntityID* toDestroy = static_cast<EntityID*>(
+    /*EntityID* toDestroy = static_cast<EntityID*>(
         World::transientArena.alloc(sizeof(EntityID) * MAX_PROJECTILES)
         );
-    int destroyCount = 0;
+    int destroyCount = 0;*/
+
+    vector<EntityID> toDestroyEnemies;
+    vector<EntityID> toHideProj;
 
     // Iterate all circles, filter projectiles
     for (auto& kv : circles)
@@ -79,15 +84,19 @@ void CollisionSystem::updateCheck(
                     if (ec.tag != CircleComponent::CollisionType::Enemy) continue;
                     if (Math::rectangleCircleSAT(cc.x, cc.y, halfLen, halfTh, angle, ec.x, ec.y, ec.radius))
                     {
-                        std::cout << "[DEBUG] Arrow collision: Projectile " << projectile << " hit Enemy " << en << std::endl;
+                        /*std::cout << "[DEBUG] Arrow collision: Projectile " << projectile << " hit Enemy " << en << std::endl;*/
+                        toHideProj.push_back(projectile);
+
                         if (healthArray.containData(en))
                         {
+                            std::cout << "[CollisionSystem] Damaged taken\n";
                             auto& health = healthArray.getData(en);
                             health.takeDamage(damage);
-                            if (health.isDead())
-                                entityManager.destroyEntity(en);
+                            if (health.isDead()){
+                                std::cout << "[CollisionSystem] Entity " << en << " is pushed to destroy vector\n";
+                                toDestroyEnemies.push_back(en);
+                            }
                         }
-                        toDestroy[destroyCount++] = projectile;
                         break;
                     }
                 }
@@ -105,17 +114,17 @@ void CollisionSystem::updateCheck(
                     if (dx * dx + dy * dy <= (pr + ec.radius) * (pr + ec.radius))
                     {
                         std::cout << "[DEBUG] MagicCircle collision: Projectile " << projectile << " hit Enemy " << en << std::endl;
+                        toHideProj.push_back(projectile);
                         if (healthArray.containData(en))
                         {
                             auto& health = healthArray.getData(en);
                             health.takeDamage(damage);
                             if (health.isDead())
-                                entityManager.destroyEntity(en);
+                                toDestroyEnemies.push_back(en);
                         }
                         // Apply stun buff
                         applyBuff(en, BuffType::Stun);
 						std::cout << "[DEBUG] Applied Stun buff to Enemy " << en << std::endl;
-                        toDestroy[destroyCount++] = projectile;
                         break;
                     }
                 }
@@ -133,29 +142,30 @@ void CollisionSystem::updateCheck(
                     if (dx * dx + dy * dy <= (pr + ec.radius) * (pr + ec.radius))
                     {
                         std::cout << "[DEBUG] CannonBall collision: Projectile " << projectile << " hit Enemy " << en << std::endl;
+                        toHideProj.push_back(projectile);
                         if (healthArray.containData(en))
                         {
                             auto& health = healthArray.getData(en);
                             health.takeDamage(damage);
                             if (health.isDead())
-                                entityManager.destroyEntity(en);
+                                toDestroyEnemies.push_back(en);
                         }
                         // Apply slow buff
                         applyBuff(en, BuffType::Slow);
-                        toDestroy[destroyCount++] = projectile;
                         break;
                     }
                 }
             } break;
         }
-
-        // Destroy all projectiles that hit this cycle
-        for (int i = 0; i < destroyCount; ++i)
-        {
-            entityManager.destroyEntity(toDestroy[i]);
-        }
-        destroyCount = 0;
     }
+    for (auto& e : toHideProj) {
+        world.getSystem<ProjectilePoolSystem>()->hideUsedProj(world, e);
+    }
+
+    for (auto& e : toDestroyEnemies) {
+        world.destroyEntity(e);
+    }
+    toDestroyEnemies.clear();
 }
 
 void CollisionSystem::update(float deltaTime, World& world)
@@ -166,7 +176,6 @@ void CollisionSystem::update(float deltaTime, World& world)
     auto& towerArray = world.getComponentArray<TowerComponent>();
     auto& healthArray = world.getComponentArray<HealthComponent>();
     auto& buffArray = world.getComponentArray<BuffComponent>();
-    auto entityManager = world.getEntityManager();
 
     updateCheck(velocityArray,
         circleArray,
@@ -174,5 +183,5 @@ void CollisionSystem::update(float deltaTime, World& world)
         towerArray,
         healthArray,
         buffArray,
-        entityManager);
+        world);
 }

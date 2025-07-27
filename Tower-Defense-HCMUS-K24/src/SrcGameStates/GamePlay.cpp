@@ -211,6 +211,8 @@ void GamePlay::onEnter(World& world)
     currentWave = 0;
 
     money = 100; // Start with 100 money
+
+    world.getSystem<ProjectilePoolSystem>()->initPool(world, 100);
 }
 
 void GamePlay::spawnInitialEntities(World& world)
@@ -574,6 +576,8 @@ void GamePlay::onExit(World& world) {
         world.destroyEntity(id);
     }
     createdEntities.clear();
+    world.getSystem<ProjectilePoolSystem>()->clearPool(world);
+
     cout << "[Gameplay] Exit state and free memory successfully.\n";
 }
 
@@ -669,14 +673,6 @@ void GamePlay::spawnTowerIcons(World& world)
 
 
 }
-
-//void GamePlay::spawnProjectile(float x, float y, const sf::Vector2f& velocity, ProjectileComponent::ProjectileType type, World& world)
-//{
-//    auto pool = world.getSystem<ProjectilePoolSystem>();
-//    
-//}
-
-
 
 EntityID GamePlay::findTowerAtPosition(World& world, const sf::Vector2f& mousePos)
 {
