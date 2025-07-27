@@ -51,17 +51,52 @@ void EnemySpawnSystem::spawnWave(World& world, const std::vector<sf::Vector2f>& 
 		std::string spritePath = EnemyComponent::getAnimationPath(enemy.type, map);
 		
         float enemyScale = 0.2f;
-        if(enemy.type == EnemyComponent::EnemyType::Boss && map == "FireMap")
-        {
-            enemyScale = 1.8f; 
-		}
+        int frameCount = 1;
+        float frameRate = 1.0f;
+        if (enemy.type == EnemyComponent::EnemyType::Normal) {
+            if (map == "FireMap") {
+                frameCount = 20;
+                frameRate = 0.05f;
+            }
+            if (map == "HellMap") {
+                frameCount = 20;
+                frameRate = 0.05f;
+            }
+            if (map == "IceMap") {
+                frameCount = 13;
+                frameRate = 0.08f;
+            }
+            if (map == "ParadiseMap") {
+                frameCount = 8;
+                frameRate = 0.1f;
+            }
+        } else {
+            enemyScale = 1.8f;
+            if (map == "FireMap") {
+                frameCount = 4;
+                frameRate = 0.2f;
+            }
+            if (map == "HellMap") {
+                frameCount = 6;
+                frameRate = 0.1f;
+            }
+            if (map == "IceMap") {
+                frameCount = 4;
+                frameRate = 0.2f;
+            }
+            if (map == "ParadiseMap") {
+                frameCount = 2;
+                frameRate = 0.6f;
+            }
+        }
 
         SpriteComponent spriteE(spritePath, { posComp.x, posComp.y }, { enemyScale, enemyScale });
-
+        spriteE.frameCount = frameCount;
+        spriteE.frameRate = frameRate;
+        
         if (spriteE.texture && spriteE.texture->getSize().x > 0)
         {
-            const int FRAME_COUNT = 4;
-            int frameWidth = spriteE.texture->getSize().x / FRAME_COUNT;
+            int frameWidth = spriteE.texture->getSize().x / frameCount;
             spriteE.sprite.setTextureRect(sf::IntRect(0, 0, frameWidth, spriteE.texture->getSize().y));
         }
         // Set origin to center

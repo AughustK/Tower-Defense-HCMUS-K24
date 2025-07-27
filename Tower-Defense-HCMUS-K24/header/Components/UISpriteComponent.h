@@ -10,6 +10,9 @@ using namespace std;
 
 struct SpriteComponent
 {
+    int frameCount = 1;
+    float frameRate = 1.0f;
+
     sf::Sprite sprite;
     std::shared_ptr<sf::Texture> texture;
     std::function<void(EntityID, World&)> onClick;
