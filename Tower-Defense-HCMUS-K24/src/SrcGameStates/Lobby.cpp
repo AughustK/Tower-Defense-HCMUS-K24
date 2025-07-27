@@ -10,6 +10,7 @@
 #include "../../header/GameStates/Setting.h"
 #include "../../header/GameStates/ChooseMap.h"
 #include "../../header/GameStates/Resource.h"
+#include "../../header/GameStates/Story.h"
 
 
 void Lobby::onEnter(World& world)
@@ -97,7 +98,7 @@ void Lobby::onEnter(World& world)
             auto& sound = world.getComponent<SoundComponent>(entityId);
             sound.sound->play();
             sf::sleep(sf::seconds(0.5f));
-            //world.setState(std::make_unique<Story>());
+            world.setState(std::make_unique<Story>());
         }
 		});
 }

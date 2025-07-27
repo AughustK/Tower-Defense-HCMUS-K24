@@ -34,5 +34,28 @@ public:
             }
         }
     }
+
+    void pauseAll(World& world)
+    {
+        for (EntityID entity : entities)
+        {
+            auto& musicComp = world.getComponent<MusicComponent>(entity);
+            if (musicComp.music && musicComp.music->getStatus() == sf::Music::Playing) {
+                musicComp.music->pause();
+            }
+        }
+    }
+
+    void resumeAll(World& world)
+    {
+        for (EntityID entity : entities)
+        {
+            auto& musicComp = world.getComponent<MusicComponent>(entity);
+            if (musicComp.music && musicComp.triggered) {
+                musicComp.music->play();
+            }
+        }
+    }
+
 };
 

@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 
 #include "GameState.h"
 #include "../Managers/World.h"
@@ -16,10 +15,14 @@ using std::vector;
 class Story : public GameState
 {
 private:
+	sf::Clock lastSlideClock;
+	bool reachedLastSlide = false;
 	bool shouldExit = false;
-	EntityID slideBoxEntity;
 	vector<string> slides;
+	vector<string> voice;
 	int currentSlide = 0;
+	EntityID slideBoxEntity;
+	EntityID voiceEntityID;
 public:
 	void handleEvent(World& world, sf::Event& event) override;
 	void update(World& world, float dt) override;
