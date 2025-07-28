@@ -444,7 +444,7 @@ void GamePlay::update(World& world, float dt)
             
             else if (mapFilename == "IceMap")
             {
-                EnemyComponent::EnemyType typeToSpawn = EnemyComponent::EnemyType::IceNormal;
+                typeToSpawn = EnemyComponent::EnemyType::IceNormal;
                 if (currentWave == static_cast<int>(waveSizes.size()) - 1)
                 {
                     typeToSpawn = EnemyComponent::EnemyType::IceBoss;
@@ -453,7 +453,7 @@ void GamePlay::update(World& world, float dt)
 
             else if (mapFilename == "ParadiseMap")
             {
-                EnemyComponent::EnemyType typeToSpawn = EnemyComponent::EnemyType::ParadiseNormal;
+                typeToSpawn = EnemyComponent::EnemyType::ParadiseNormal;
                 if (currentWave == static_cast<int>(waveSizes.size()) - 1)
                 {
                     typeToSpawn = EnemyComponent::EnemyType::ParadiseBoss;
@@ -462,7 +462,7 @@ void GamePlay::update(World& world, float dt)
 
             else if (mapFilename == "HellMap")
             {
-                EnemyComponent::EnemyType typeToSpawn = EnemyComponent::EnemyType::HellNormal;
+                typeToSpawn = EnemyComponent::EnemyType::HellNormal;
                 if (currentWave == static_cast<int>(waveSizes.size()) - 1)
                 {
                     typeToSpawn = EnemyComponent::EnemyType::HellBoss;

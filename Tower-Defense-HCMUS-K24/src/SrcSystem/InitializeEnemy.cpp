@@ -61,7 +61,7 @@ void EnemySpawnSystem::spawnWave(World& world, const std::vector<sf::Vector2f>& 
         }
         if (enemy.type == EnemyComponent::EnemyType::HellNormal)
         {
-            frameCount = 20;
+            frameCount = 19;
             frameRate = 0.05f;
         }
         if (enemy.type == EnemyComponent::EnemyType::IceNormal)
@@ -90,7 +90,7 @@ void EnemySpawnSystem::spawnWave(World& world, const std::vector<sf::Vector2f>& 
         if (enemy.type == EnemyComponent::EnemyType::IceBoss)
         {
             frameCount = 4;
-            frameRate = 0.2f;
+            frameRate = 0.35f;
         }
 
         if (enemy.type == EnemyComponent::EnemyType::ParadiseBoss)
