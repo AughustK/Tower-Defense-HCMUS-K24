@@ -96,8 +96,6 @@ void GamePlay::onEnter(World& world)
             << p.x << ", " << p.y << ")\n";
     }
 
-
-
     const string soundPath = "assets/SFX/MouseClick.mp3";
     const string musicPath = "assets/SFX/Music/Map/" + mapFilename + ".mp3";
     SoundComponent soundComp(soundPath, false);
@@ -334,6 +332,14 @@ void GamePlay::handleEvent(World& world, sf::Event& event)
             world.addComponent(tower, towerSprite);
 
             money -= towerComp.cost;
+
+            const string placeSoundPath = "assets/SFX/PlaceTower.mp3";
+            EntityID soundEntity = world.createEntity();
+            SoundComponent placeSound(placeSoundPath, false);
+            placeSound.sound->setVolume(world.getSystem<SoundSystem>()->globalVolume*1.5f);
+            world.addComponent(soundEntity, placeSound);
+            placeSound.sound->play();
+
             isPlacingTower = false;
         }
     }
@@ -819,9 +825,11 @@ void GamePlay::upgradeTower(World& world, EntityID towerId)
     money -= upgradeCost;
 
     // Play upgrade sound
-    const string upgradeSoundPath = "assets/SFX/MouseClick.mp3";
+    const string upgradeSoundPath = "assets/SFX/PlaceTower.mp3";
+    EntityID soundEntity = world.createEntity();
     SoundComponent upgradeSound(upgradeSoundPath, false);
-    upgradeSound.sound->setVolume(world.getSystem<SoundSystem>()->globalVolume);
+    upgradeSound.sound->setVolume(world.getSystem<SoundSystem>()->globalVolume*1.5f);
+    world.addComponent(soundEntity, upgradeSound);
     upgradeSound.sound->play();
 
     // Update the tower sprite
@@ -881,9 +889,11 @@ void GamePlay::deleteTower(World& world, EntityID towerId)
     money += refund;
 
     // Play delete sound
-    const string deleteSoundPath = "assets/SFX/MouseClick.mp3";
+    const string deleteSoundPath = "assets/SFX/DestroyTower.mp3";
+    EntityID soundEntity = world.createEntity();
     SoundComponent deleteSound(deleteSoundPath, false);
-    deleteSound.sound->setVolume(world.getSystem<SoundSystem>()->globalVolume);
+    deleteSound.sound->setVolume(world.getSystem<SoundSystem>()->globalVolume*0.8f);
+    world.addComponent(soundEntity, deleteSound);
     deleteSound.sound->play();
 
     // Destroy the tower

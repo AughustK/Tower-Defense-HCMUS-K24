@@ -374,5 +374,7 @@
     <Media Include="assets\SFX\HelpBGM.mp3" />
     <Media Include="assets\SFX\MainMenuBGM.mp3" />
     <Media Include="assets\SFX\MouseClick.mp3" />
+    <Media Include="assets\SFX\DestroyTower.mp3" />
+    <Media Include="assets\SFX\PlaceTower.mp3" />
   </ItemGroup>
 </Project>

@@ -53,7 +53,6 @@ private:
     void hideTowerOptions(World& world);
     void upgradeTower(World& world, EntityID towerId);
     void deleteTower(World& world, EntityID towerId);
-
 public:
     // construct by map filename or by index
     explicit GamePlay(const std::string& mapFilename);
