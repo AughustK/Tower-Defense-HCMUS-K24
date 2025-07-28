@@ -35,6 +35,7 @@
 #include <optional>
 
 EntityID moneyTextId = INVALID_ENTITY;
+int GamePlay::money = 0;
 
 GamePlay::GamePlay(const std::string& mapFilename) : mapFilename(mapFilename)
 {
@@ -130,7 +131,6 @@ void GamePlay::onEnter(World& world)
     world.addComponent(towerHeader, towerHeaderText);
 
     //money
-
     moneyTextId = world.createEntity();
     registerEntity(moneyTextId);
 
@@ -205,40 +205,8 @@ void GamePlay::onEnter(World& world)
     TextComponent textComp0(str, 50, fontPath, Color(255, 215, 0), { 768, 100 }, false, sf::Color::Black, 7.f);
     world.addComponent(noti, textComp0);
 
-    spawnInitialEntities(world);
-    //Ensure our enemy‐spawn timer is reset
-    spawnTimer = 0.f;
-    currentWave = 0;
-
     money = 100; // Start with 100 money
-}
-
-void GamePlay::spawnInitialEntities(World& world)
-{
-    auto e = world.createEntity();
-
-    PositionComponent pos{ pathWaypoints.front().x, pathWaypoints.front().y, PositionComponent::Type::Enemy };
-    world.addComponent(e, pos);
-
-    VelocityComponent vel{ 0.f, 0.f };
-    world.addComponent(e, vel);
-
-
-    PathComponent pc;
-    pc.waypoints = pathWaypoints;
-    pc.currentIndex = 0;
-    pc.speed = 80.f;  // pixels/sec
-    world.addComponent(e, pc);
-
-
-    HealthComponent hp{ 1 };
-    world.addComponent(e, hp);
-
-    // 5) (Optional) Add a sprite so you can see it:
-    SpriteComponent sprite{};
-    world.addComponent(e, sprite);
-
-    createdEntities.push_back(e);
+    world.getSystem<ProjectilePoolSystem>()->initPool(world, 100);
 }
 
 void GamePlay::handleEvent(World& world, sf::Event& event)
@@ -279,7 +247,6 @@ void GamePlay::handleEvent(World& world, sf::Event& event)
         // If in placement mode, place the tower
         if (isPlacingTower)
         {
-            std::cout << "isPlacingCalled\n";
             auto snappedPosOpt = getValidPlacementSpot(
                 mousePos,
                 validTowerSpotsPerMap,
@@ -346,7 +313,6 @@ void GamePlay::handleEvent(World& world, sf::Event& event)
             // Create the tower entity
             EntityID tower = world.createEntity();
             registerEntity(tower);
-			cout << "[GamePlay] Placing tower at position: " << tower << endl;
             TowerComponent towerComp(snappedPos.x, snappedPos.y, placingType, placingLevel);
             world.addComponent(tower, towerComp);
 
@@ -369,7 +335,6 @@ void GamePlay::handleEvent(World& world, sf::Event& event)
 
             money -= towerComp.cost;
             isPlacingTower = false;
-            std::cout << "Tower Pos: " << snappedPos.x << ", " << snappedPos.y << std::endl;
         }
     }
 
@@ -468,11 +433,42 @@ void GamePlay::update(World& world, float dt)
         enemySpawnTimer += dt;
         if (enemySpawnTimer >= enemySpawnInterval)
         {
-            EnemyComponent::EnemyType typeToSpawn = EnemyComponent::EnemyType::Normal;
-            if (currentWave == static_cast<int>(waveSizes.size()) - 1)
+            EnemyComponent::EnemyType typeToSpawn = EnemyComponent::EnemyType::FireNormal;
+            if (mapFilename == "FireMap")
             {
-                typeToSpawn = EnemyComponent::EnemyType::Boss;
+                if (currentWave == static_cast<int>(waveSizes.size()) - 1)
+                {
+                    typeToSpawn = EnemyComponent::EnemyType::FireBoss;
+                }
             }
+            
+            else if (mapFilename == "IceMap")
+            {
+                EnemyComponent::EnemyType typeToSpawn = EnemyComponent::EnemyType::IceNormal;
+                if (currentWave == static_cast<int>(waveSizes.size()) - 1)
+                {
+                    typeToSpawn = EnemyComponent::EnemyType::IceBoss;
+                }
+            }
+
+            else if (mapFilename == "ParadiseMap")
+            {
+                EnemyComponent::EnemyType typeToSpawn = EnemyComponent::EnemyType::ParadiseNormal;
+                if (currentWave == static_cast<int>(waveSizes.size()) - 1)
+                {
+                    typeToSpawn = EnemyComponent::EnemyType::ParadiseBoss;
+                }
+            }
+
+            else if (mapFilename == "HellMap")
+            {
+                EnemyComponent::EnemyType typeToSpawn = EnemyComponent::EnemyType::HellNormal;
+                if (currentWave == static_cast<int>(waveSizes.size()) - 1)
+                {
+                    typeToSpawn = EnemyComponent::EnemyType::HellBoss;
+                }
+            }
+            
             world.getSystem<EnemySpawnSystem>()->spawnWave(world, currentWavePath, 1, mapFilename, typeToSpawn);
             enemiesToSpawn--;
             enemySpawnTimer = 0.0f;
@@ -524,6 +520,11 @@ void GamePlay::update(World& world, float dt)
     }
 }
 
+void GamePlay::updateMoney(int g)
+{
+    money += g;
+}
+
 void GamePlay::spawnWave(World& world)
 {
     enemiesToSpawn = waveSizes[currentWave];
@@ -550,31 +551,6 @@ void GamePlay::render(World& world, sf::RenderWindow& window)
         debugDot.setPosition(wp.x, wp.y);
         window.draw(debugDot);
     }
-}
-
-void GamePlay::onExit(World& world) {
-    // Hide tower options before exiting
-    hideTowerOptions(world);
-
-    auto musicEntities = world.getEntitiesWithComponent<MusicComponent>();
-    for (EntityID id : musicEntities)
-    {
-        auto& musicComp = world.getComponent<MusicComponent>(id);
-        if (musicComp.music && musicComp.music->getStatus() == sf::Music::Playing) {
-            musicComp.music->stop();
-        }
-    }
-    auto enemySys = world.getSystem<EnemySpawnSystem>();
-    if (enemySys) 
-    {
-        enemySys->destroyAllEnemies(world);
-    }
-    for (EntityID id : createdEntities)
-    {
-        world.destroyEntity(id);
-    }
-    createdEntities.clear();
-    cout << "[Gameplay] Exit state and free memory successfully.\n";
 }
 
 void GamePlay::spawnTowerIcons(World& world)
@@ -669,14 +645,6 @@ void GamePlay::spawnTowerIcons(World& world)
 
 
 }
-
-//void GamePlay::spawnProjectile(float x, float y, const sf::Vector2f& velocity, ProjectileComponent::ProjectileType type, World& world)
-//{
-//    auto pool = world.getSystem<ProjectilePoolSystem>();
-//    
-//}
-
-
 
 EntityID GamePlay::findTowerAtPosition(World& world, const sf::Vector2f& mousePos)
 {
@@ -934,3 +902,33 @@ void GamePlay::deleteTower(World& world, EntityID towerId)
     hideTowerOptions(world);
 }
 
+void GamePlay::onExit(World& world) {
+    // Hide tower options before exiting
+    hideTowerOptions(world);
+
+    auto musicEntities = world.getEntitiesWithComponent<MusicComponent>();
+    for (EntityID id : musicEntities)
+    {
+        auto& musicComp = world.getComponent<MusicComponent>(id);
+        if (musicComp.music && musicComp.music->getStatus() == sf::Music::Playing) {
+            musicComp.music->stop();
+        }
+    }
+    auto enemySys = world.getSystem<EnemySpawnSystem>();
+    if (enemySys)
+    {
+        enemySys->destroyAllEnemies(world);
+    }
+    for (EntityID id : createdEntities)
+    {
+        world.destroyEntity(id);
+    }
+    createdEntities.clear();
+    world.getSystem<ProjectilePoolSystem>()->clearPool(world);
+    world.getSystem<SpriteRenderSystem>()->clear();
+    pathWaypoints.clear();
+    currentWave = 0;
+    spawnTimer = 0.f;
+    money = 0;
+    cout << "[Gameplay] Exit state and free memory successfully.\n";
+}

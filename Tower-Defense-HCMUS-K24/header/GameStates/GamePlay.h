@@ -12,19 +12,16 @@
 #include "../../header/Components/ProjectileComponent.h"
 #include "../../header/Components/TowerComponent.h"
 
-
 class GamePlay : public GameState 
 {
+    static int money;
 private:
-    //void spawnInitialEntities(World& world);
-    //void spawnWave(World& world);
     bool isPlacingTower = false;
     TowerComponent::TowerType placingType = TowerComponent::TowerType::Archer;
     int placingLevel = 0;
 
     std::string                 mapFilename;
     std::vector<sf::Vector2f>   pathWaypoints;
-
 
 
     // enemy‐wave control
@@ -35,16 +32,13 @@ private:
 
     int enemiesToSpawn = 0;
     float enemySpawnTimer = 0.0f;
-    float enemySpawnInterval = 1.2f; // seconds between enemies
+    float enemySpawnInterval = 1.5f; // seconds between enemies
     std::vector<sf::Vector2f> currentWavePath;
     std::unordered_map<std::string, std::vector<sf::Vector2f>> validTowerSpotsPerMap;
 
     EntityID notificationEntity;
     bool notificationActive = false;
     float notificationTimer = 0.f;
-
-    int money = 0;
-    int moneyPerWave = 100;
 
     // Tower interaction variables
     EntityID selectedTower = INVALID_ENTITY;
@@ -72,5 +66,6 @@ public:
     void onExit(World& world) override;
     void spawnTowerIcons(World& world);
 	void spawnWave(World& world);
-    void spawnInitialEntities(World& world);
+    //void spawnInitialEntities(World& world);
+    static void updateMoney(int g);
 };

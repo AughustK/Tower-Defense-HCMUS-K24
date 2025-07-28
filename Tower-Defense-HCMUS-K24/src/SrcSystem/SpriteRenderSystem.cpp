@@ -19,16 +19,22 @@ void SpriteRenderSystem::render(World& world)
 }
 
 
-void SpriteRenderSystem::update(float deltaTime) 
-{}
+void SpriteRenderSystem::update(float deltaTime)
+{
+}
+
+
+void SpriteRenderSystem::clear()
+{
+    // Clear animation timers and current frames when the system is reset
+    animationTimers.clear();
+    currentFrames.clear();
+    std::cout << "[SpriteRenderSystem] Cleared animation data\n";
+}
 
 
 void SpriteRenderSystem::updateAnimation(float deltaTime, World& world)
 {
-    // Static map to store animation state for each entity
-    // static std::unordered_map<EntityID, float> animationTimers;
-    // static std::unordered_map<EntityID, int> currentFrames;
-
     for (auto entity : entities)
     {
         if (world.hasComponent<SpriteComponent>(entity))
@@ -50,10 +56,9 @@ void SpriteRenderSystem::updateAnimation(float deltaTime, World& world)
                     this->animationTimers[entity] = 0.0f;
                     this->currentFrames[entity] = 0;
 
-                    const int FRAME_COUNT = 20;
                     if (sprite.texture && sprite.texture->getSize().x > 0)
                     {
-                        int frameWidth = sprite.texture->getSize().x / FRAME_COUNT;
+                        int frameWidth = sprite.texture->getSize().x / sprite.frameCount;
                         sprite.sprite.setTextureRect(sf::IntRect(0, 0, frameWidth, sprite.texture->getSize().y));
 
                         sf::FloatRect bounds = sprite.sprite.getLocalBounds();
@@ -63,17 +68,15 @@ void SpriteRenderSystem::updateAnimation(float deltaTime, World& world)
 
                 // Update animation
                 this->animationTimers[entity] += deltaTime;
-                const float FRAME_TIME = 0.05f;
 
-                if (animationTimers[entity] >= FRAME_TIME)
+                if (animationTimers[entity] >= sprite.frameRate)
                 {
                     this->animationTimers[entity] = 0;
-                    const int FRAME_COUNT = 20;
-                    this->currentFrames[entity] = (this->currentFrames[entity] + 1) % FRAME_COUNT;
+                    this->currentFrames[entity] = (this->currentFrames[entity] + 1) % sprite.frameCount;
 
                     if (sprite.texture && sprite.texture->getSize().x > 0)
                     {
-                        int frameWidth = sprite.texture->getSize().x / FRAME_COUNT;
+                        int frameWidth = sprite.texture->getSize().x / sprite.frameCount;
                         sprite.sprite.setTextureRect(sf::IntRect(
                             this->currentFrames[entity] * frameWidth, 0,
                             frameWidth, sprite.texture->getSize().y

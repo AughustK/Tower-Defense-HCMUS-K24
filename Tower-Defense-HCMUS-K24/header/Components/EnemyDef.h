@@ -6,8 +6,10 @@
 struct EnemyDef
 {
     EnemyComponent::EnemyType  type;
-    float                      health;    // hit points
-    float                      speed;     // units per second
-    float                      damage;    // damage dealt on reach
+    float                      health;    
+    float                      speed;     
+    float                      damage;    
+    float                      scale;
+    int                        prize;
 };
 

@@ -5,22 +5,9 @@
 #include "../../header/Components/VelocityComponent.h"
 #include "../../header/Components/ProjectileComponent.h"
 #include "../../header/Components/CircleComponent.h"
+#include "../../header/Systems/InitializeProjectile.h"
 
-void TowerSystem::initializePool(long long poolSize, World& world) 
-{
-    projectilePool.clear();
-    projectilePool.reserve(poolSize);
-    for (long long i = 0; i < poolSize; i++) {
-        EntityID projectile = world.createEntity();
-        world.addComponent(projectile, PositionComponent());
-        world.addComponent(projectile, VelocityComponent());
-        world.addComponent(projectile, ProjectileComponent());
-        world.addComponent(projectile, CircleComponent());
-        projectilePool.push_back(projectile);
-    }
-}
-
-void TowerSystem::update(float deltaTime, World& world) 
+void TowerSystem::update(float deltaTime, World& world)
 {
     auto& towerArray = world.getComponentArray<TowerComponent>();
     auto& circleArray = world.getComponentArray<CircleComponent>();
@@ -50,73 +37,42 @@ void TowerSystem::update(float deltaTime, World& world)
             auto& C = circleArray.getData(e);
             if (C.tag != CircleComponent::CollisionType::Enemy) continue;
             float dx = C.x - T.x;
-			std::cout << "[DEBUG] Checking enemy at " << dx << std::endl;
+            /*std::cout << "[DEBUG] Checking enemy at " << dx << std::endl;*/
             float dy = C.y - T.y;
-			std::cout << "[DEBUG] Checking enemy at " << dy << std::endl;
+            /*std::cout << "[DEBUG] Checking enemy at " << dy << std::endl;*/
             float dist2 = dx * dx + dy * dy;
             if (dist2 <= bestDist2)
             {
                 bestDist2 = dist2;
                 target = e;
-				std::cout << "[DEBUG] Found target: " << target << " at distance " << std::sqrt(dist2) << std::endl;
             }
         }
         if (!target) continue;
 
-        // Debug: print when tower fires
-        std::cout << "[DEBUG] Tower " << towerEnt << " (type=" << int(T.type) << ", level=" << T.level << ") fires at Enemy " << target << std::endl;
-
-        // Recycle next projectile from the pool
-        EntityID P = projectilePool[nextProjectile];
-        nextProjectile = (nextProjectile + 1) % projectilePool.size();
-
-        // Reset Position
-        auto& pos = positionArray.getData(P);
-        pos.x = T.x;
-        pos.y = T.y;
-        pos.type = PositionComponent::Type::Projectile;
-
-        // Compute velocity towards target
-        auto& vel = velocityArray.getData(P);
+        /// Compute velocity towards target
         auto& enemyC = circleArray.getData(target);
         float dx = enemyC.x - T.x;
         float dy = enemyC.y - T.y;
         float dist2 = dx * dx + dy * dy;
-        float invLen;
-        if (dist2 > 0.0f) 
-        {
-            invLen = 1.0f / std::sqrt(dist2);
-        }
-        else {
-            invLen = 0.0f;
-        }
+        float invLen = (dist2 > 0.0f) ? 1.0f / std::sqrt(dist2) : 0.0f;
         float dirX = dx * invLen;
         float dirY = dy * invLen;
-        vel.x = dirX * def.projectileSpeed[T.level];
-        vel.y = dirY * def.projectileSpeed[T.level];
+        sf::Vector2f velocity = {
+            dirX * def.projectileSpeed[T.level],
+            dirY * def.projectileSpeed[T.level]
+        };
 
-        // Reset Projectile component
-        auto& pc = projectileArray.getData(P);
-        pc.tag = static_cast<ProjectileComponent::ProjectileType>(T.type);
-        pc.owner = towerEnt;
-        pc.x = T.x;
-        pc.y = T.y;
-        if (T.type == TowerComponent::TowerType::Archer) 
-        {
-            pc.arrowLength = def.projectileLength;
-        }
-        else {
-            pc.arrowLength = 0.0f;
-        }
+        auto poolSystem = world.getSystem<ProjectilePoolSystem>();
+        poolSystem->spawn(
+            world,
+            T.x,
+            T.y,
+            velocity,
+            static_cast<ProjectileComponent::ProjectileType>(T.type),
+            T.level,
+            towerEnt
+        );
 
-        // Reset Collision circle
-        auto& cc = circleArray.getData(P);
-        cc.x = T.x;
-        cc.y = T.y;
-        cc.tag = CircleComponent::CollisionType::Projectile;
-        cc.radius = def.projectileRadius;
-
-        // Ready for next shot
         T.lastShotTimer = 0.0f;
     }
 }

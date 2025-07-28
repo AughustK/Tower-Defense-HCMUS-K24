@@ -30,8 +30,8 @@ public:
         ComponentArray<TowerComponent>& towerArray,
         ComponentArray<HealthComponent>& healthArray,
         ComponentArray<BuffComponent>& buffArray,
-        EntityManager& entityManager
-    );  
+        World& world
+    );
     void update(float deltaTime, World& world);
     void update(float deltaTime) {}
 };

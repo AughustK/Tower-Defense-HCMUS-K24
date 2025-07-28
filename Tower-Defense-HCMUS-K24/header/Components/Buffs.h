@@ -21,7 +21,7 @@ struct BuffDef
 // Data-driven table for all buffs
 static constexpr BuffDef BUFF_DEFS[] = 
 {
-    { BuffType::Stun, 1.0f,  1,  0.0f }, // Mage freeze: 1s stun
+    { BuffType::Stun, 0.5f,  1,  0.0f }, // Mage freeze: 1s stun
     { BuffType::Slow, 2.0f, 10,  0.5f }  // Cannon slow: 2s at 50% speed
 };
 static_assert(sizeof(BUFF_DEFS) / sizeof(*BUFF_DEFS) == 2, "Update BUFF_DEFS");

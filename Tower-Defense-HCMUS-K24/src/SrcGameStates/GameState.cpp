@@ -1,6 +1,7 @@
 #include "../../header/GameStates/GameState.h"
 #include "../../header/Managers/World.h"
 #include "../../header/Systems/MusicSystem.h"
+#include "../../header/Systems/SpriteRenderSystem.h"
 
 #include <iostream>
 
@@ -20,6 +21,7 @@ void GameState::onExit(World& world)
         world.destroyEntity(id);
     }
     createdEntities.clear();
+    world.getSystem<SpriteRenderSystem>()->clear();
     cout << "Exit state and free memory successfully.\n";
 }
 

@@ -12,7 +12,7 @@ private:
 
 public:
     // reachThreshold: distance (in px) at which we consider a waypoint reached
-    PathFollowingSystem(float reachThreshold = 0.05f) : threshold(reachThreshold) {}
+    PathFollowingSystem(float reachThreshold = 0.f) : threshold(reachThreshold) {}
 
     void update(float deltaTime) {}
     void update(float deltaTme, World& world);

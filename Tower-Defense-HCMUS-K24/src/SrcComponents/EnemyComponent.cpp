@@ -3,8 +3,14 @@
 
 // define the table exactly once
 static const EnemyDef ENEMY_DEFS[] = {
-    { EnemyComponent::EnemyType::Normal, 150.f, 80.f,  5.f },
-    { EnemyComponent::EnemyType::Boss,   2000.f,40.f, 20.f }
+    { EnemyComponent::EnemyType::FireNormal, 800.f, 80.f,  100.f, 0.2f, 10 },
+    { EnemyComponent::EnemyType::FireBoss,   1800.f,40.f, 400.f, 1.2f, 100 },
+    { EnemyComponent::EnemyType::IceNormal, 800.f, 80.f,  100.f, 1.0f, 10 },
+    { EnemyComponent::EnemyType::IceBoss,   1800.f,40.f, 400.f, 1.2f, 100 },
+    { EnemyComponent::EnemyType::ParadiseNormal, 800.f, 80.f,  100.f, 1.0f, 10 },
+    { EnemyComponent::EnemyType::ParadiseBoss,   1800.f,40.f, 400.f, 1.2f, 100 },
+    { EnemyComponent::EnemyType::HellNormal, 800.f, 80.f,  100.f, 1.0f, 10 },
+    { EnemyComponent::EnemyType::HellBoss,   1800.f,40.f, 400.f, 1.2f, 100 }
 };
 
 const EnemyDef& EnemyComponent::getEnemyDef(EnemyType t) {
@@ -17,11 +23,29 @@ std::string EnemyComponent::getAnimationPath(EnemyType t, const string& map)
 {
     std::string prefix;
     switch (t) {
-    case EnemyType::Normal:
-        prefix = "Normal";
+    case EnemyType::FireNormal:
+        prefix = "FireNormal";
         break;
-    case EnemyType::Boss:
-        prefix = "Boss";
+    case EnemyType::FireBoss:
+        prefix = "FireBoss";
+        break;
+    case EnemyType::IceNormal:
+        prefix = "IceNormal";
+        break;
+    case EnemyType::IceBoss:
+        prefix = "IceBoss";
+        break;
+    case EnemyType::ParadiseNormal:
+        prefix = "ParadiseNormal";
+        break;
+    case EnemyType::ParadiseBoss:
+        prefix = "ParadiseBoss";
+        break;
+    case EnemyType::HellNormal:
+        prefix = "HellNormal";
+        break;
+    case EnemyType::HellBoss:
+        prefix = "HellBoss";
         break;
     default:
         return "";
@@ -35,6 +59,7 @@ void EnemyComponent::loadStats() {
     health = d.health;
     speed = d.speed;
     damage = d.damage;
+    scale = d.scale;
 }
 
 

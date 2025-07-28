@@ -13,6 +13,7 @@
 #include "../Components/CircleComponent.h"
 #include "../Components/TowerComponent.h"
 #include "../Components/ShopComponent.h"
+#include "../Components/ProjectileComponent.h"
 
 #include "../Systems/SpriteRenderSystem.h"
 #include "../Systems/TextRenderSystem.h"
@@ -103,13 +104,6 @@ void World::init()
     spawnSig.set(getComponentType<PathComponent>(), true);
     setSystemSignature<EnemySpawnSystem>(spawnSig);
 
-    //set up for projectile spawning
-    registerComponent<ProjectileComponent>();
-    auto projSystem = registerSystem<ProjectilePoolSystem>();
-    Signature projSig;
-    projSig.set(getComponentType<ProjectileComponent>(), true);
-    setSystemSignature<ProjectilePoolSystem>(projSig);
-
     //set up for path system
     auto pathSystem = registerSystem<PathFollowingSystem>();
     Signature pathSig;
@@ -123,6 +117,7 @@ void World::init()
     registerComponent<BuffComponent>();
     registerComponent<CircleComponent>();
     registerComponent<TowerComponent>();
+    registerComponent<ProjectileComponent>();
 
     auto colSystem = registerSystem<CollisionSystem>();
     Signature colSig;
@@ -138,15 +133,22 @@ void World::init()
     registerComponent<TowerIconComponent>();
 
     //tower system
-	auto towerSystem = registerSystem<TowerSystem>();
+    auto towerSystem = registerSystem<TowerSystem>();
     Signature towerSig;
-	towerSig.set(getComponentType<TowerComponent>(), true);
-	towerSig.set(getComponentType<PositionComponent>(), true);
-	towerSig.set(getComponentType<VelocityComponent>(), true);
-	towerSig.set(getComponentType<ProjectileComponent>(), true);
-	towerSig.set(getComponentType<CircleComponent>(), true);
-
+    towerSig.set(getComponentType<TowerComponent>(), true);
+    towerSig.set(getComponentType<PositionComponent>(), true);
+    towerSig.set(getComponentType<VelocityComponent>(), true);
+    towerSig.set(getComponentType<CircleComponent>(), true);
     setSystemSignature<TowerSystem>(towerSig);
+
+    //set up for projectile spawning
+    auto projectileSystem = registerSystem<ProjectilePoolSystem>();
+    Signature projectileSig;
+    projectileSig.set(getComponentType<ProjectileComponent>(), true);
+    projectileSig.set(getComponentType<PositionComponent>(), true);
+    projectileSig.set(getComponentType<VelocityComponent>(), true);
+    projectileSig.set(getComponentType<CircleComponent>(), true);
+    setSystemSignature<ProjectilePoolSystem>(projectileSig);
 }
 
 EntityID World::createEntity()
@@ -156,10 +158,17 @@ EntityID World::createEntity()
 
 void World::destroyEntity(EntityID entityID)
 {
-    entityManager.destroyEntity(entityID);
-    componentManager.removeEntityComponent(entityID);
+    // First, remove the entity from all systems
     systemManager.removeEntitySystem(entityID);
+    
+    // Then remove all components
+    componentManager.removeEntityComponent(entityID);
+    
+    // Finally destroy the entity in the entity manager
+    entityManager.destroyEntity(entityID);
+    
     // Now it's safe to make the entity ID available for reuse
+    // This ensures all cleanup is complete before the ID can be reused
     entityManager.makeEntityAvailableForReuse(entityID);
 }
 
@@ -223,7 +232,3 @@ bool World::isRunning() const
 {
     return window.isOpen() && !shouldClose;
 }
-
-
-
-

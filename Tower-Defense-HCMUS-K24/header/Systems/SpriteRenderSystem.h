@@ -17,4 +17,5 @@ public:
     void update(float deltaTime);
     void render(World& world);
     void updateAnimation(float deltaTime, World& world);
+    void clear();
 };

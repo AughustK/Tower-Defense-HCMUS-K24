@@ -21,7 +21,6 @@ private:
 
 public:
 	TowerSystem() = default;
-	void initializePool(long long poolSize, World& world);
 	void update(float deltaTime, World& world);
 	void update(float dt) override;
 };

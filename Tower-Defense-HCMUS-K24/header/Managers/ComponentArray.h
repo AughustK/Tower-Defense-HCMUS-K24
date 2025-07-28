@@ -6,6 +6,7 @@
 #include <memory>
 #include <typeinfo>
 #include <cassert>
+#include <iostream> // Added for debug output
 
 using std::array;
 using std::unordered_map;
@@ -29,7 +30,14 @@ private:
 public:
 	void insertData(EntityID entity, const T& component)
 	{
-		assert(entityToIndexMap.find(entity) == entityToIndexMap.end() && "Component added to same entity more than once.");
+		// If the entity already has this component, remove it first
+		// This can happen if the entity ID was reused too quickly
+		if (entityToIndexMap.find(entity) != entityToIndexMap.end())
+		{
+			std::cout << "[ComponentArray] Entity " << entity << " already has component, removing old data before adding new\n";
+			removeData(entity);
+		}
+		
 		uint32_t newIndex = size;
 
 		entityToIndexMap[entity] = newIndex; // Map entity to index
