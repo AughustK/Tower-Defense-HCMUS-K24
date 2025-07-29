@@ -8,6 +8,8 @@
 #include "../../header/Managers/World.h"
 #include "../../header/GameStates/Setting.h"
 #include "../../header/GameStates/Lobby.h"
+#include "../../header/GameStates/Victory.h"
+#include "../../header/GameStates/Defeat.h"
 
 void MainMenu::handleEvent(World& world, sf::Event& event)
 {

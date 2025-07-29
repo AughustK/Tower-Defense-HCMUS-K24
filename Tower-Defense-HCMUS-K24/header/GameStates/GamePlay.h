@@ -35,10 +35,13 @@ private:
     float enemySpawnInterval = 1.5f; // seconds between enemies
     std::vector<sf::Vector2f> currentWavePath;
     std::unordered_map<std::string, std::vector<sf::Vector2f>> validTowerSpotsPerMap;
+    std::unordered_map<std::string, sf::Vector2f> castlePos;
 
     EntityID notificationEntity;
     bool notificationActive = false;
     float notificationTimer = 0.f;
+
+    EntityID castleEntity;
 
     // Tower interaction variables
     EntityID selectedTower = INVALID_ENTITY;
@@ -46,6 +49,7 @@ private:
     EntityID deleteButton = INVALID_ENTITY;
     std::vector<EntityID> towerOptionEntities; // Track all option entities
     bool towerOptionsVisible = false;
+    bool victoryTriggered = false;
 
     // Tower interaction helper functions
     EntityID findTowerAtPosition(World& world, const sf::Vector2f& mousePos);

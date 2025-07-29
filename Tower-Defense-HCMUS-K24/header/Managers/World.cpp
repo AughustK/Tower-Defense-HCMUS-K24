@@ -14,6 +14,7 @@
 #include "../Components/TowerComponent.h"
 #include "../Components/ShopComponent.h"
 #include "../Components/ProjectileComponent.h"
+#include "../Components/CastleHPComponent.h"
 
 #include "../Systems/SpriteRenderSystem.h"
 #include "../Systems/TextRenderSystem.h"
@@ -28,6 +29,7 @@
 #include "../Systems/CollisionSystem.h"
 #include "../Systems/TowerSystem.h"
 #include "../GameStates/GamePlay.h"
+#include "../Systems/CastleHPSystem.h"
 
 #include <iostream>
 
@@ -149,6 +151,13 @@ void World::init()
     projectileSig.set(getComponentType<VelocityComponent>(), true);
     projectileSig.set(getComponentType<CircleComponent>(), true);
     setSystemSignature<ProjectilePoolSystem>(projectileSig);
+
+    //set up for castle health
+    registerComponent<CastleHPComponent>();
+    auto castleHPSystem = registerSystem<CastleHPSystem>();
+    Signature hpSig;
+    hpSig.set(getComponentType<CastleHPComponent>(), true);
+    setSystemSignature<CastleHPSystem>(hpSig);
 }
 
 EntityID World::createEntity()

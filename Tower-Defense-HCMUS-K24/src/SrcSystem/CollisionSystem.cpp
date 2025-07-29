@@ -8,6 +8,7 @@
 #include "../../header/GameStates/GamePlay.h"
 #include "../../header/Systems/InitializeProjectile.h"
 #include "../../header/Components/EnemyDef.h"
+#include "../../header/Systems/CastleHPSystem.h"
 #include <cmath>
 #include <iostream> // Added for debug output
 #include <unordered_set> // Added for tracking enemies to destroy
@@ -40,6 +41,16 @@ void CollisionSystem::updateCheck(
         if (cc.tag != CircleComponent::CollisionType::Projectile) continue;
         if (!projectileArray.containData(projectile))      continue;
 
+        //hide proj when passing through a killed enemy
+        const float screenLeft = 0.f;
+        const float screenRight = 1613.5f;
+        const float screenTop = 0.f;
+        const float screenBottom = 1080.f;
+
+        if (cc.x < screenLeft || cc.x > screenRight || cc.y < screenTop || cc.y > screenBottom) {
+            toHideProj.push_back(projectile);
+            continue;
+        }
 
         // Damage from owning tower
         int damage = 0;
@@ -174,6 +185,32 @@ void CollisionSystem::updateCheck(
         world.getSystem<ProjectilePoolSystem>()->hideUsedProj(world, e);
     }
 
+    float castleRadius = 20.f;  
+
+    for (auto& kv : circleArray.getEntityToIndexMap())
+    {
+        EntityID enemy = kv.first;
+        auto& cc = circleArray.getData(enemy);
+        if (cc.tag != CircleComponent::CollisionType::Enemy) continue;
+
+        float dx = cc.x - currCastlePos.x;
+        float dy = cc.y - currCastlePos.y;
+        float distanceSq = dx * dx + dy * dy;
+
+        float combinedRadius = cc.radius + castleRadius;
+
+        if (distanceSq <= combinedRadius * combinedRadius)
+        {
+            std::cout << "[CollisionSystem] Enemy " << enemy << " reached the castle (within radius), destroying.\n";
+            auto& enemyComp = world.getComponent<EnemyComponent>(enemy);
+            int damage = static_cast<int>(EnemyComponent::getEnemyDef(enemyComp.type).damage);
+
+            world.getSystem<CastleHPSystem>()->update(world, damage);
+            toDestroyEnemies.push_back(enemy);
+        }
+    }
+
+
     for (auto& e : toDestroyEnemies) {
         world.destroyEntity(e);
     }
@@ -196,4 +233,12 @@ void CollisionSystem::update(float deltaTime, World& world)
         healthArray,
         buffArray,
         world);
+}
+
+void CollisionSystem::init(string name) {
+    castlePos["FireMap"] = { 1320,825 };
+    castlePos["HellMap"] = {1210, 380};
+    castlePos["IceMap"] = { 1290, 785 };
+    castlePos["ParadiseMap"] = { 1160, 585 };
+    currCastlePos= castlePos[name];
 }

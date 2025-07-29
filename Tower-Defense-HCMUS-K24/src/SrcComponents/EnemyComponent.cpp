@@ -3,14 +3,14 @@
 
 // define the table exactly once
 static const EnemyDef ENEMY_DEFS[] = {
-    { EnemyComponent::EnemyType::FireNormal, 800.f, 80.f,  100.f, 0.2f, 10 },
-    { EnemyComponent::EnemyType::FireBoss,   1800.f,40.f, 400.f, 1.2f, 100 },
-    { EnemyComponent::EnemyType::IceNormal, 800.f, 80.f,  100.f, 1.3f, 10 },
-    { EnemyComponent::EnemyType::IceBoss,   1800.f,40.f, 400.f, 3.0f, 100 },
-    { EnemyComponent::EnemyType::ParadiseNormal, 800.f, 80.f,  100.f, 1.0f, 10 },
-    { EnemyComponent::EnemyType::ParadiseBoss,   1800.f,40.f, 400.f, 1.4f, 100 },
-    { EnemyComponent::EnemyType::HellNormal, 800.f, 80.f,  100.f, 0.2f, 10 },
-    { EnemyComponent::EnemyType::HellBoss,   1800.f,40.f, 400.f, 1.2f, 100 }
+    { EnemyComponent::EnemyType::FireNormal, 800.f, 80.f,  20.f, 0.2f, 10 },
+    { EnemyComponent::EnemyType::FireBoss,   1800.f,40.f, 70.f, 1.2f, 100 },
+    { EnemyComponent::EnemyType::IceNormal, 800.f, 80.f,  20.f, 1.3f, 10 },
+    { EnemyComponent::EnemyType::IceBoss,   1800.f,40.f, 70.f, 3.0f, 100 },
+    { EnemyComponent::EnemyType::ParadiseNormal, 800.f, 80.f,  20.f, 1.0f, 10 },
+    { EnemyComponent::EnemyType::ParadiseBoss,   1800.f,40.f, 70.f, 1.4f, 100 },
+    { EnemyComponent::EnemyType::HellNormal, 800.f, 80.f,  20.f, 0.2f, 10 },
+    { EnemyComponent::EnemyType::HellBoss,   1800.f,40.f, 70.f, 1.2f, 100 }
 };
 
 const EnemyDef& EnemyComponent::getEnemyDef(EnemyType t) {

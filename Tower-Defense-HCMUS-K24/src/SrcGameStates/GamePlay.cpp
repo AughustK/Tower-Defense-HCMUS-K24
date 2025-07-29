@@ -2,6 +2,8 @@
 #include "../../header/Managers/World.h"
 #include "../../header/Managers/MapLoad.h"
 #include "../../header/GameStates/ChooseMap.h"
+#include "../../header/GameStates/Victory.h"
+#include "../../header/GameStates/Defeat.h"
 
 #include "../../header/Components/PositionComponent.h"
 #include "../../header/Components/HealthComponent.h"
@@ -16,6 +18,7 @@
 #include "../../header/Components/ShopComponent.h"
 #include "../../header/Components/TowerComponent.h"
 #include "../../header/Components/TowerDef.h"
+#include "../../header/Components/CastleHPComponent.h"
 
 
 #include "../../header/Systems/PathFindingSystem.h"
@@ -28,6 +31,7 @@
 #include "../../header/Systems/MusicSystem.h"
 #include "../../header/Systems/TextRenderSystem.h"
 #include "../../header/Systems/TowerSystem.h"
+#include "../../header/Systems/CastleHPSystem.h"
 
 #include <fstream>
 #include <sstream>
@@ -51,6 +55,11 @@ GamePlay::GamePlay(const std::string& mapFilename) : mapFilename(mapFilename)
 
     validTowerSpotsPerMap["IceMap"] = { {328, 448}, {628, 364}, \
     {916, 320}, { 916, 512 }, { 929, 734 }, { 433, 660 }, { 1088, 909 } };
+
+    castlePos["FireMap"] = { 1252,672-3*64 };
+    castlePos["HellMap"] = { 17 * 64+20,64 - 25 };
+    castlePos["ParadiseMap"] = { 17 * 64 + 52,3 * 64 + 32 };
+    castlePos["IceMap"] = { 1252-64,672 - 3 * 64 };
 }
 
 std::optional<sf::Vector2f> getValidPlacementSpot(
@@ -127,7 +136,7 @@ void GamePlay::onEnter(World& world)
     EntityID towerHeader = world.createEntity();
     registerEntity(towerHeader);
     const string headerText = "Heroes Shop";
-    TextComponent towerHeaderText(headerText, 32, fontPath, sf::Color::White, { 1750.f, 120.f }, true, sf::Color::Black, 5.f);
+    TextComponent towerHeaderText(headerText, 32, fontPath, sf::Color::White, { 1760.f, 120.f }, true, sf::Color::Black, 5.f);
     world.addComponent(towerHeader, towerHeaderText);
 
     //money
@@ -207,6 +216,12 @@ void GamePlay::onEnter(World& world)
 
     money = 100; // Start with 100 money
     world.getSystem<ProjectilePoolSystem>()->initPool(world, 100);
+    world.getSystem<CollisionSystem>()->init(mapFilename);
+
+    castleEntity = world.createEntity();
+    registerEntity(castleEntity);
+    CastleHPComponent hpComp(100, 100, castlePos[mapFilename].x, castlePos[mapFilename].y, 200.f, 20.f);
+    world.addComponent<CastleHPComponent>(castleEntity, hpComp);
 }
 
 void GamePlay::handleEvent(World& world, sf::Event& event)
@@ -480,6 +495,25 @@ void GamePlay::update(World& world, float dt)
         spawnTimer = 0.f;
     }
 
+    if (!victoryTriggered &&
+        currentWave >= static_cast<int>(waveSizes.size()) &&
+        world.getComponentArray<EnemyComponent>().getEntityToIndexMap().empty())
+    {
+        std::cout << "[GamePlay] Player wins!\n";
+        victoryTriggered = true;
+
+        sf::sleep(sf::seconds(1.f));
+        world.setState(std::make_unique<Victory>());
+        return;
+    }
+
+    auto& hpComp = world.getComponent<CastleHPComponent>(castleEntity);
+    if (hpComp.currentHP == 0) {
+        sf::sleep(sf::seconds(1.f));
+        world.setState(std::make_unique<Defeat>());
+        return;
+    }
+
 
     auto pathSys = world.getSystem<PathFollowingSystem>();
     pathSys->update(dt, world);
@@ -551,6 +585,9 @@ void GamePlay::render(World& world, sf::RenderWindow& window)
         debugDot.setPosition(wp.x, wp.y);
         window.draw(debugDot);
     }
+    
+    auto castleHPSystem = world.getSystem<CastleHPSystem>();
+    castleHPSystem->render(world);
 }
 
 void GamePlay::spawnTowerIcons(World& world)
