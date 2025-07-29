@@ -54,27 +54,42 @@ void EnemySpawnSystem::spawnWave(World& world, const std::vector<sf::Vector2f>& 
         float enemyScale = enemy.scale;
         int frameCount = 1;
         float frameRate = 1.0f;
-        if (enemy.type == EnemyComponent::EnemyType::FireNormal)
+        if (enemy.type == EnemyComponent::EnemyType::FireNormal1)
         {
             frameCount = 20;
             frameRate = 0.05f;
         }
-        if (enemy.type == EnemyComponent::EnemyType::HellNormal)
+        if (enemy.type == EnemyComponent::EnemyType::FireNormal2) {
+            frameCount = 6;
+            frameRate = 0.2f;
+        }
+        if (enemy.type == EnemyComponent::EnemyType::HellNormal1)
         {
             frameCount = 19;
             frameRate = 0.05f;
         }
-        if (enemy.type == EnemyComponent::EnemyType::IceNormal)
+        if (enemy.type == EnemyComponent::EnemyType::HellNormal2) {
+            frameCount = 6;
+            frameRate = 0.2f;
+        }
+        if (enemy.type == EnemyComponent::EnemyType::IceNormal1)
         {
             frameCount = 13;
             frameRate = 0.08f;
         }
-        if (enemy.type == EnemyComponent::EnemyType::ParadiseNormal)
+        if (enemy.type == EnemyComponent::EnemyType::IceNormal2) {
+            frameCount = 10;
+            frameRate = 0.1f;
+        }
+        if (enemy.type == EnemyComponent::EnemyType::ParadiseNormal1)
         {
             frameCount = 8;
             frameRate = 0.1f;
         }
-        
+        if (enemy.type == EnemyComponent::EnemyType::ParadiseNormal2) {
+            frameCount = 1;
+            frameRate = 1;
+        }
         if (enemy.type == EnemyComponent::EnemyType::FireBoss)
         {
             frameCount = 4;

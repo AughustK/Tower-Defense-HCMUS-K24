@@ -433,39 +433,46 @@ void GamePlay::update(World& world, float dt)
         enemySpawnTimer += dt;
         if (enemySpawnTimer >= enemySpawnInterval)
         {
-            EnemyComponent::EnemyType typeToSpawn = EnemyComponent::EnemyType::FireNormal;
+            bool isOddWave = (currentWave + 1) % 2 == 1;
+
+            EnemyComponent::EnemyType typeToSpawn = EnemyComponent::EnemyType::FireNormal1;
             if (mapFilename == "FireMap")
             {
                 if (currentWave == static_cast<int>(waveSizes.size()) - 1)
                 {
                     typeToSpawn = EnemyComponent::EnemyType::FireBoss;
+                } else {
+                    typeToSpawn = isOddWave ? EnemyComponent::EnemyType::FireNormal1 : EnemyComponent::EnemyType::FireNormal2;
                 }
             }
             
             else if (mapFilename == "IceMap")
             {
-                typeToSpawn = EnemyComponent::EnemyType::IceNormal;
                 if (currentWave == static_cast<int>(waveSizes.size()) - 1)
                 {
                     typeToSpawn = EnemyComponent::EnemyType::IceBoss;
+                } else {
+                    typeToSpawn = isOddWave ? EnemyComponent::EnemyType::IceNormal1 : EnemyComponent::EnemyType::IceNormal2;
                 }
             }
 
             else if (mapFilename == "ParadiseMap")
             {
-                typeToSpawn = EnemyComponent::EnemyType::ParadiseNormal;
                 if (currentWave == static_cast<int>(waveSizes.size()) - 1)
                 {
                     typeToSpawn = EnemyComponent::EnemyType::ParadiseBoss;
+                } else {
+                    typeToSpawn = isOddWave ? EnemyComponent::EnemyType::ParadiseNormal1 : EnemyComponent::EnemyType::ParadiseNormal2;
                 }
             }
 
             else if (mapFilename == "HellMap")
             {
-                typeToSpawn = EnemyComponent::EnemyType::HellNormal;
                 if (currentWave == static_cast<int>(waveSizes.size()) - 1)
                 {
                     typeToSpawn = EnemyComponent::EnemyType::HellBoss;
+                } else {
+                    typeToSpawn = isOddWave ? EnemyComponent::EnemyType::HellNormal1 : EnemyComponent::EnemyType::HellNormal2;
                 }
             }
             
