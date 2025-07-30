@@ -5,16 +5,16 @@
 static const EnemyDef ENEMY_DEFS[] = {
     { EnemyComponent::EnemyType::FireNormal1, 800.f, 80.f,  100.f, 0.2f, 10 },
     { EnemyComponent::EnemyType::FireNormal2, 800.f, 80.f,  100.f, 0.5f, 10 },
-    { EnemyComponent::EnemyType::FireBoss,   1800.f,40.f, 400.f, 1.2f, 100 },
-    { EnemyComponent::EnemyType::IceNormal1, 800.f, 80.f,  100.f, 1.3f, 10 },
-    { EnemyComponent::EnemyType::IceNormal2, 800.f, 80.f,  100.f, 1.0f, 10 },
-    { EnemyComponent::EnemyType::IceBoss,   1800.f,40.f, 400.f, 3.0f, 100 },
+    { EnemyComponent::EnemyType::FireBoss,   1800.f,40.f, 400.f, 1.5f, 100 },
+    { EnemyComponent::EnemyType::IceNormal1, 800.f, 80.f,  100.f, 1.5f, 10 },
+    { EnemyComponent::EnemyType::IceNormal2, 800.f, 80.f,  100.f, 1.5f, 10 },
+    { EnemyComponent::EnemyType::IceBoss,   1800.f,40.f, 400.f, 3.4f, 100 },
     { EnemyComponent::EnemyType::ParadiseNormal1, 800.f, 80.f,  100.f, 1.0f, 10 },
-    { EnemyComponent::EnemyType::ParadiseNormal2, 800.f, 80.f,  100.f, 0.2f, 10 },
-    { EnemyComponent::EnemyType::ParadiseBoss,   1800.f,40.f, 400.f, 1.4f, 100 },
+    { EnemyComponent::EnemyType::ParadiseNormal2, 800.f, 80.f,  100.f, 1.4f, 10 },
+    { EnemyComponent::EnemyType::ParadiseBoss,   1800.f,40.f, 400.f, 1.5f, 100 },
     { EnemyComponent::EnemyType::HellNormal1, 800.f, 80.f,  100.f, 0.2f, 10 },
     { EnemyComponent::EnemyType::HellNormal2, 800.f, 80.f,  100.f, 0.6f, 10 },
-    { EnemyComponent::EnemyType::HellBoss,   1800.f,40.f, 400.f, 1.2f, 100 }
+    { EnemyComponent::EnemyType::HellBoss,   1800.f,40.f, 400.f, 1.0f, 100 }
 };
 
 const EnemyDef& EnemyComponent::getEnemyDef(EnemyType t) {
