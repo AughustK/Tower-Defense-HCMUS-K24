@@ -2,13 +2,15 @@
 #include "../../header/Managers/World.h"
 #include "../../header/Utils/Math.h"
 #include "../../header/Components/TowerDef.h"
-#include "../../header/Components/Buffs.h"
 #include "../../header/Components/UISpriteComponent.h"
 #include "../../header/Components/EnemyComponent.h"
 #include "../../header/GameStates/GamePlay.h"
 #include "../../header/Systems/InitializeProjectile.h"
 #include "../../header/Components/EnemyDef.h"
 #include "../../header/Systems/CastleHPSystem.h"
+#include "../../header/Systems/InitializeEnemy.h"
+#include "../../header/Components/SoundComponent.h"
+#include "../../header/Systems/SoundSystem.h"
 #include <cmath>
 #include <iostream> // Added for debug output
 #include <unordered_set> // Added for tracking enemies to destroy
@@ -18,13 +20,22 @@ float CollisionSystem::computeDistanceOfTwoPoint(float dX, float dY) const
     return std::sqrt(dX * dX + dY * dY);
 }
 
+void CollisionSystem::playCollisionSound(World& world)
+{
+    const string collisionSoundPath = "assets/SFX/DestroyTower.mp3";
+    EntityID soundEntity = world.createEntity();
+    SoundComponent collisionSound(collisionSoundPath, false);
+    collisionSound.sound->setVolume(world.getSystem<SoundSystem>()->globalVolume);
+    world.addComponent(soundEntity, collisionSound);
+    collisionSound.sound->play();
+}
+
 void CollisionSystem::updateCheck(
     ComponentArray<VelocityComponent>& velocityArray,
     ComponentArray<CircleComponent>& circleArray,
     ComponentArray<ProjectileComponent>& projectileArray,
     ComponentArray<TowerComponent>& towerArray,
     ComponentArray<HealthComponent>& healthArray,
-    ComponentArray<BuffComponent>& buffArray,
     World& world)
 {
     const auto& circles = circleArray.getEntityToIndexMap();
@@ -79,6 +90,9 @@ void CollisionSystem::updateCheck(
                 if (Math::rectangleCircleSAT(cc.x, cc.y, halfLen, halfTh, angle, ec.x, ec.y, ec.radius))
                 {
                     toHideProj.push_back(projectile);
+                    
+                    // Play collision sound effect
+                    playCollisionSound(world);
 
                     if (healthArray.containData(en))
                     {
@@ -92,7 +106,7 @@ void CollisionSystem::updateCheck(
                                 if (world.hasComponent<EnemyComponent>(en)) {
                                     auto& enemyComp = world.getComponent<EnemyComponent>(en);
                                     auto* gameplay = dynamic_cast<GamePlay*>(world.getCurrentState().get());
-                                    int bonus = EnemyComponent::getEnemyDef(enemyComp.type).prize; 
+                                    int bonus = EnemyComponent::getEnemyDef(enemyComp.type).getPrize(enemyComp.difficulty); 
                                     gameplay->updateMoney(bonus);
                                 }
                             }
@@ -116,6 +130,10 @@ void CollisionSystem::updateCheck(
                 if (dx * dx + dy * dy <= (pr + ec.radius) * (pr + ec.radius))
                 {
                     toHideProj.push_back(projectile);
+                    
+                    // Play collision sound effect
+                    playCollisionSound(world);
+                    
                     if (healthArray.containData(en))
                     {
                         auto& health = healthArray.getData(en);
@@ -128,7 +146,7 @@ void CollisionSystem::updateCheck(
                                 if (world.hasComponent<EnemyComponent>(en)) {
                                     auto& enemyComp = world.getComponent<EnemyComponent>(en);
                                     auto* gameplay = dynamic_cast<GamePlay*>(world.getCurrentState().get());
-                                    int bonus = EnemyComponent::getEnemyDef(enemyComp.type).prize; 
+                                    int bonus = EnemyComponent::getEnemyDef(enemyComp.type).getPrize(enemyComp.difficulty); 
                                     gameplay->updateMoney(bonus);
                                 }
                             }
@@ -152,6 +170,10 @@ void CollisionSystem::updateCheck(
                 if (dx * dx + dy * dy <= (pr + ec.radius) * (pr + ec.radius))
                 {
                     toHideProj.push_back(projectile);
+                    
+                    // Play collision sound effect
+                    playCollisionSound(world);
+                    
                     if (healthArray.containData(en))
                     {
                         auto& health = healthArray.getData(en);
@@ -164,7 +186,7 @@ void CollisionSystem::updateCheck(
                                 if (world.hasComponent<EnemyComponent>(en)) {
                                     auto& enemyComp = world.getComponent<EnemyComponent>(en);
                                     auto* gameplay = dynamic_cast<GamePlay*>(world.getCurrentState().get());
-                                    int bonus = EnemyComponent::getEnemyDef(enemyComp.type).prize; // Add a 'prize' field to EnemyDef if needed
+                                    int bonus = EnemyComponent::getEnemyDef(enemyComp.type).getPrize(enemyComp.difficulty); // Add a 'prize' field to EnemyDef if needed
                                     gameplay->updateMoney(bonus);
                                 }
                             }
@@ -180,7 +202,7 @@ void CollisionSystem::updateCheck(
         world.getSystem<ProjectilePoolSystem>()->hideUsedProj(world, e);
     }
 
-    float castleRadius = 5.f;
+    float castleRadius = 2.f;
     for (auto& kv : circleArray.getEntityToIndexMap())
     {
         EntityID enemy = kv.first;
@@ -197,7 +219,7 @@ void CollisionSystem::updateCheck(
         {
             std::cout << "[CollisionSystem] Enemy " << enemy << " reached the castle (within radius), destroying.\n";
             auto& enemyComp = world.getComponent<EnemyComponent>(enemy);
-            int damage = static_cast<int>(EnemyComponent::getEnemyDef(enemyComp.type).damage);
+            int damage = static_cast<int>(EnemyComponent::getEnemyDef(enemyComp.type).getDamage(enemyComp.difficulty));
 
             world.getSystem<CastleHPSystem>()->update(world, damage);
             toDestroyEnemies.push_back(enemy);
@@ -206,7 +228,12 @@ void CollisionSystem::updateCheck(
 
 
     for (auto& e : toDestroyEnemies) {
-        world.destroyEntity(e);
+        // Return enemy to pool instead of destroying
+        if (world.hasComponent<EnemyComponent>(e)) {
+            world.getSystem<EnemySpawnSystem>()->returnToPool(world, e);
+        } else {
+            world.destroyEntity(e);
+        }
     }
     toDestroyEnemies.clear();
 }
@@ -218,14 +245,12 @@ void CollisionSystem::update(float deltaTime, World& world)
     auto& projectileArray = world.getComponentArray<ProjectileComponent>();
     auto& towerArray = world.getComponentArray<TowerComponent>();
     auto& healthArray = world.getComponentArray<HealthComponent>();
-    auto& buffArray = world.getComponentArray<BuffComponent>();
 
     updateCheck(velocityArray,
         circleArray,
         projectileArray,
         towerArray,
         healthArray,
-        buffArray,
         world);
 }
 

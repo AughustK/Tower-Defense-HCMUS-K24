@@ -9,7 +9,6 @@
 #include"../Components/ClickComponent.h"
 #include "../Components/PathfindingComponent.h"
 #include "../Components/HealthComponent.h"
-#include "../Components/Buffs.h"
 #include "../Components/CircleComponent.h"
 #include "../Components/TowerComponent.h"
 #include "../Components/ShopComponent.h"
@@ -117,7 +116,6 @@ void World::init()
 
     //set up for collision
     registerComponent<HealthComponent>();
-    registerComponent<BuffComponent>();
     registerComponent<CircleComponent>();
     registerComponent<TowerComponent>();
     registerComponent<ProjectileComponent>();
@@ -129,7 +127,6 @@ void World::init()
     colSig.set(getComponentType<ProjectileComponent>(), true);
     colSig.set(getComponentType<TowerComponent>(), true);
     colSig.set(getComponentType<HealthComponent>(), true);
-    colSig.set(getComponentType<BuffComponent>(), true);
     setSystemSignature<CollisionSystem>(colSig);
 
     //set up for tower spawning

@@ -55,7 +55,6 @@
     <ClInclude Include="header\Components\TowerDef.h" />
     <ClInclude Include="header\Utils\Math.h" />
     <ClInclude Include="header\Managers\TransientArena.h" />
-    <ClInclude Include="header\Components\Buffs.h" />
     <ClInclude Include="header\GameStates\MainMenu.h" />
     <ClInclude Include="header\Components\UISpriteComponent.h" />
     <ClInclude Include="header\Components\UITextComponent.h" />
@@ -93,6 +92,8 @@
     <ClInclude Include="header\GameStates\Defeat.h" />
     <ClInclude Include="header\GameStates\Victory.h" />
     <ClInclude Include="header\Systems\CastleHPSystem.h" />
+    <ClInclude Include="header\Components\DifficultyLevel.h" />
+    <ClInclude Include="header\Components\Difficulty.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\Bg\CreditBackground2Fixed.png" />

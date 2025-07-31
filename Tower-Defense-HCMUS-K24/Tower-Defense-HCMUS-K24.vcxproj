@@ -192,9 +192,10 @@
   <ItemGroup>
     <ClInclude Include="assets\json.hpp" />
     <ClInclude Include="header\Components\AnimationComponent.h" />
-    <ClInclude Include="header\Components\Buffs.h" />
     <ClInclude Include="header\Components\CastleHPComponent.h" />
     <ClInclude Include="header\Components\ClickComponent.h" />
+    <ClInclude Include="header\Components\Difficulty.h" />
+    <ClInclude Include="header\Components\DifficultyLevel.h" />
     <ClInclude Include="header\Components\EnemyComponent.h" />
     <ClInclude Include="header\Components\EnemyDef.h" />
     <ClInclude Include="header\Components\MusicComponent.h" />

@@ -2,7 +2,12 @@
 
 void System::addEntity(EntityID entityID)
 {
-	entities.push_back(entityID);
+	if (std::find(entities.begin(), entities.end(), entityID) == entities.end()) {
+		entities.push_back(entityID);
+	}
+	else {
+		std::cout << "[DEBUG] Tried to add duplicate entity " << entityID << " to system\n";
+	}
 }
 
 void System::removeEntity(EntityID entityID)

@@ -17,7 +17,8 @@ void ProjectilePoolSystem::initPool(World& world, std::size_t count)
 {
     pool.clear();
     pool.reserve(count);
-    for (size_t i = 0; i < count; ++i) {
+    for (size_t i = 0; i < count; ++i) 
+    {
         EntityID e = world.createEntity();
         world.addComponent(e, PositionComponent());
         world.addComponent(e, VelocityComponent());

@@ -24,7 +24,7 @@ void Lobby::onEnter(World& world)
     //bg
     EntityID background = world.createEntity();
     registerEntity(background);
-    const string bgPath = "assets/Bg/Lobby.jpg";
+    const string bgPath = "assets/Bg/Lobby.png";
     SpriteComponent spriteComp0(bgPath, { 0.f, 0.f }, { 1.f, 1.f });
     world.addComponent(background, spriteComp0);
 

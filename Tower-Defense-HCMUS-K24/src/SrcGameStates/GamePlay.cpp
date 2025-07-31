@@ -42,7 +42,12 @@
 EntityID moneyTextId = INVALID_ENTITY;
 int GamePlay::money = 0;
 
-GamePlay::GamePlay(const std::string& mapFilename) : mapFilename(mapFilename)
+GamePlay::GamePlay(const std::string& mapFilename)
+{
+}
+
+GamePlay::GamePlay(const std::string& mapFilename, DifficultyLevel difficulty)
+    : mapFilename(mapFilename), currentDifficulty(difficulty)
 {
     validTowerSpotsPerMap["FireMap"] = { {510, 330}, {760, 330}, \
     {992, 236}, { 828, 430 }, { 995, 430 }, { 580, 525 }, \
@@ -217,6 +222,7 @@ void GamePlay::onEnter(World& world)
 
     money = 100; // Start with 100 money
     world.getSystem<ProjectilePoolSystem>()->initPool(world, 100);
+    world.getSystem<EnemySpawnSystem>()->initPool(world, 200); // Initialize enemy pool
     world.getSystem<CollisionSystem>()->init(mapFilename);
 
     castleEntity = world.createEntity();
@@ -504,7 +510,7 @@ void GamePlay::update(World& world, float dt)
                 }
             }
 
-            world.getSystem<EnemySpawnSystem>()->spawnWave(world, currentWavePath, 1, mapFilename, typeToSpawn);
+            world.getSystem<EnemySpawnSystem>()->spawnFromPool(world, currentWavePath, mapFilename, typeToSpawn, currentDifficulty);
             enemiesToSpawn--;
             enemySpawnTimer = 0.0f;
             if (enemiesToSpawn == 0)

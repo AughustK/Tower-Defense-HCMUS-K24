@@ -37,14 +37,14 @@ void ChooseMap::onEnter(World& world)
     registerEntity(blackFlag);
     const string blackFlagPath = "assets/Bg/BlackFlag.png";
     SpriteComponent spriteComp2(blackFlagPath, { 1100.f, 80.f }, { 0.5f, 0.5f });
-    spriteComp2.onClick = [](EntityID entityId, World& world)
+    spriteComp2.onClick = [this](EntityID entityId, World& world)
         {
             std::cout << "[ChooseMap][HellMap] Clicked\n";
             auto& sound = world.getComponent<SoundComponent>(entityId);
             sound.sound->play();
             sf::sleep(sf::seconds(0.5f));
             const string hellMPath = "HellMap";
-            world.setState(std::make_unique<GamePlay>(hellMPath));
+            world.setState(std::make_unique<GamePlay>(hellMPath, currentDifficulty));
         };
     world.addComponent(blackFlag, soundComp);
     world.addComponent(blackFlag, spriteComp2);
@@ -54,14 +54,14 @@ void ChooseMap::onEnter(World& world)
     registerEntity(blueFlag);
     const string blueFlagPath = "assets/Bg/BlueFlag.png";
     SpriteComponent spriteComp3(blueFlagPath, { 1380.f, 400.f }, { 0.5f, 0.5f });
-    spriteComp3.onClick = [](EntityID entityId, World& world)
+    spriteComp3.onClick = [this](EntityID entityId, World& world)
         {
             std::cout << "[ChooseMap][IceMap] Clicked\n";
             auto& sound = world.getComponent<SoundComponent>(entityId);
             sound.sound->play();
             sf::sleep(sf::seconds(0.5f));
             const string iceMPath = "IceMap";
-            world.setState(std::make_unique<GamePlay>(iceMPath));
+            world.setState(std::make_unique<GamePlay>(iceMPath, currentDifficulty));
         };
     world.addComponent(blueFlag, soundComp);
     world.addComponent(blueFlag, spriteComp3);
@@ -71,14 +71,14 @@ void ChooseMap::onEnter(World& world)
     registerEntity(whiteFlag);
     const string whiteFlagPath = "assets/Bg/WhiteFlag.png";
     SpriteComponent spriteComp4(whiteFlagPath, { 1100.f, 700.f }, { 0.5f, 0.5f });
-    spriteComp4.onClick = [](EntityID entityId, World& world)
+    spriteComp4.onClick = [this](EntityID entityId, World& world)
         {
             std::cout << "[ChooseMap][ParadiselMap] Clicked\n";
             auto& sound = world.getComponent<SoundComponent>(entityId);
             sound.sound->play();
             sf::sleep(sf::seconds(0.5f));
             const string paraMPath = "ParadiseMap";
-            world.setState(std::make_unique<GamePlay>(paraMPath));
+            world.setState(std::make_unique<GamePlay>(paraMPath, currentDifficulty));
         };
     world.addComponent(whiteFlag, soundComp);
     world.addComponent(whiteFlag, spriteComp4);
@@ -88,14 +88,14 @@ void ChooseMap::onEnter(World& world)
     registerEntity(redFlag);
     const string redFlagPath = "assets/Bg/redFlag.png";
     SpriteComponent spriteComp5(redFlagPath, { 400.f, 250.f }, { 0.5f, 0.5f });
-    spriteComp5.onClick = [](EntityID entityId, World& world)
+    spriteComp5.onClick = [this](EntityID entityId, World& world)
         {
             std::cout << "[ChooseMap][FireMap] Clicked\n";
             auto& sound = world.getComponent<SoundComponent>(entityId);
             sound.sound->play();
             sf::sleep(sf::seconds(0.5f));
             const string fireMPath = "FireMap";
-            world.setState(std::make_unique<GamePlay>(fireMPath));
+            world.setState(std::make_unique<GamePlay>(fireMPath, currentDifficulty));
         };
     world.addComponent(redFlag, soundComp);
     world.addComponent(redFlag, spriteComp5);

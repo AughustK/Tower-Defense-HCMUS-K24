@@ -11,6 +11,7 @@
 #include "../../header/Components/PositionComponent.h"
 #include "../../header/Components/ProjectileComponent.h"
 #include "../../header/Components/TowerComponent.h"
+#include "../Components/EnemyDef.h" // For DifficultyLevel
 
 class GamePlay : public GameState 
 {
@@ -19,6 +20,7 @@ private:
     bool isPlacingTower = false;
     TowerComponent::TowerType placingType = TowerComponent::TowerType::Archer;
     int placingLevel = 0;
+    DifficultyLevel currentDifficulty = DifficultyLevel::Normal;
 
     std::string                 mapFilename;
     std::vector<sf::Vector2f>   pathWaypoints;
@@ -63,6 +65,7 @@ private:
 public:
     // construct by map filename or by index
     explicit GamePlay(const std::string& mapFilename);
+    GamePlay(const std::string& mapFilename, DifficultyLevel difficulty);
 
     // State interface
     void onEnter(World& world) override;

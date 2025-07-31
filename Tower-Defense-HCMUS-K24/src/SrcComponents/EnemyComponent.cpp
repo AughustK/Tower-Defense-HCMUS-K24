@@ -70,12 +70,14 @@ std::string EnemyComponent::getAnimationPath(EnemyType t, const string& map)
     return "assets/" + map + "/" + prefix + "Spritesheet/" + "run.png";
 }
 
-void EnemyComponent::loadStats() {
+void EnemyComponent::loadStats(DifficultyLevel diff) {
+    if (diff == DifficultyLevel::Normal) diff = difficulty;
     const EnemyDef& d = getEnemyDef(type);
-    health = d.health;
-    speed = d.speed;
-    damage = d.damage;
+    health = d.getHealth(diff);
+    speed = d.getSpeed(diff);
+    damage = d.getDamage(diff);
     scale = d.scale;
+    prize = d.getPrize(diff);
 }
 
 

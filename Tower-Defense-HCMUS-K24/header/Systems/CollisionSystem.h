@@ -10,7 +10,6 @@
 #include "../Components/TowerComponent.h"
 #include "../Components/VelocityComponent.h"
 #include "../Components/ProjectileComponent.h"
-#include "../Components/Buffs.h"
 #include "../Managers/EntityManager.h"
 #include "System.h"
 #include "../Managers/World.h"
@@ -29,6 +28,9 @@ public:
 
     // Utility: straight?line distance
     float computeDistanceOfTwoPoint(float dX, float dY) const;
+    
+    // Play collision sound effect
+    void playCollisionSound(World& world);
 
     // Main collision check: now includes projectileArray
     void updateCheck(
@@ -37,7 +39,6 @@ public:
         ComponentArray<ProjectileComponent>& projectileArray,
         ComponentArray<TowerComponent>& towerArray,
         ComponentArray<HealthComponent>& healthArray,
-        ComponentArray<BuffComponent>& buffArray,
         World& world);
 
     void update(float deltaTime, World& world);
