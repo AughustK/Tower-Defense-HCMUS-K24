@@ -14,6 +14,8 @@
 #include "../Components/TowerComponent.h"
 #include "../Components/ShopComponent.h"
 #include "../Components/ProjectileComponent.h"
+#include "../Components/CastleHPComponent.h"
+
 
 #include "../Systems/SpriteRenderSystem.h"
 #include "../Systems/TextRenderSystem.h"
@@ -27,6 +29,7 @@
 #include "../Systems/InitializeProjectile.h"
 #include "../Systems/CollisionSystem.h"
 #include "../Systems/TowerSystem.h"
+#include "../Systems/CastleHPSystem.h"
 #include "../GameStates/GamePlay.h"
 
 #include <iostream>
@@ -149,6 +152,13 @@ void World::init()
     projectileSig.set(getComponentType<VelocityComponent>(), true);
     projectileSig.set(getComponentType<CircleComponent>(), true);
     setSystemSignature<ProjectilePoolSystem>(projectileSig);
+
+    //set up for castle health
+    registerComponent<CastleHPComponent>();
+    auto castleHPSystem = registerSystem<CastleHPSystem>();
+    Signature hpSig;
+    hpSig.set(getComponentType<CastleHPComponent>(), true);
+    setSystemSignature<CastleHPSystem>(hpSig);
 }
 
 EntityID World::createEntity()
@@ -158,18 +168,16 @@ EntityID World::createEntity()
 
 void World::destroyEntity(EntityID entityID)
 {
-    // First, remove the entity from all systems
+    // Remove entity from all systems
     systemManager.removeEntitySystem(entityID);
     
-    // Then remove all components
+    // Remove all components from the entity
     componentManager.removeEntityComponent(entityID);
     
-    // Finally destroy the entity in the entity manager
+    // Destroy the entity in the entity manager
     entityManager.destroyEntity(entityID);
     
-    // Now it's safe to make the entity ID available for reuse
-    // This ensures all cleanup is complete before the ID can be reused
-    entityManager.makeEntityAvailableForReuse(entityID);
+    std::cout << "[World] Destroyed entity " << entityID << std::endl;
 }
 
 void World::setState(std::unique_ptr<GameState> state)

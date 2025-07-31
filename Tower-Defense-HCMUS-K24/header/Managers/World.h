@@ -137,6 +137,5 @@ public:
     void update(float deltaTime);
     void requestClose();
     bool isRunning() const;
-    
 };
 

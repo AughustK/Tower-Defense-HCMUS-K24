@@ -23,13 +23,31 @@ void SpriteRenderSystem::update(float deltaTime)
 {
 }
 
-
 void SpriteRenderSystem::clear()
 {
     // Clear animation timers and current frames when the system is reset
     animationTimers.clear();
     currentFrames.clear();
-    std::cout << "[SpriteRenderSystem] Cleared animation data\n";
+    
+    // Clear the entities list to ensure no stale references
+    entities.clear();
+    
+    std::cout << "[SpriteRenderSystem] Cleared animation data and entity list\n";
+}
+
+void SpriteRenderSystem::removeEntity(EntityID entityID)
+{
+    // Remove entity from the entities list
+    auto it = std::find(entities.begin(), entities.end(), entityID);
+    if (it != entities.end()) {
+        entities.erase(it);
+    }
+    
+    // Clean up animation data for this entity
+    animationTimers.erase(entityID);
+    currentFrames.erase(entityID);
+    
+    std::cout << "[SpriteRenderSystem] Removed entity " << entityID << " from system\n";
 }
 
 

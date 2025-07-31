@@ -25,7 +25,7 @@ private:
 
 
     // enemy‐wave control
-    std::vector<int>            waveSizes = { 8, 10, 1 };
+    std::vector<int>            waveSizes = { 8, 10, 10, 1 };
     float                       waveInterval = 6.0f;   // secs between waves
     int                         currentWave = 0;
     float                       spawnTimer = 0.f;
@@ -35,6 +35,7 @@ private:
     float enemySpawnInterval = 1.5f; // seconds between enemies
     std::vector<sf::Vector2f> currentWavePath;
     std::unordered_map<std::string, std::vector<sf::Vector2f>> validTowerSpotsPerMap;
+    std::unordered_map<std::string, sf::Vector2f> castlePos;
 
     EntityID notificationEntity;
     bool notificationActive = false;
@@ -54,6 +55,11 @@ private:
     void upgradeTower(World& world, EntityID towerId);
     void deleteTower(World& world, EntityID towerId);
 
+	//Victory and Defeat conditions
+    EntityID castleEntity;
+    bool victoryTriggered = false;
+
+
 public:
     // construct by map filename or by index
     explicit GamePlay(const std::string& mapFilename);
@@ -66,6 +72,5 @@ public:
     void onExit(World& world) override;
     void spawnTowerIcons(World& world);
 	void spawnWave(World& world);
-    //void spawnInitialEntities(World& world);
     static void updateMoney(int g);
 };

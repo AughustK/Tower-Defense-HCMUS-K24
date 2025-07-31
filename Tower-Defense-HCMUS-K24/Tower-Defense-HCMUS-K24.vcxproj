@@ -153,8 +153,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\SrcComponents\CastleHPComponent.cpp" />
     <ClCompile Include="src\SrcComponents\EnemyComponent.cpp" />
+    <ClCompile Include="src\SrcGameStates\Defeat.cpp" />
     <ClCompile Include="src\SrcGameStates\Resource.cpp" />
+    <ClCompile Include="src\SrcGameStates\Victory.cpp" />
+    <ClCompile Include="src\SrcSystem\CastleHPSystem.cpp" />
     <ClCompile Include="src\SrcSystem\InitializeEnemy.cpp" />
     <ClCompile Include="src\SrcComponents\ClickComponent.cpp" />
     <ClCompile Include="src\SrcComponents\HealthComponent.cpp" />
@@ -189,6 +193,7 @@
     <ClInclude Include="assets\json.hpp" />
     <ClInclude Include="header\Components\AnimationComponent.h" />
     <ClInclude Include="header\Components\Buffs.h" />
+    <ClInclude Include="header\Components\CastleHPComponent.h" />
     <ClInclude Include="header\Components\ClickComponent.h" />
     <ClInclude Include="header\Components\EnemyComponent.h" />
     <ClInclude Include="header\Components\EnemyDef.h" />
@@ -199,6 +204,7 @@
     <ClInclude Include="header\Components\UISliderComponent.h" />
     <ClInclude Include="header\GameStates\ChooseMap.h" />
     <ClInclude Include="header\GameStates\Credit.h" />
+    <ClInclude Include="header\GameStates\Defeat.h" />
     <ClInclude Include="header\GameStates\GamePlay.h" />
     <ClInclude Include="header\GameStates\Help.h" />
     <ClInclude Include="header\GameStates\Lobby.h" />
@@ -209,8 +215,10 @@
     <ClInclude Include="header\GameStates\GameState.h" />
     <ClInclude Include="header\GameStates\Resource.h" />
     <ClInclude Include="header\GameStates\Setting.h" />
+    <ClInclude Include="header\GameStates\Victory.h" />
     <ClInclude Include="header\Managers\AnimationLoad.h" />
     <ClInclude Include="header\Managers\MapLoad.h" />
+    <ClInclude Include="header\Systems\CastleHPSystem.h" />
     <ClInclude Include="header\Systems\InitializeEnemy.h" />
     <ClInclude Include="header\Systems\InitializeProjectile.h" />
     <ClInclude Include="header\Systems\MusicSystem.h" />

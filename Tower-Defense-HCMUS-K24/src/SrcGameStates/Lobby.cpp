@@ -107,20 +107,6 @@ void Lobby::render(World& world, sf::RenderWindow& window)
 {
     auto spriteSystem = world.getSystem<SpriteRenderSystem>();
     spriteSystem->render(world);
-
-    for (EntityID e : world.getEntitiesWithComponent<ClickComponent>())
-    {
-        auto& cc = world.getComponent<ClickComponent>(e);
-        sf::RectangleShape zoneShape;
-        zoneShape.setPosition(0.0f, 450.f);
-        zoneShape.setSize({ 500.f, 450.f });
-        zoneShape.setOutlineColor(sf::Color::Green);
-        zoneShape.setOutlineThickness(2.f);
-        zoneShape.setFillColor(sf::Color(0, 255, 0, 50)); // semi-transparent green
-        window.draw(zoneShape);
-    }
-
-
 }
 
 void Lobby::handleEvent(World& world, sf::Event& event)

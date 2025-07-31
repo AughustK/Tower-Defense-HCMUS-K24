@@ -2,6 +2,9 @@
 #include "../../header/Managers/World.h"
 #include "../../header/Managers/MapLoad.h"
 #include "../../header/GameStates/ChooseMap.h"
+#include "../../header/GameStates/Victory.h"
+#include "../../header/GameStates/Defeat.h"
+#include "../../header/GameStates/PauseGame.h"
 
 #include "../../header/Components/PositionComponent.h"
 #include "../../header/Components/HealthComponent.h"
@@ -16,6 +19,7 @@
 #include "../../header/Components/ShopComponent.h"
 #include "../../header/Components/TowerComponent.h"
 #include "../../header/Components/TowerDef.h"
+#include "../../header/Components/CastleHPComponent.h"
 
 
 #include "../../header/Systems/PathFindingSystem.h"
@@ -28,6 +32,7 @@
 #include "../../header/Systems/MusicSystem.h"
 #include "../../header/Systems/TextRenderSystem.h"
 #include "../../header/Systems/TowerSystem.h"
+#include "../../header/Systems/CastleHPSystem.h"
 
 #include <fstream>
 #include <sstream>
@@ -51,6 +56,11 @@ GamePlay::GamePlay(const std::string& mapFilename) : mapFilename(mapFilename)
 
     validTowerSpotsPerMap["IceMap"] = { {328, 448}, {628, 364}, \
     {916, 320}, { 916, 512 }, { 929, 734 }, { 433, 660 }, { 1088, 909 } };
+
+    castlePos["FireMap"] = { 1252,672 - 3 * 64 };
+    castlePos["HellMap"] = { 17 * 64 + 20,64 - 25 };
+    castlePos["ParadiseMap"] = { 17 * 64 + 52,3 * 64 + 32 };
+    castlePos["IceMap"] = { 1252 - 64,672 - 3 * 64 };
 }
 
 std::optional<sf::Vector2f> getValidPlacementSpot(
@@ -176,7 +186,7 @@ void GamePlay::onEnter(World& world)
             auto& sound = world.getComponent<SoundComponent>(entityId);
             sound.sound->play();
             sf::sleep(sf::seconds(0.5f));
-            world.setState(std::make_unique<ChooseMap>());
+            //world.setState(std::make_unique<PauseMenu>());
         };
     world.addComponent(pauseButton, soundComp);
     world.addComponent(pauseButton, pauseSprite);
@@ -207,6 +217,12 @@ void GamePlay::onEnter(World& world)
 
     money = 100; // Start with 100 money
     world.getSystem<ProjectilePoolSystem>()->initPool(world, 100);
+    world.getSystem<CollisionSystem>()->init(mapFilename);
+
+    castleEntity = world.createEntity();
+    registerEntity(castleEntity);
+    CastleHPComponent hpComp(100, 100, castlePos[mapFilename].x, castlePos[mapFilename].y, 200.f, 20.f);
+    world.addComponent<CastleHPComponent>(castleEntity, hpComp);
 }
 
 void GamePlay::handleEvent(World& world, sf::Event& event)
@@ -334,6 +350,14 @@ void GamePlay::handleEvent(World& world, sf::Event& event)
             world.addComponent(tower, towerSprite);
 
             money -= towerComp.cost;
+
+            const string placeSoundPath = "assets/SFX/PlaceTower.mp3";
+            EntityID soundEntity = world.createEntity();
+            SoundComponent placeSound(placeSoundPath, false);
+            placeSound.sound->setVolume(world.getSystem<SoundSystem>()->globalVolume * 1.5f);
+            world.addComponent(soundEntity, placeSound);
+            placeSound.sound->play();
+
             isPlacingTower = false;
         }
     }
@@ -427,48 +451,59 @@ void GamePlay::update(World& world, float dt)
 
     }
 
-    //Spawn enemies for the current wave
+	// Spawn enemies for the current wave
     if (enemiesToSpawn > 0)
     {
         enemySpawnTimer += dt;
         if (enemySpawnTimer >= enemySpawnInterval)
         {
-            EnemyComponent::EnemyType typeToSpawn = EnemyComponent::EnemyType::FireNormal;
+            bool isOddWave = (currentWave + 1) % 2 == 1;
+
+            EnemyComponent::EnemyType typeToSpawn = EnemyComponent::EnemyType::FireNormal1;
             if (mapFilename == "FireMap")
             {
                 if (currentWave == static_cast<int>(waveSizes.size()) - 1)
                 {
                     typeToSpawn = EnemyComponent::EnemyType::FireBoss;
                 }
+                else {
+                    typeToSpawn = isOddWave ? EnemyComponent::EnemyType::FireNormal1 : EnemyComponent::EnemyType::FireNormal2;
+                }
             }
-            
+
             else if (mapFilename == "IceMap")
             {
-                EnemyComponent::EnemyType typeToSpawn = EnemyComponent::EnemyType::IceNormal;
                 if (currentWave == static_cast<int>(waveSizes.size()) - 1)
                 {
                     typeToSpawn = EnemyComponent::EnemyType::IceBoss;
+                }
+                else {
+                    typeToSpawn = isOddWave ? EnemyComponent::EnemyType::IceNormal1 : EnemyComponent::EnemyType::IceNormal2;
                 }
             }
 
             else if (mapFilename == "ParadiseMap")
             {
-                EnemyComponent::EnemyType typeToSpawn = EnemyComponent::EnemyType::ParadiseNormal;
                 if (currentWave == static_cast<int>(waveSizes.size()) - 1)
                 {
                     typeToSpawn = EnemyComponent::EnemyType::ParadiseBoss;
+                }
+                else {
+                    typeToSpawn = isOddWave ? EnemyComponent::EnemyType::ParadiseNormal1 : EnemyComponent::EnemyType::ParadiseNormal2;
                 }
             }
 
             else if (mapFilename == "HellMap")
             {
-                EnemyComponent::EnemyType typeToSpawn = EnemyComponent::EnemyType::HellNormal;
                 if (currentWave == static_cast<int>(waveSizes.size()) - 1)
                 {
                     typeToSpawn = EnemyComponent::EnemyType::HellBoss;
                 }
+                else {
+                    typeToSpawn = isOddWave ? EnemyComponent::EnemyType::HellNormal1 : EnemyComponent::EnemyType::HellNormal2;
+                }
             }
-            
+
             world.getSystem<EnemySpawnSystem>()->spawnWave(world, currentWavePath, 1, mapFilename, typeToSpawn);
             enemiesToSpawn--;
             enemySpawnTimer = 0.0f;
@@ -478,6 +513,27 @@ void GamePlay::update(World& world, float dt)
             }
         }
         spawnTimer = 0.f;
+    }
+
+
+	// Check for victory or defeat conditions
+    if (!victoryTriggered &&
+        currentWave >= static_cast<int>(waveSizes.size()) &&
+        world.getComponentArray<EnemyComponent>().getEntityToIndexMap().empty())
+    {
+        std::cout << "[GamePlay] Player wins!\n";
+        victoryTriggered = true;
+
+        sf::sleep(sf::seconds(1.f));
+        world.setState(std::make_unique<Victory>());
+        return;
+    }
+
+    auto& hpComp = world.getComponent<CastleHPComponent>(castleEntity);
+    if (hpComp.currentHP == 0) {
+        sf::sleep(sf::seconds(1.f));
+        world.setState(std::make_unique<Defeat>());
+        return;
     }
 
 
@@ -551,6 +607,9 @@ void GamePlay::render(World& world, sf::RenderWindow& window)
         debugDot.setPosition(wp.x, wp.y);
         window.draw(debugDot);
     }
+
+    auto castleHPSystem = world.getSystem<CastleHPSystem>();
+    castleHPSystem->render(world);
 }
 
 void GamePlay::spawnTowerIcons(World& world)
@@ -819,10 +878,13 @@ void GamePlay::upgradeTower(World& world, EntityID towerId)
     money -= upgradeCost;
 
     // Play upgrade sound
-    const string upgradeSoundPath = "assets/SFX/MouseClick.mp3";
+    const string upgradeSoundPath = "assets/SFX/PlaceTower.mp3";
+    EntityID soundEntity = world.createEntity();
     SoundComponent upgradeSound(upgradeSoundPath, false);
-    upgradeSound.sound->setVolume(world.getSystem<SoundSystem>()->globalVolume);
+    upgradeSound.sound->setVolume(world.getSystem<SoundSystem>()->globalVolume * 1.5f);
+    world.addComponent(soundEntity, upgradeSound);
     upgradeSound.sound->play();
+
 
     // Update the tower sprite
     if (world.hasComponent<SpriteComponent>(towerId))
@@ -840,7 +902,7 @@ void GamePlay::upgradeTower(World& world, EntityID towerId)
     if ((towerComp.type == TowerComponent::TowerType::Archer && towerComp.level == 1) ||
         (towerComp.type == TowerComponent::TowerType::Mage && towerComp.level == 1))
     {
-        spritePos.y -= 12;
+        spritePos.y -= 14;
         spritePos.x += 10;
     }
 
@@ -880,10 +942,12 @@ void GamePlay::deleteTower(World& world, EntityID towerId)
     int refund = totalCost / 2;
     money += refund;
 
-    // Play delete sound
-    const string deleteSoundPath = "assets/SFX/MouseClick.mp3";
+    // Play delete sound    
+    const string deleteSoundPath = "assets/SFX/DestroyTower.mp3";
+    EntityID soundEntity = world.createEntity();
     SoundComponent deleteSound(deleteSoundPath, false);
-    deleteSound.sound->setVolume(world.getSystem<SoundSystem>()->globalVolume);
+    deleteSound.sound->setVolume(world.getSystem<SoundSystem>()->globalVolume * 0.8f);
+    world.addComponent(soundEntity, deleteSound);
     deleteSound.sound->play();
 
     // Destroy the tower

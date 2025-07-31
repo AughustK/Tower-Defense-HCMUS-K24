@@ -26,7 +26,7 @@ struct TowerDef
 static constexpr TowerDef TOWER_DEFS[] =
 {
     //           type                       fireRate       projSpeed           damage              range      projRad    projLen  scale             cost
-    { TowerComponent::TowerType::Archer, {0.8f, 1.3f},  {200.0f, 350.0f},  {120.0f, 220.0f}, {140.0f, 240.0f}, 5.0f,    14.0f, {3.2f, 2.2f},      {20, 30} },
-    { TowerComponent::TowerType::Mage,   {1.0f, 1.8f},  {250.0f, 300.0f},  {170.0f, 330.0f}, {160.0f, 220.0f}, 6.0f,     0.0f, {2.2f, 2.2f},      {30, 40} },
-    { TowerComponent::TowerType::Cannon, {0.8f, 1.2f},  {200.0f, 250.0f},  {270.0f, 470.0f}, {200.0f, 260.0f}, 8.0f,     0.0f, {0.8f, 1.0f},      {40, 50} },
+    { TowerComponent::TowerType::Archer, {1.0f, 1.6f},  {200.0f, 350.0f},  {200.0f, 300.0f}, {140.0f, 240.0f}, 5.0f,    14.0f, {3.2f, 2.2f},      {20, 50} },
+    { TowerComponent::TowerType::Mage,   {0.8f, 1.3f},  {250.0f, 300.0f},  {270.0f, 420.0f}, {160.0f, 220.0f}, 6.0f,     0.0f, {2.2f, 2.2f},      {30, 70} },
+    { TowerComponent::TowerType::Cannon, {0.6f, 1.0f},  {200.0f, 250.0f},  {380.0f, 570.0f}, {200.0f, 260.0f}, 8.0f,     0.0f, {0.8f, 1.2f},      {55, 80} },
 };

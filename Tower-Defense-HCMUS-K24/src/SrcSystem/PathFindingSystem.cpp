@@ -91,8 +91,7 @@ void PathFollowingSystem::update(float deltaTime, World& world)
         else
         {
             velComponent.x = velComponent.y = 0.f;
-            // No more waypoints: stop moving
-            // Optionally, set velocity to zero or trigger an event
         }
     }
 }
+

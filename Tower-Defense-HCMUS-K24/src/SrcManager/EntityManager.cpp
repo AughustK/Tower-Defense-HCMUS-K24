@@ -22,7 +22,10 @@ EntityID EntityManager::createEntity()
 void EntityManager::destroyEntity(EntityID entity)
 {
     assert(entity < MAX_ENTITIES && "Entity out of range");
+    
+    // Clear the entity's signature to ensure no stale component references
     signatures[entity].reset();
+    
     // Don't immediately make entity available for reuse
     // This will be done by a separate call to makeEntityAvailableForReuse()
     --livingEntity;
@@ -31,6 +34,11 @@ void EntityManager::destroyEntity(EntityID entity)
 void EntityManager::makeEntityAvailableForReuse(EntityID entity)
 {
     assert(entity < MAX_ENTITIES && "Entity out of range");
+    
+    // Double-check that the signature is cleared
+    signatures[entity].reset();
+    
+    // Add to available entities for reuse
     availableEntities.push_back(entity);
 }
 
@@ -54,6 +62,6 @@ Signature EntityManager::getSignature(EntityID entity) const
 
 uint32_t EntityManager::getLivingEntityCount() const noexcept
 {
-	return livingEntity;
+    return livingEntity;
 }
 

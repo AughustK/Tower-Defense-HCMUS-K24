@@ -29,6 +29,7 @@ public:
     virtual ~System() = default;
 
     virtual void update(float deltaTime) = 0;
+    virtual void clear() { entities.clear(); }
 
 	virtual void addEntity(EntityID entityID);
 	virtual void removeEntity(EntityID entityID);

@@ -8,17 +8,19 @@ using std::string;
 struct EnemyDef;  // forward–decl
 
 struct EnemyComponent {
-    enum class EnemyType : uint8_t { FireNormal = 0, FireBoss,
-                                     IceNormal, IceBoss,
-                                     HellNormal, HellBoss,
-                                     ParadiseNormal, ParadiseBoss};
+    enum class EnemyType : uint8_t {
+        FireNormal1 = 0, FireNormal2, FireBoss,
+        IceNormal1, IceNormal2, IceBoss,
+        HellNormal1, HellNormal2, HellBoss,
+        ParadiseNormal1, ParadiseNormal2, ParadiseBoss
+    };
     float x = 0, y = 0;
     float health = 0, speed = 0, damage = 0, scale = 0, prize = 0;
     uint32_t pathIndex = 0;
-    EnemyType type = EnemyType::FireNormal;
+    EnemyType type = EnemyType::FireNormal1;
     EntityID target = INVALID_ENTITY;
 
-    EnemyComponent(float tX = 0, float tY = 0, EnemyType t = EnemyType::FireNormal)
+    EnemyComponent(float tX = 0, float tY = 0, EnemyType t = EnemyType::FireNormal1)
         : x(tX), y(tY), type(t)
     {
         loadStats();

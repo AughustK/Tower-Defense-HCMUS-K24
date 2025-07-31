@@ -8,6 +8,8 @@
 #include "../../header/Managers/World.h"
 #include "../../header/GameStates/Setting.h"
 #include "../../header/GameStates/Lobby.h"
+#include "../../header/GameStates/Victory.h"
+#include "../../header/GameStates/Defeat.h"
 
 void MainMenu::handleEvent(World& world, sf::Event& event)
 {
@@ -77,9 +79,9 @@ void MainMenu::onEnter(World& world)
     const string bgPath = "assets/Bg/MenuV3.png";
     SpriteComponent spriteComp(bgPath, { 0.f, 0.f }, { 1.f, 1.f });
     world.addComponent(background, spriteComp);
-    
+
     //bgm
-    if ((world.getSystem<MusicSystem>()->getEntity()).size() == 0) 
+    if ((world.getSystem<MusicSystem>()->getEntity()).size() == 0)
     {
         EntityID bgm = world.createEntity();
         registerEntity(bgm);

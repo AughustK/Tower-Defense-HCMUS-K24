@@ -72,7 +72,7 @@ void PauseMenu::onEnter(World& world)
         };
     world.addComponent(quitButton, quitText);
 
-   
+
 }
 
 void PauseMenu::handleEvent(World& world, sf::Event& event)
@@ -123,7 +123,7 @@ void PauseMenu::update(World& world, float dt)
 void PauseMenu::render(World& world, sf::RenderWindow& window)
 {
     auto spriteRenderSystem = world.getSystem<SpriteRenderSystem>();
-    if (spriteRenderSystem && spriteRenderSystem->isEnabled()) 
+    if (spriteRenderSystem && spriteRenderSystem->isEnabled())
     {
         spriteRenderSystem->render(world);
     }

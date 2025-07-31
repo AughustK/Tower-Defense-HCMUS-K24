@@ -74,7 +74,11 @@ EntityID ProjectilePoolSystem::spawn(World& world,
     sprite.sprite.setPosition(startX, startY);
 
     float scale = TOWER_DEFS[static_cast<int>(world.getComponent<TowerComponent>(owner).type)].scale[level];
-    sprite.sprite.setScale(scale + 1, scale + 1);
+    if(world.getComponent<TowerComponent>(owner).type == TowerComponent::TowerType::Archer) 
+    {
+        scale = -0.5f;
+	}
+    sprite.sprite.setScale(scale + 2.0f, scale + 2.0f);
 
     return e;
 }
