@@ -58,6 +58,11 @@ void CollisionSystem::updateCheck(
         const float screenTop = 0.f;
         const float screenBottom = 1080.f;
 
+        if (cc.x < screenLeft || cc.x > screenRight || cc.y < screenTop || cc.y > screenBottom) {
+            toHideProj.push_back(projectile);
+            continue;
+        }
+
         // Damage from owning tower
         int damage = 0;
         auto& pc = projectileArray.getData(projectile);

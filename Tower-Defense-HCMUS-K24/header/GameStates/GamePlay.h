@@ -61,7 +61,6 @@ private:
     EntityID castleEntity;
     bool victoryTriggered = false;
 
-
 public:
     // construct by map filename or by index
     explicit GamePlay(const std::string& mapFilename);

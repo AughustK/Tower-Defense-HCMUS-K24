@@ -2,8 +2,10 @@
 #include "../../header/Components/SoundComponent.h"
 #include "../../header/Components/MusicComponent.h"
 #include "../../header/Components/ClickComponent.h"
+#include "../../header/Components/UITextComponent.h"
 
 #include "../../header/Systems/SoundSystem.h"
+#include "../../header/Systems/TextRenderSystem.h"
 #include "../../header/Systems/MusicSystem.h"
 #include "../../header/GameStates/ChooseMap.h"
 #include "../../header/GameStates/Lobby.h"
@@ -43,8 +45,9 @@ void ChooseMap::onEnter(World& world)
             auto& sound = world.getComponent<SoundComponent>(entityId);
             sound.sound->play();
             sf::sleep(sf::seconds(0.5f));
-            const string hellMPath = "HellMap";
-            world.setState(std::make_unique<GamePlay>(hellMPath, currentDifficulty));
+
+            pendingMap = "HellMap";
+            showDifficultyMenu(world);
         };
     world.addComponent(blackFlag, soundComp);
     world.addComponent(blackFlag, spriteComp2);
@@ -60,8 +63,8 @@ void ChooseMap::onEnter(World& world)
             auto& sound = world.getComponent<SoundComponent>(entityId);
             sound.sound->play();
             sf::sleep(sf::seconds(0.5f));
-            const string iceMPath = "IceMap";
-            world.setState(std::make_unique<GamePlay>(iceMPath, currentDifficulty));
+            pendingMap = "IceMap";
+            showDifficultyMenu(world);
         };
     world.addComponent(blueFlag, soundComp);
     world.addComponent(blueFlag, spriteComp3);
@@ -77,8 +80,8 @@ void ChooseMap::onEnter(World& world)
             auto& sound = world.getComponent<SoundComponent>(entityId);
             sound.sound->play();
             sf::sleep(sf::seconds(0.5f));
-            const string paraMPath = "ParadiseMap";
-            world.setState(std::make_unique<GamePlay>(paraMPath, currentDifficulty));
+            pendingMap = "ParadiseMap";
+            showDifficultyMenu(world);
         };
     world.addComponent(whiteFlag, soundComp);
     world.addComponent(whiteFlag, spriteComp4);
@@ -94,8 +97,8 @@ void ChooseMap::onEnter(World& world)
             auto& sound = world.getComponent<SoundComponent>(entityId);
             sound.sound->play();
             sf::sleep(sf::seconds(0.5f));
-            const string fireMPath = "FireMap";
-            world.setState(std::make_unique<GamePlay>(fireMPath, currentDifficulty));
+            pendingMap = "FireMap";
+            showDifficultyMenu(world);
         };
     world.addComponent(redFlag, soundComp);
     world.addComponent(redFlag, spriteComp5);
@@ -121,30 +124,89 @@ void ChooseMap::render(World& world, sf::RenderWindow& window)
 {
     auto spriteSystem = world.getSystem<SpriteRenderSystem>();
     spriteSystem->render(world);
+
+    auto textSystem = world.getSystem<TextRenderSystem>();
+    textSystem->render(world);
 }
 
 void ChooseMap::handleEvent(World& world, sf::Event& event)
 {
-    auto entities = world.getEntitiesWithComponent<SpriteComponent>();
-    if (event.type == sf::Event::MouseButtonPressed &&
-        event.mouseButton.button == sf::Mouse::Left)
-    {
-        Vector2f mousePos = world.window.mapPixelToCoords(
+    sf::Vector2f mousePos;
+    if (event.type == sf::Event::MouseMoved) {
+        mousePos = world.window.mapPixelToCoords(
+            { event.mouseMove.x, event.mouseMove.y });
+    }
+    else if (event.type == sf::Event::MouseButtonPressed) {
+        mousePos = world.window.mapPixelToCoords(
             { event.mouseButton.x, event.mouseButton.y });
-        for (EntityID e : entities)
+    }
+
+    if (showingDifficultyMenu)
+    {
+        if (event.type == sf::Event::MouseMoved)
         {
-            auto& spriteComp = world.getComponent<SpriteComponent>(e);
-            if (spriteComp.tryClick(mousePos, e, world))
+            for (EntityID btn : difficultyButtons)
             {
-                return;
+                auto& tc = world.getComponent<TextComponent>(btn);
+                tc.tryHover(mousePos, btn, world);
             }
         }
+        else if (event.type == sf::Event::MouseButtonPressed &&
+            event.mouseButton.button == sf::Mouse::Left)
+        {
+            bool clickedDifficulty = false;
+            for (EntityID btn : difficultyButtons)
+            {
+                auto& tc = world.getComponent<TextComponent>(btn);
+                if (tc.tryClick(mousePos, btn, world))
+                {
+                    clickedDifficulty = true;
+                    break;
+                }
+            }
+            if (!clickedDifficulty)
+            {
+                for (EntityID btn : difficultyButtons)
+                    world.destroyEntity(btn);
+                difficultyButtons.clear();
+                showingDifficultyMenu = false;
+                pendingMap.reset();
+            }
+        }
+        return; 
+    }
+
+    if (event.type == sf::Event::MouseMoved)
+    {
+        for (EntityID e : world.getEntitiesWithComponent<TextComponent>())
+        {
+            auto& tc = world.getComponent<TextComponent>(e);
+            tc.tryHover(mousePos, e, world);
+        }
+    }
+    else if (event.type == sf::Event::MouseButtonPressed &&
+        event.mouseButton.button == sf::Mouse::Left)
+    {
+        // click TextComponent
+        for (EntityID e : world.getEntitiesWithComponent<TextComponent>())
+        {
+            auto& tc = world.getComponent<TextComponent>(e);
+            if (tc.tryClick(mousePos, e, world))
+                return;
+        }
+        // click SpriteComponent
+        for (EntityID e : world.getEntitiesWithComponent<SpriteComponent>())
+        {
+            auto& sp = world.getComponent<SpriteComponent>(e);
+            if (sp.tryClick(mousePos, e, world))
+                return;
+        }
+        // click ClickComponent
         for (EntityID e : world.getEntitiesWithComponent<ClickComponent>())
         {
-            auto& clickComp = world.getComponent<ClickComponent>(e);
-            if (clickComp.tryClick(mousePos, e, world)) {
+            auto& cc = world.getComponent<ClickComponent>(e);
+            if (cc.tryClick(mousePos, e, world))
                 return;
-            }
         }
     }
 }
@@ -154,3 +216,67 @@ void ChooseMap::update(World& world, float dt)
     auto musicSystem = world.getSystem<MusicSystem>();
     if (musicSystem) musicSystem->play(world);
 }
+
+#include "../../header/Components/UITextComponent.h"
+
+void ChooseMap::showDifficultyMenu(World& world)
+{
+    showingDifficultyMenu = true;
+    difficultyButtons.clear();
+
+    auto winSize = world.window.getSize();        // sf::Vector2u
+    float centerX = winSize.x * 0.5f;
+    float centerY = winSize.y * 0.5f;
+
+    const string fontPath = "assets/Font/Minecraft-Regular.otf";
+    std::vector<std::pair<std::string, DifficultyLevel>> options = {
+        {"EASY",   DifficultyLevel::Easy},
+        {"NORMAL", DifficultyLevel::Normal},
+        {"HARD",   DifficultyLevel::Hard}
+    };
+
+    float spacingY = 100.f;
+    float totalSpan = spacingY * (options.size() - 1);
+    float startY = centerY - totalSpan * 0.5f;
+
+    for (size_t i = 0; i < options.size(); ++i) {
+        EntityID btn = world.createEntity();
+        registerEntity(btn);
+
+        TextComponent tc(
+            options[i].first,                
+            48,                              
+            fontPath,
+            sf::Color::White,
+            { centerX, startY + spacingY * float(i) },
+            true,                            
+            sf::Color::Black,
+            5.f                              
+        );
+
+
+        tc.onClick = [this, lvl = options[i].second, &world](EntityID, World&)
+            {
+                this->selectedDifficulty = lvl;
+
+                for (EntityID d : difficultyButtons)
+                    world.destroyEntity(d);
+                difficultyButtons.clear();
+                showingDifficultyMenu = false;
+
+                if (pendingMap.has_value()) {
+                    world.setState(
+                        std::make_unique<GamePlay>(
+                            pendingMap.value(),
+                            this->selectedDifficulty
+                        )
+                    );
+                }
+            };
+
+        world.addComponent(btn, tc);
+        difficultyButtons.push_back(btn);
+    }
+}
+
+

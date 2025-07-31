@@ -111,8 +111,6 @@ void GamePlay::onEnter(World& world)
             << p.x << ", " << p.y << ")\n";
     }
 
-
-
     const string soundPath = "assets/SFX/MouseClick.mp3";
     const string musicPath = "assets/SFX/Music/Map/" + mapFilename + ".mp3";
     SoundComponent soundComp(soundPath, false);
@@ -225,6 +223,7 @@ void GamePlay::onEnter(World& world)
     world.getSystem<EnemySpawnSystem>()->initPool(world, 200); // Initialize enemy pool
     world.getSystem<CollisionSystem>()->init(mapFilename);
 
+    //create castle hp
     castleEntity = world.createEntity();
     registerEntity(castleEntity);
     CastleHPComponent hpComp(100, 100, castlePos[mapFilename].x, castlePos[mapFilename].y, 200.f, 20.f);
