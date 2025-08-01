@@ -61,6 +61,14 @@ private:
     EntityID castleEntity;
     bool victoryTriggered = false;
 
+    //wave info
+    EntityID waveInfoID;
+
+    //money delta
+    EntityID moneyDeltaID;
+    float deltaTextTimer = 0.f;
+    bool deltaVisible = false;
+
 public:
     // construct by map filename or by index
     explicit GamePlay(const std::string& mapFilename);
@@ -74,5 +82,5 @@ public:
     void onExit(World& world) override;
     void spawnTowerIcons(World& world);
 	void spawnWave(World& world);
-    static void updateMoney(int g);
+    void updateMoney(int g, World& world);
 };

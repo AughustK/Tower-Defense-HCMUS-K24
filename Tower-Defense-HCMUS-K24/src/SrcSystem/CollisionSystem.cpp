@@ -112,7 +112,7 @@ void CollisionSystem::updateCheck(
                                     auto& enemyComp = world.getComponent<EnemyComponent>(en);
                                     auto* gameplay = dynamic_cast<GamePlay*>(world.getCurrentState().get());
                                     int bonus = EnemyComponent::getEnemyDef(enemyComp.type).getPrize(enemyComp.difficulty); 
-                                    gameplay->updateMoney(bonus);
+                                    gameplay->updateMoney(bonus, world);
                                 }
                             }
                         }
@@ -152,7 +152,7 @@ void CollisionSystem::updateCheck(
                                     auto& enemyComp = world.getComponent<EnemyComponent>(en);
                                     auto* gameplay = dynamic_cast<GamePlay*>(world.getCurrentState().get());
                                     int bonus = EnemyComponent::getEnemyDef(enemyComp.type).getPrize(enemyComp.difficulty); 
-                                    gameplay->updateMoney(bonus);
+                                    gameplay->updateMoney(bonus, world);
                                 }
                             }
                         }
@@ -192,7 +192,7 @@ void CollisionSystem::updateCheck(
                                     auto& enemyComp = world.getComponent<EnemyComponent>(en);
                                     auto* gameplay = dynamic_cast<GamePlay*>(world.getCurrentState().get());
                                     int bonus = EnemyComponent::getEnemyDef(enemyComp.type).getPrize(enemyComp.difficulty); // Add a 'prize' field to EnemyDef if needed
-                                    gameplay->updateMoney(bonus);
+                                    gameplay->updateMoney(bonus, world);
                                 }
                             }
                         }

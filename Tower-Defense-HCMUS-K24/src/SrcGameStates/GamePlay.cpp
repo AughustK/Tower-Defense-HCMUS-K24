@@ -148,8 +148,48 @@ void GamePlay::onEnter(World& world)
     registerEntity(moneyTextId);
 
     std::string moneyStr = std::to_string(money);
-    TextComponent moneyText(moneyStr, 70, fontPath, sf::Color::Yellow, { 95.f, 20.f }, true, sf::Color::Black, 4.f);
+    TextComponent moneyText(moneyStr, 70, fontPath, sf::Color::Yellow, { 95.f, 20.f }, false, sf::Color::Black, 4.f);
     world.addComponent(moneyTextId, moneyText);
+
+    // difficulty info
+    EntityID diffID = world.createEntity();
+    registerEntity(diffID);
+
+    std::string diffStr;
+    sf::Color diffColor;
+
+    switch (currentDifficulty)
+    {
+    case DifficultyLevel::Easy:
+        diffStr = "Difficulty: Easy";
+        diffColor = sf::Color::Green;
+        break;
+    case DifficultyLevel::Normal:
+        diffStr = "Difficulty: Normal";
+        diffColor = sf::Color::Yellow;
+        break;
+    case DifficultyLevel::Hard:
+        diffStr = "Difficulty: Hard";
+        diffColor = sf::Color::Red;
+        break;
+    }
+
+    TextComponent diffText(diffStr, 40, fontPath, diffColor, { 165.f, 88.f },false, sf::Color::Black, 4.f);
+    world.addComponent(diffID, diffText);
+
+    //Wave info
+    waveInfoID = world.createEntity();
+    registerEntity(waveInfoID);
+    std::string waveInfoStr = "Wave: "+std::to_string(currentWave+1)+"/4";
+    TextComponent waveInfoText(waveInfoStr, 40, fontPath, sf::Color::White, { 110.f, 130.f }, false, sf::Color::Black, 4.f);
+    world.addComponent(waveInfoID, waveInfoText);
+
+    //money delta
+    moneyDeltaID = world.createEntity();
+    registerEntity(moneyDeltaID);
+
+    TextComponent deltaText("", 50, fontPath, sf::Color::Green, { 180.f, 20.f }, false, sf::Color::Black, 2.f);
+    world.addComponent(moneyDeltaID, deltaText);
 
     // coin Icon
     EntityID coinIcon = world.createEntity();
@@ -355,6 +395,17 @@ void GamePlay::handleEvent(World& world, sf::Event& event)
             world.addComponent(tower, towerSprite);
 
             money -= towerComp.cost;
+            if (world.hasComponent<TextComponent>(moneyDeltaID)) {
+                auto& dtxt = world.getComponent<TextComponent>(moneyDeltaID);
+                dtxt.setString("-" + std::to_string(towerComp.cost));
+                sf::FloatRect bounds = dtxt.txt.getLocalBounds();
+                dtxt.txt.setOrigin(bounds.width / 2.f,
+                    bounds.height / 2.f);
+                dtxt.txt.setPosition(250.f, 30.f);
+                dtxt.txt.setFillColor(sf::Color::Red);
+                deltaTextTimer = 0.f;
+                deltaVisible = true;
+            }
 
             const string placeSoundPath = "assets/SFX/PlaceTower.mp3";
             EntityID soundEntity = world.createEntity();
@@ -579,11 +630,44 @@ void GamePlay::update(World& world, float dt)
         auto& text = world.getComponent<TextComponent>(moneyTextId);
         text.setString(std::to_string(money));
     }
+
+    //update wave
+    if (world.hasComponent<TextComponent>(waveInfoID))
+    {
+        auto& waveText = world.getComponent<TextComponent>(waveInfoID);
+        waveText.setString("Wave: " + std::to_string(currentWave + 1) + "/4");
+    }
+
+    //show money
+    if (deltaVisible)
+    {
+        deltaTextTimer += dt;
+        if (deltaTextTimer >= 0.5f)
+        {
+            if (world.hasComponent<TextComponent>(moneyDeltaID))
+            {
+                auto& deltaText = world.getComponent<TextComponent>(moneyDeltaID);
+                deltaText.setString("");
+            }
+            deltaVisible = false;
+        }
+    }
 }
 
-void GamePlay::updateMoney(int g)
+void GamePlay::updateMoney(int g, World& world)
 {
     money += g;
+    if (world.hasComponent<TextComponent>(moneyDeltaID)) {
+        auto& dtxt = world.getComponent<TextComponent>(moneyDeltaID);
+        dtxt.setString("+" + std::to_string(g));
+        sf::FloatRect bounds = dtxt.txt.getLocalBounds();
+        dtxt.txt.setOrigin(bounds.width / 2.f,
+            bounds.height / 2.f);
+        dtxt.txt.setPosition(250.f, 30.f);
+        dtxt.txt.setFillColor(sf::Color::Green);
+        deltaTextTimer = 0.f;
+        deltaVisible = true;
+    }
 }
 
 void GamePlay::spawnWave(World& world)
@@ -881,6 +965,17 @@ void GamePlay::upgradeTower(World& world, EntityID towerId)
     // Upgrade the tower
     towerComp.upgrade();
     money -= upgradeCost;
+    if (world.hasComponent<TextComponent>(moneyDeltaID)) {
+        auto& dtxt = world.getComponent<TextComponent>(moneyDeltaID);
+        dtxt.setString("-" + std::to_string(upgradeCost));
+        sf::FloatRect bounds = dtxt.txt.getLocalBounds();
+        dtxt.txt.setOrigin(bounds.width / 2.f,
+            bounds.height / 2.f);
+        dtxt.txt.setPosition(250.f, 30.f);
+        dtxt.txt.setFillColor(sf::Color::Red);
+        deltaTextTimer = 0.f;
+        deltaVisible = true;
+    }
 
     // Play upgrade sound
     const string upgradeSoundPath = "assets/SFX/PlaceTower.mp3";
@@ -946,6 +1041,17 @@ void GamePlay::deleteTower(World& world, EntityID towerId)
     // Refund half the cost
     int refund = totalCost / 2;
     money += refund;
+    if (world.hasComponent<TextComponent>(moneyDeltaID)) {
+        auto& dtxt = world.getComponent<TextComponent>(moneyDeltaID);
+        dtxt.setString("+" + std::to_string(refund));
+        sf::FloatRect bounds = dtxt.txt.getLocalBounds();
+        dtxt.txt.setOrigin(bounds.width / 2.f,
+            bounds.height / 2.f);
+        dtxt.txt.setPosition(250.f, 30.f);
+        dtxt.txt.setFillColor(sf::Color::Green);
+        deltaTextTimer = 0.f;
+        deltaVisible = true;
+    }
 
     // Play delete sound    
     const string deleteSoundPath = "assets/SFX/DestroyTower.mp3";

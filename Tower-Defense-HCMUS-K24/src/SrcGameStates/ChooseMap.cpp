@@ -239,19 +239,22 @@ void ChooseMap::showDifficultyMenu(World& world)
     float totalSpan = spacingY * (options.size() - 1);
     float startY = centerY - totalSpan * 0.5f;
 
+    vector<sf::Color> btnColor = { Color::Green, Color::Yellow, Color::Red };
+
     for (size_t i = 0; i < options.size(); ++i) {
         EntityID btn = world.createEntity();
         registerEntity(btn);
 
         TextComponent tc(
-            options[i].first,                
-            48,                              
+            options[i].first,
+            48,
             fontPath,
-            sf::Color::White,
+            Color::White,
             { centerX, startY + spacingY * float(i) },
-            true,                            
+            true,
             sf::Color::Black,
-            5.f                              
+            5.f,
+            btnColor[i]
         );
 
 
