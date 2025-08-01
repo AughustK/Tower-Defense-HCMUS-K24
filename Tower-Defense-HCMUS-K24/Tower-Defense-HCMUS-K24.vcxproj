@@ -155,10 +155,12 @@
   <ItemGroup>
     <ClCompile Include="src\SrcComponents\CastleHPComponent.cpp" />
     <ClCompile Include="src\SrcComponents\EnemyComponent.cpp" />
+    <ClCompile Include="src\SrcComponents\EnemyHPComponent.cpp" />
     <ClCompile Include="src\SrcGameStates\Defeat.cpp" />
     <ClCompile Include="src\SrcGameStates\Resource.cpp" />
     <ClCompile Include="src\SrcGameStates\Victory.cpp" />
     <ClCompile Include="src\SrcSystem\CastleHPSystem.cpp" />
+    <ClCompile Include="src\SrcSystem\EnemyHPSystem.cpp" />
     <ClCompile Include="src\SrcSystem\InitializeEnemy.cpp" />
     <ClCompile Include="src\SrcComponents\ClickComponent.cpp" />
     <ClCompile Include="src\SrcComponents\HealthComponent.cpp" />
@@ -198,6 +200,7 @@
     <ClInclude Include="header\Components\DifficultyLevel.h" />
     <ClInclude Include="header\Components\EnemyComponent.h" />
     <ClInclude Include="header\Components\EnemyDef.h" />
+    <ClInclude Include="header\Components\EnemyHPComponent.h" />
     <ClInclude Include="header\Components\MusicComponent.h" />
     <ClInclude Include="header\Components\PathfindingComponent.h" />
     <ClInclude Include="header\Components\ShopComponent.h" />
@@ -220,6 +223,7 @@
     <ClInclude Include="header\Managers\AnimationLoad.h" />
     <ClInclude Include="header\Managers\MapLoad.h" />
     <ClInclude Include="header\Systems\CastleHPSystem.h" />
+    <ClInclude Include="header\Systems\EnemyHPSystem.h" />
     <ClInclude Include="header\Systems\InitializeEnemy.h" />
     <ClInclude Include="header\Systems\InitializeProjectile.h" />
     <ClInclude Include="header\Systems\MusicSystem.h" />

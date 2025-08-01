@@ -33,11 +33,13 @@
 #include "../../header/Systems/TextRenderSystem.h"
 #include "../../header/Systems/TowerSystem.h"
 #include "../../header/Systems/CastleHPSystem.h"
+#include "../../header/Systems/EnemyHPSystem.h"
 
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <optional>
+#include <iomanip>
 
 EntityID moneyTextId = INVALID_ENTITY;
 int GamePlay::money = 0;
@@ -222,7 +224,7 @@ void GamePlay::onEnter(World& world)
     EntityID pauseButton = world.createEntity();
     registerEntity(pauseButton);
     const string pauseButtonPath = "assets/Icon/Pause/A_Pause2.png";
-    SpriteComponent pauseSprite(pauseButtonPath, { 1650.f, 975.f }, { 4.35f, 4.35f });
+    SpriteComponent pauseSprite(pauseButtonPath, { 1640.f, 975.f }, { 4.35f, 4.35f });
     pauseSprite.onClick = [](EntityID entityId, World& world)
         {
             std::cout << "[Pause Button] Clicked\n";
@@ -238,7 +240,7 @@ void GamePlay::onEnter(World& world)
     EntityID settingButton = world.createEntity();
     registerEntity(settingButton);
     const string settingButtonPath = "assets/Icon/Settings/A_Settings2.png";
-    SpriteComponent settingSprite(settingButtonPath, { 1800.f, 975.f }, { 4.35f, 4.35f });
+    SpriteComponent settingSprite(settingButtonPath, { 1814.f, 975.f }, { 4.35f, 4.35f });
     settingSprite.onClick = [](EntityID entityId, World& world)
         {
             std::cout << "[Setting Button] Clicked\n";
@@ -249,6 +251,47 @@ void GamePlay::onEnter(World& world)
         };
     world.addComponent(settingButton, soundComp);
     world.addComponent(settingButton, settingSprite);
+
+    //speed button
+    EntityID speedButton = world.createEntity();
+    registerEntity(speedButton);
+    const string speedButtonPath = "assets/Icon/Next/A_Next2.png";
+    SpriteComponent speedSprite(speedButtonPath, { 1727.f, 975.f }, { 4.35f, 4.35f });
+    speedSprite.onClick = [this](EntityID entityId, World& world)
+        {
+            std::cout << "[Speed Button] Clicked\n";
+
+            auto& sound = world.getComponent<SoundComponent>(entityId);
+            sound.sound->play();
+
+            currSpdOpt = (currSpdOpt + 1) % speedMulti.size();
+
+            if (world.hasComponent<TextComponent>(speedID)) {
+                auto& text = world.getComponent<TextComponent>(speedID);
+
+                float val = speedMulti[currSpdOpt];
+                std::ostringstream oss;
+
+                if (val == static_cast<int>(val)) {
+                    oss << static_cast<int>(val);
+                }
+                else {
+                    oss << std::fixed << std::setprecision(2) << val;  // "1.25"
+                }
+
+                text.txt.setString("Speed: x" + oss.str());
+            }
+            
+        };
+    world.addComponent(speedButton, soundComp);
+    world.addComponent(speedButton, speedSprite);
+
+    //speed info
+    speedID = world.createEntity();
+    registerEntity(speedID);
+    std::string spdTextStr = "Speed: x1.0";
+    TextComponent spdText(spdTextStr, 40, fontPath, sf::Color::Cyan, { 125.f, 175.f }, false, sf::Color::Black, 4.f);
+    world.addComponent(speedID, spdText);
 
     //Notify invalid placement
     EntityID noti = world.createEntity();
@@ -482,8 +525,9 @@ void GamePlay::handleEvent(World& world, sf::Event& event)
     }
 }
 
-void GamePlay::update(World& world, float dt)
+void GamePlay::update(World& world, float odt)
 {
+    float dt = odt * speedMulti[currSpdOpt];
     auto musicSystem = world.getSystem<MusicSystem>();
     if (musicSystem) musicSystem->play(world);
 
@@ -635,7 +679,7 @@ void GamePlay::update(World& world, float dt)
     if (world.hasComponent<TextComponent>(waveInfoID))
     {
         auto& waveText = world.getComponent<TextComponent>(waveInfoID);
-        waveText.setString("Wave: " + std::to_string(currentWave + 1) + "/4");
+        waveText.setString("Wave: " + std::to_string(min(currentWave + 1, 4)) + "/4");
     }
 
     //show money
@@ -652,6 +696,10 @@ void GamePlay::update(World& world, float dt)
             deltaVisible = false;
         }
     }
+
+    //update enemy health bar
+    auto healthBarSys = world.getSystem<EnemyHPSystem>();
+    healthBarSys->update(world, dt);
 }
 
 void GamePlay::updateMoney(int g, World& world)
@@ -699,6 +747,9 @@ void GamePlay::render(World& world, sf::RenderWindow& window)
 
     auto castleHPSystem = world.getSystem<CastleHPSystem>();
     castleHPSystem->render(world);
+
+    auto enemyHPSystem = world.getSystem<EnemyHPSystem>();
+    enemyHPSystem->render(world);
 }
 
 void GamePlay::spawnTowerIcons(World& world)

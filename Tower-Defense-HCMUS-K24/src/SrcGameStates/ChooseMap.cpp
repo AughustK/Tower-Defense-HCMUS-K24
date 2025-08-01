@@ -38,7 +38,7 @@ void ChooseMap::onEnter(World& world)
     EntityID blackFlag = world.createEntity();
     registerEntity(blackFlag);
     const string blackFlagPath = "assets/Bg/BlackFlag.png";
-    SpriteComponent spriteComp2(blackFlagPath, { 1100.f, 80.f }, { 0.5f, 0.5f });
+    SpriteComponent spriteComp2(blackFlagPath, { 1300.f, 190.f }, { 0.5f, 0.5f }, true);
     spriteComp2.onClick = [this](EntityID entityId, World& world)
         {
             std::cout << "[ChooseMap][HellMap] Clicked\n";
@@ -51,12 +51,15 @@ void ChooseMap::onEnter(World& world)
         };
     world.addComponent(blackFlag, soundComp);
     world.addComponent(blackFlag, spriteComp2);
+    auto& sp1 = world.getComponent<SpriteComponent>(blackFlag);
+    sf::FloatRect b1 = sp1.sprite.getLocalBounds();
+    sp1.sprite.setOrigin(b1.width / 2.f, b1.height / 2.f);
 
     //ice map
     EntityID blueFlag = world.createEntity();
     registerEntity(blueFlag);
     const string blueFlagPath = "assets/Bg/BlueFlag.png";
-    SpriteComponent spriteComp3(blueFlagPath, { 1380.f, 400.f }, { 0.5f, 0.5f });
+    SpriteComponent spriteComp3(blueFlagPath, { 1530.f, 510.f }, { 0.5f, 0.5f }, true);
     spriteComp3.onClick = [this](EntityID entityId, World& world)
         {
             std::cout << "[ChooseMap][IceMap] Clicked\n";
@@ -68,12 +71,15 @@ void ChooseMap::onEnter(World& world)
         };
     world.addComponent(blueFlag, soundComp);
     world.addComponent(blueFlag, spriteComp3);
+    auto& sp2 = world.getComponent<SpriteComponent>(blueFlag);
+    sf::FloatRect b2 = sp2.sprite.getLocalBounds();
+    sp2.sprite.setOrigin(b2.width / 2.f, b2.height / 2.f);
 
     //paradise map
     EntityID whiteFlag = world.createEntity();
     registerEntity(whiteFlag);
     const string whiteFlagPath = "assets/Bg/WhiteFlag.png";
-    SpriteComponent spriteComp4(whiteFlagPath, { 1100.f, 700.f }, { 0.5f, 0.5f });
+    SpriteComponent spriteComp4(whiteFlagPath, { 1270.f, 820.f }, { 0.5f, 0.5f }, true);
     spriteComp4.onClick = [this](EntityID entityId, World& world)
         {
             std::cout << "[ChooseMap][ParadiselMap] Clicked\n";
@@ -85,12 +91,15 @@ void ChooseMap::onEnter(World& world)
         };
     world.addComponent(whiteFlag, soundComp);
     world.addComponent(whiteFlag, spriteComp4);
+    auto& sp3 = world.getComponent<SpriteComponent>(whiteFlag);
+    sf::FloatRect b3 = sp3.sprite.getLocalBounds();
+    sp3.sprite.setOrigin(b3.width / 2.f, b3.height / 2.f);
 
     //firemap
     EntityID redFlag = world.createEntity();
     registerEntity(redFlag);
     const string redFlagPath = "assets/Bg/redFlag.png";
-    SpriteComponent spriteComp5(redFlagPath, { 400.f, 250.f }, { 0.5f, 0.5f });
+    SpriteComponent spriteComp5(redFlagPath, { 620.f, 410.f }, { 0.5f, 0.5f }, true);
     spriteComp5.onClick = [this](EntityID entityId, World& world)
         {
             std::cout << "[ChooseMap][FireMap] Clicked\n";
@@ -102,6 +111,9 @@ void ChooseMap::onEnter(World& world)
         };
     world.addComponent(redFlag, soundComp);
     world.addComponent(redFlag, spriteComp5);
+    auto& sp4 = world.getComponent<SpriteComponent>(redFlag);
+    sf::FloatRect b4 = sp4.sprite.getLocalBounds();
+    sp4.sprite.setOrigin(b4.width / 2.f, b4.height / 2.f);
 
     //button
     EntityID exitButton = world.createEntity();
@@ -182,6 +194,22 @@ void ChooseMap::handleEvent(World& world, sf::Event& event)
         {
             auto& tc = world.getComponent<TextComponent>(e);
             tc.tryHover(mousePos, e, world);
+        }
+        for (EntityID e : world.getEntitiesWithComponent<SpriteComponent>())
+        {
+            auto& sp = world.getComponent<SpriteComponent>(e);
+
+            if (!sp.isHover) continue; 
+
+            sf::FloatRect bounds = sp.sprite.getGlobalBounds();
+            if (bounds.contains(mousePos))
+            {
+                sp.sprite.setScale(0.6f, 0.6f);
+            }
+            else
+            {
+                sp.sprite.setScale(0.5f, 0.5f); 
+            }
         }
     }
     else if (event.type == sf::Event::MouseButtonPressed &&

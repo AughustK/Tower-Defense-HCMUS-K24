@@ -15,7 +15,7 @@ struct EnemyDef
     int                        basePrize;
 
     // Multipliers for each difficulty: [Easy, Normal, Hard]
-    float healthMultiplier[3]   = {1.0f, 1.2f, 1.5f};
+    float healthMultiplier[3]   = {0.5f, 1.2f, 1.5f};
     float speedMultiplier[3]    = {1.0f, 1.1f, 1.2f};
     float damageMultiplier[3]   = {1.0f, 1.2f, 1.4f};
     float prizeMultiplier[3]    = {1.0f, 1.2f, 0.8f};

@@ -14,6 +14,7 @@
 #include "../Components/ShopComponent.h"
 #include "../Components/ProjectileComponent.h"
 #include "../Components/CastleHPComponent.h"
+#include "../Components/EnemyHPComponent.h"
 
 
 #include "../Systems/SpriteRenderSystem.h"
@@ -29,6 +30,7 @@
 #include "../Systems/CollisionSystem.h"
 #include "../Systems/TowerSystem.h"
 #include "../Systems/CastleHPSystem.h"
+#include "../Systems/EnemyHPSystem.h"
 #include "../GameStates/GamePlay.h"
 
 #include <iostream>
@@ -98,12 +100,15 @@ void World::init()
     registerComponent<ClickComponent>();
 
     //set up for enemy spawning
+    registerComponent<EnemyHPComponent>();
     registerComponent<EnemyComponent>();
     registerComponent<PathComponent>();
     auto spawnSystem = registerSystem<EnemySpawnSystem>();
+    auto enemyHPSystem = registerSystem<EnemyHPSystem>();
     Signature spawnSig;
     spawnSig.set(getComponentType<EnemyComponent>(), true);
     spawnSig.set(getComponentType<PathComponent>(), true);
+    spawnSig.set(getComponentType<EnemyHPComponent>(), true);
     setSystemSignature<EnemySpawnSystem>(spawnSig);
 
     //set up for path system

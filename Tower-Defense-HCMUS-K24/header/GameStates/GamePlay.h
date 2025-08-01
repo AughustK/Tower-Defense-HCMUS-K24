@@ -69,6 +69,11 @@ private:
     float deltaTextTimer = 0.f;
     bool deltaVisible = false;
 
+    //speed info
+    EntityID speedID;
+    vector<float> speedMulti = { 1.0, 1.25,1.5,2.0 };
+    int currSpdOpt = 0;
+
 public:
     // construct by map filename or by index
     explicit GamePlay(const std::string& mapFilename);

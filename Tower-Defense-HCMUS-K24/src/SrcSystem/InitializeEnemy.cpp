@@ -4,6 +4,7 @@
 #include "../../header/Components/PositionComponent.h"
 #include "../../header/Components/HealthComponent.h"
 #include "../../header/Components/CircleComponent.h"
+#include "../../header/Components/EnemyHPComponent.h"
 
 void EnemySpawnSystem::update(float deltaTime){}
 
@@ -20,6 +21,7 @@ void EnemySpawnSystem::initPool(World& world, std::size_t count)
         world.addComponent(e, HealthComponent());
         world.addComponent(e, CircleComponent());
         world.addComponent(e, SpriteComponent());
+        world.addComponent(e, EnemyHPComponent());
         enemyPool.push_back(e);
     }
     nextPoolIndex = 0;
@@ -154,6 +156,10 @@ EntityID EnemySpawnSystem::spawnFromPool(World& world, const std::vector<sf::Vec
     if (enemy.type == EnemyComponent::EnemyType::HellBoss) {
         spriteE.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f + 15.f);
     }
+
+    // Health bar
+    auto& healthBar = world.getComponent<EnemyHPComponent>(e);
+    healthBar.init(hp.maxHealth, hp.currentHealth, 40.f, 5.f, sf::Vector2f(-30.f, -50.f));
 
     createdEnemies.push_back(e);
     return e;

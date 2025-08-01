@@ -36,6 +36,8 @@
     <ClCompile Include="src\SrcGameStates\Defeat.cpp" />
     <ClCompile Include="src\SrcGameStates\Victory.cpp" />
     <ClCompile Include="src\SrcSystem\CastleHPSystem.cpp" />
+    <ClCompile Include="src\SrcComponents\EnemyHPComponent.cpp" />
+    <ClCompile Include="src\SrcSystem\EnemyHPSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Systems\System.h" />
@@ -94,6 +96,8 @@
     <ClInclude Include="header\Systems\CastleHPSystem.h" />
     <ClInclude Include="header\Components\DifficultyLevel.h" />
     <ClInclude Include="header\Components\Difficulty.h" />
+    <ClInclude Include="header\Components\EnemyHPComponent.h" />
+    <ClInclude Include="header\Systems\EnemyHPSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\Bg\CreditBackground2Fixed.png" />
