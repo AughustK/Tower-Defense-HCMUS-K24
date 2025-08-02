@@ -159,8 +159,10 @@ void ChooseMap::handleEvent(World& world, sf::Event& event)
         {
             for (EntityID btn : difficultyButtons)
             {
-                auto& tc = world.getComponent<TextComponent>(btn);
-                tc.tryHover(mousePos, btn, world);
+                if (world.hasComponent<TextComponent>(btn)) {
+                    auto& tc = world.getComponent<TextComponent>(btn);
+                    tc.tryHover(mousePos, btn, world);
+                }
             }
         }
         else if (event.type == sf::Event::MouseButtonPressed &&
@@ -169,11 +171,13 @@ void ChooseMap::handleEvent(World& world, sf::Event& event)
             bool clickedDifficulty = false;
             for (EntityID btn : difficultyButtons)
             {
-                auto& tc = world.getComponent<TextComponent>(btn);
-                if (tc.tryClick(mousePos, btn, world))
-                {
-                    clickedDifficulty = true;
-                    break;
+                if (world.hasComponent<TextComponent>(btn)) {
+                    auto& tc = world.getComponent<TextComponent>(btn);
+                    if (tc.tryClick(mousePos, btn, world))
+                    {
+                        clickedDifficulty = true;
+                        break;
+                    }
                 }
             }
             if (!clickedDifficulty)
@@ -269,9 +273,16 @@ void ChooseMap::showDifficultyMenu(World& world)
 
     vector<sf::Color> btnColor = { Color::Green, Color::Yellow, Color::Red };
 
+    EntityID bg = world.createEntity();
+    const std::string bgPath = ""; 
+    SpriteComponent bgSprite(bgPath, { centerX, centerY }, { 1.f, 1.f }); 
+    sf::FloatRect bounds = bgSprite.sprite.getLocalBounds();
+    bgSprite.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+    world.addComponent(bg, bgSprite);
+    difficultyButtons.push_back(bg);
+
     for (size_t i = 0; i < options.size(); ++i) {
         EntityID btn = world.createEntity();
-        registerEntity(btn);
 
         TextComponent tc(
             options[i].first,

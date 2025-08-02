@@ -5,6 +5,7 @@
 #include "../../header/GameStates/Victory.h"
 #include "../../header/GameStates/Defeat.h"
 #include "../../header/GameStates/PauseGame.h"
+#include "../../header/GameStates/Lobby.h"
 
 #include "../../header/Components/PositionComponent.h"
 #include "../../header/Components/HealthComponent.h"
@@ -20,6 +21,7 @@
 #include "../../header/Components/TowerComponent.h"
 #include "../../header/Components/TowerDef.h"
 #include "../../header/Components/CastleHPComponent.h"
+#include "../../header/Components/UISliderComponent.h"
 
 
 #include "../../header/Systems/PathFindingSystem.h"
@@ -34,6 +36,7 @@
 #include "../../header/Systems/TowerSystem.h"
 #include "../../header/Systems/CastleHPSystem.h"
 #include "../../header/Systems/EnemyHPSystem.h"
+#include "../../header/Systems/UISliderSystem.h"
 
 #include <fstream>
 #include <sstream>
@@ -225,13 +228,13 @@ void GamePlay::onEnter(World& world)
     registerEntity(pauseButton);
     const string pauseButtonPath = "assets/Icon/Pause/A_Pause2.png";
     SpriteComponent pauseSprite(pauseButtonPath, { 1640.f, 975.f }, { 4.35f, 4.35f });
-    pauseSprite.onClick = [](EntityID entityId, World& world)
+    pauseSprite.onClick = [this](EntityID entityId, World& world)
         {
             std::cout << "[Pause Button] Clicked\n";
             auto& sound = world.getComponent<SoundComponent>(entityId);
             sound.sound->play();
             sf::sleep(sf::seconds(0.5f));
-            //world.setState(std::make_unique<PauseMenu>());
+            this->showPauseMenu(world);
         };
     world.addComponent(pauseButton, soundComp);
     world.addComponent(pauseButton, pauseSprite);
@@ -241,13 +244,13 @@ void GamePlay::onEnter(World& world)
     registerEntity(settingButton);
     const string settingButtonPath = "assets/Icon/Settings/A_Settings2.png";
     SpriteComponent settingSprite(settingButtonPath, { 1814.f, 975.f }, { 4.35f, 4.35f });
-    settingSprite.onClick = [](EntityID entityId, World& world)
+    settingSprite.onClick = [this](EntityID entityId, World& world)
         {
             std::cout << "[Setting Button] Clicked\n";
             auto& sound = world.getComponent<SoundComponent>(entityId);
             sound.sound->play();
             sf::sleep(sf::seconds(0.5f));
-            /*world.setState(std::make_unique<Setting>());*/
+            showSettingMenu(world);
         };
     world.addComponent(settingButton, soundComp);
     world.addComponent(settingButton, settingSprite);
@@ -315,6 +318,72 @@ void GamePlay::onEnter(World& world)
 
 void GamePlay::handleEvent(World& world, sf::Event& event)
 {
+    if (!showingPauseMenu && event.type == sf::Event::KeyPressed
+        && event.key.code == sf::Keyboard::Escape) {
+        showPauseMenu(world);
+        return;
+    }
+
+    if (showingPauseMenu) {
+        if (event.type == sf::Event::MouseMoved) {
+            Vector2f mousePos = world.window.mapPixelToCoords(
+                { event.mouseMove.x, event.mouseMove.y }
+            );
+
+            for (auto btn : pauseButtons) {
+                if (world.hasComponent<TextComponent>(btn)) {
+                    auto& tc = world.getComponent<TextComponent>(btn);
+                    tc.tryHover(mousePos, btn, world);
+                }
+            }
+        }
+        else if (event.type == sf::Event::MouseButtonPressed) {
+            Vector2f mousePos = world.window.mapPixelToCoords(
+                { event.mouseButton.x, event.mouseButton.y }
+            );
+            for (auto btn : pauseButtons) {
+                if (world.hasComponent<TextComponent>(btn)) {
+                    auto& tc = world.getComponent<TextComponent>(btn);
+                    if (tc.tryClick(mousePos, btn, world))
+                        break;
+                }
+            }
+        }
+        return;
+    }
+
+    if (showingSettingMenu) {
+        Vector2f mousePos;
+        if (event.type == sf::Event::MouseMoved)
+            mousePos = world.window.mapPixelToCoords({ event.mouseMove.x, event.mouseMove.y });
+        else if (event.type == sf::Event::MouseButtonPressed)
+            mousePos = world.window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y });
+
+        if (event.type == sf::Event::MouseMoved) {
+            for (auto e : settingButtons) {
+                if (world.hasComponent<TextComponent>(e)) {
+                    auto& tc = world.getComponent<TextComponent>(e);
+                    tc.tryHover(mousePos, e, world);
+                }
+            }
+        }
+        else if (event.type == sf::Event::MouseButtonPressed &&
+            event.mouseButton.button == sf::Mouse::Left) {
+            for (auto e : settingButtons) {
+                if (world.hasComponent<TextComponent>(e)) {
+                    auto& tc = world.getComponent<TextComponent>(e);
+                    if (tc.tryClick(mousePos, e, world)) break;
+                }
+            }
+        }
+
+        // Đưa vào đây để xử lý kéo slider
+        auto sliderSystem = world.getSystem<SliderSystem>();
+        if (sliderSystem) sliderSystem->handleEvent(world);
+
+        return;
+    }
+
     auto entities = world.getEntitiesWithComponent<SpriteComponent>();
 
     // Handle left click
@@ -428,13 +497,14 @@ void GamePlay::handleEvent(World& world, sf::Event& event)
                 snappedPos.x += 10;
             }
 
-            std::string spritePath = TowerComponent::getSpritePath(placingType, placingLevel);
+            std::string spritePath = TowerComponent::getAnimationPath(placingType, placingLevel);
             const TowerDef& def = TowerComponent::getTowerDef(placingType);
             float scale = def.scale[placingLevel];
 
             SpriteComponent towerSprite(spritePath, snappedPos, { scale, scale });
             sf::FloatRect bounds = towerSprite.sprite.getLocalBounds();
             towerSprite.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+            setupTowerAnimation(towerSprite, placingType, placingLevel);
             world.addComponent(tower, towerSprite);
 
             money -= towerComp.cost;
@@ -527,6 +597,15 @@ void GamePlay::handleEvent(World& world, sf::Event& event)
 
 void GamePlay::update(World& world, float odt)
 {
+    if (showingPauseMenu) return;
+    if (showingSettingMenu) {
+        auto musicSystem = world.getSystem<MusicSystem>();
+        if (musicSystem) musicSystem->play(world);
+
+        auto soundSystem = world.getSystem<SoundSystem>();
+        if (soundSystem) soundSystem->play(world);
+        return;
+    }
     float dt = odt * speedMulti[currSpdOpt];
     auto musicSystem = world.getSystem<MusicSystem>();
     if (musicSystem) musicSystem->play(world);
@@ -700,6 +779,11 @@ void GamePlay::update(World& world, float odt)
     //update enemy health bar
     auto healthBarSys = world.getSystem<EnemyHPSystem>();
     healthBarSys->update(world, dt);
+
+    if (showingSettingMenu) {
+        auto sliderSystem = world.getSystem<SliderSystem>();
+        if (sliderSystem) sliderSystem->render(world);
+    }
 }
 
 void GamePlay::updateMoney(int g, World& world)
@@ -750,6 +834,12 @@ void GamePlay::render(World& world, sf::RenderWindow& window)
 
     auto enemyHPSystem = world.getSystem<EnemyHPSystem>();
     enemyHPSystem->render(world);
+
+    if (showingSettingMenu) {
+        auto sliderSystem = world.getSystem<SliderSystem>();
+        sliderSystem->render(world);
+    }
+
 }
 
 void GamePlay::spawnTowerIcons(World& world)
@@ -1044,7 +1134,7 @@ void GamePlay::upgradeTower(World& world, EntityID towerId)
     }
 
     // Create new sprite component for upgraded tower
-    std::string newSpritePath = TowerComponent::getSpritePath(towerComp.type, towerComp.level);
+    std::string newSpritePath = TowerComponent::getAnimationPath(towerComp.type, towerComp.level);
     const TowerDef& def = TowerComponent::getTowerDef(towerComp.type);
     float newScale = def.scale[towerComp.level];
 
@@ -1060,6 +1150,7 @@ void GamePlay::upgradeTower(World& world, EntityID towerId)
     SpriteComponent newSpriteComp(newSpritePath, spritePos, { newScale, newScale });
     sf::FloatRect twBounds = newSpriteComp.sprite.getLocalBounds();
     newSpriteComp.sprite.setOrigin(twBounds.width / 2.f, twBounds.height / 2.f);
+    setupTowerAnimation(newSpriteComp, towerComp.type, towerComp.level);
     world.addComponent(towerId, newSpriteComp);
 
 
@@ -1157,4 +1248,131 @@ void GamePlay::onExit(World& world) {
     spawnTimer = 0.f;
     money = 0;
     cout << "[Gameplay] Exit state and free memory successfully.\n";
+}
+
+void GamePlay::setupTowerAnimation(SpriteComponent& sprite, TowerComponent::TowerType type, int level)
+{
+    // Set animation parameters based on tower type and level
+    switch (type) {
+    case TowerComponent::TowerType::Archer:
+        if (level == 0) {
+            sprite.frameCount = 6;
+            sprite.frameRate = 0.18f;
+        }
+        else {
+            sprite.frameCount = 10;
+            sprite.frameRate = 0.1f;
+        }
+        break;
+
+    case TowerComponent::TowerType::Mage:
+        if (level == 0) {
+            sprite.frameCount = 6;
+            sprite.frameRate = 0.18f;
+        }
+        else {
+            sprite.frameCount = 13;
+            sprite.frameRate = 1.2f;
+        }
+        break;
+        // No sprites for Cannons yet    
+    case TowerComponent::TowerType::Cannon:
+        if (level == 0) {
+            sprite.frameCount = 2;
+            sprite.frameRate = 0.5f;
+        }
+        else {
+            sprite.frameCount = 3;
+            sprite.frameRate = 0.4f;
+        }
+        break;
+
+    default:
+        sprite.frameCount = 1;
+        sprite.frameRate = 1.0f;
+        break;
+    }
+}
+
+void GamePlay::showPauseMenu(World& world) {
+    showingPauseMenu = true;
+    pauseButtons.clear();
+    
+    EntityID bgBoard = world.createEntity();
+    SpriteComponent bgSprite("",
+        { world.window.getSize().x / 2.f, world.window.getSize().y / 2.f },
+        { 1.0f, 1.0f });
+    sf::FloatRect bounds = bgSprite.sprite.getLocalBounds();
+    bgSprite.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+    world.addComponent(bgBoard, bgSprite);
+    pauseButtons.push_back(bgBoard);
+
+    std::vector<std::pair<std::string, std::function<void(EntityID, World&)>>> opts = {
+      {"Resume", [&](EntityID, World& w) {
+            // gỡ hết button và overlay
+            for (auto e : pauseButtons) w.destroyEntity(e);
+            pauseButtons.clear();
+            showingPauseMenu = false;
+       }},
+       {"Quit", [&](EntityID, World& w) {
+            for (auto e : pauseButtons) w.destroyEntity(e);
+            pauseButtons.clear();
+            w.setState(std::make_unique<Lobby>());
+       }}
+    };
+
+    float cx = world.window.getSize().x / 2, cy = world.window.getSize().y / 2;
+    float spacing = 100.f;
+    for (int i = 0; i < opts.size(); ++i) {
+        EntityID btn = world.createEntity();
+        TextComponent tc(
+            opts[i].first, 48,
+            "assets/Font/Minecraft-Regular.otf",
+            sf::Color::White,
+            { cx, cy + (i - 0.5f) * spacing },
+            true, sf::Color::Black, 5.f
+        );
+        tc.onClick = opts[i].second;
+        world.addComponent(btn, tc);
+        pauseButtons.push_back(btn);
+    }
+}
+
+void GamePlay::showSettingMenu(World& world) {
+    showingSettingMenu = true;
+    settingButtons.clear();
+
+    float cx = world.window.getSize().x / 2.f;
+
+    EntityID bgBoard = world.createEntity();
+    SpriteComponent bgSprite("",
+        { world.window.getSize().x / 2.f, world.window.getSize().y / 2.f },
+        { 1.0f, 1.0f }); 
+    sf::FloatRect bounds = bgSprite.sprite.getLocalBounds();
+    bgSprite.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+    world.addComponent(bgBoard, bgSprite);
+    settingButtons.push_back(bgBoard);
+
+    EntityID sfxSlider = world.createEntity();
+    float sfxVol = world.getSystem<SoundSystem>()->globalVolume;
+    SliderComponent sfxComp(400.f, cx - 200.f, 400.f, "SFX:", sfxVol);
+    world.addComponent(sfxSlider, sfxComp);
+    settingButtons.push_back(sfxSlider);
+
+    EntityID musicSlider = world.createEntity();
+    float musicVol = world.getSystem<MusicSystem>()->globalVolume;
+    SliderComponent musicComp(400.f, cx - 200.f, 550.f, "Music:", musicVol);
+    world.addComponent(musicSlider, musicComp);
+    settingButtons.push_back(musicSlider);
+
+    EntityID backBtn = world.createEntity();
+    TextComponent backTC("Back", 48, "assets/Font/Minecraft-Regular.otf",
+        sf::Color::White, { cx, 650.f }, true, sf::Color::Black, 5.f);
+    backTC.onClick = [this](EntityID, World& w) {
+        for (auto e : settingButtons) w.destroyEntity(e);
+        settingButtons.clear();
+        showingSettingMenu = false;
+        };
+    world.addComponent(backBtn, backTC);
+    settingButtons.push_back(backBtn);
 }

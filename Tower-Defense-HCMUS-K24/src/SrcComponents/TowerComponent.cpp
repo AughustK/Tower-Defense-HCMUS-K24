@@ -34,21 +34,39 @@ std::string TowerComponent::getSpritePath(TowerType t, uint8_t lvl)
     {
     case TowerType::Archer:
         return (lvl == 0)
-            ? "assets/heroes/archer_base.png"
-            : "assets/heroes/archer_up.png";
+            ? "assets/Heroes/archer_base.png"
+            : "assets/Heroes/archer_up.png";
     case TowerType::Mage:
         return (lvl == 0)
-            ? "assets/heroes/mage_base.png"
-            : "assets/heroes/mage_up.png";
+            ? "assets/Heroes/mage_base.png"
+            : "assets/Heroes/mage_up.png";
     case TowerType::Cannon:
         return (lvl == 0)
-            ? "assets/heroes/cannon_base.png"
-            : "assets/heroes/cannon_up.png";
+            ? "assets/Heroes/cannon_base.png"
+            : "assets/Heroes/cannon_up.png";
     }
     return {};
 }
 
-
+std::string TowerComponent::getAnimationPath(TowerType t, uint8_t lvl)
+{
+    switch (t)
+    {
+    case TowerType::Archer:
+        return (lvl == 0)
+            ? "assets/Heroes/archer_base_idle.png"
+            : "assets/Heroes/archer_up_idle.png";
+    case TowerType::Mage:
+        return (lvl == 0)
+            ? "assets/Heroes/mage_base_idle.png"
+            : "assets/Heroes/mage_up_idle.png";
+    case TowerType::Cannon:
+        return (lvl == 0)
+            ? "assets/Heroes/cannon_base_idle.png"
+            : "assets/Heroes/cannon_up_idle.png";
+    }
+    return {};
+}
 
 
 
