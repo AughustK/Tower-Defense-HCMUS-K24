@@ -385,13 +385,14 @@ void GamePlay::handleEvent(World& world, sf::Event& event)
                 snappedPos.x += 10;
             }
 
-            std::string spritePath = TowerComponent::getSpritePath(placingType, placingLevel);
+            std::string spritePath = TowerComponent::getAnimationPath(placingType, placingLevel);
             const TowerDef& def = TowerComponent::getTowerDef(placingType);
             float scale = def.scale[placingLevel];
 
             SpriteComponent towerSprite(spritePath, snappedPos, { scale, scale });
             sf::FloatRect bounds = towerSprite.sprite.getLocalBounds();
             towerSprite.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+            setupTowerAnimation(towerSprite, placingType, placingLevel);
             world.addComponent(tower, towerSprite);
 
             money -= towerComp.cost;
@@ -667,6 +668,47 @@ void GamePlay::updateMoney(int g, World& world)
         dtxt.txt.setFillColor(sf::Color::Green);
         deltaTextTimer = 0.f;
         deltaVisible = true;
+    }
+}
+
+void GamePlay::setupTowerAnimation(SpriteComponent& sprite, TowerComponent::TowerType type, int level)
+{
+    // Set animation parameters based on tower type and level
+    switch(type) {
+        case TowerComponent::TowerType::Archer:
+            if (level == 0) {
+                sprite.frameCount = 6;
+                sprite.frameRate = 0.18f;
+            } else {
+                sprite.frameCount = 10;
+                sprite.frameRate = 0.1f;
+            }
+            break;
+            
+        case TowerComponent::TowerType::Mage:
+            if (level == 0) {
+                sprite.frameCount = 6;
+                sprite.frameRate = 0.18f;
+            } else {
+                sprite.frameCount = 13;
+                sprite.frameRate = 1.2f;
+            }
+            break;
+        // No sprites for Cannons yet    
+        case TowerComponent::TowerType::Cannon:
+            if (level == 0) {
+                sprite.frameCount = 2;
+                sprite.frameRate = 0.5f;
+            } else {
+                sprite.frameCount = 3;
+                sprite.frameRate = 0.4f;
+            }
+            break;
+            
+        default:
+            sprite.frameCount = 1;
+            sprite.frameRate = 1.0f;
+            break;
     }
 }
 
@@ -993,7 +1035,7 @@ void GamePlay::upgradeTower(World& world, EntityID towerId)
     }
 
     // Create new sprite component for upgraded tower
-    std::string newSpritePath = TowerComponent::getSpritePath(towerComp.type, towerComp.level);
+    std::string newSpritePath = TowerComponent::getAnimationPath(towerComp.type, towerComp.level);
     const TowerDef& def = TowerComponent::getTowerDef(towerComp.type);
     float newScale = def.scale[towerComp.level];
 
@@ -1009,6 +1051,7 @@ void GamePlay::upgradeTower(World& world, EntityID towerId)
     SpriteComponent newSpriteComp(newSpritePath, spritePos, { newScale, newScale });
     sf::FloatRect twBounds = newSpriteComp.sprite.getLocalBounds();
     newSpriteComp.sprite.setOrigin(twBounds.width / 2.f, twBounds.height / 2.f);
+    setupTowerAnimation(newSpriteComp, towerComp.type, towerComp.level);
     world.addComponent(towerId, newSpriteComp);
 
 

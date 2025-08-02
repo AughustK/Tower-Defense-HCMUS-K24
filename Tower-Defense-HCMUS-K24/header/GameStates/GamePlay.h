@@ -11,6 +11,7 @@
 #include "../../header/Components/PositionComponent.h"
 #include "../../header/Components/ProjectileComponent.h"
 #include "../../header/Components/TowerComponent.h"
+#include "../../header/Components/UISpriteComponent.h"
 #include "../Components/EnemyDef.h" // For DifficultyLevel
 
 class GamePlay : public GameState 
@@ -81,6 +82,7 @@ public:
     void render(World& world, sf::RenderWindow& window) override;
     void onExit(World& world) override;
     void spawnTowerIcons(World& world);
+    void setupTowerAnimation(SpriteComponent& sprite, TowerComponent::TowerType type, int level);
 	void spawnWave(World& world);
     void updateMoney(int g, World& world);
 };

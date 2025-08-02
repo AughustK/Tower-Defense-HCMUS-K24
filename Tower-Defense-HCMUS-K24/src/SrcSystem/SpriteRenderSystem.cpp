@@ -2,6 +2,7 @@
 #include "../../header/Managers/World.h"
 #include "../../header/Components/PositionComponent.h"
 #include "../../header/Components/EnemyComponent.h"
+#include "../../header/Components/TowerComponent.h"
 #include <iostream>
 
 void SpriteRenderSystem::render(World& world)
@@ -67,7 +68,8 @@ void SpriteRenderSystem::updateAnimation(float deltaTime, World& world)
             }
 
             // Only animate entities with EnemyComponent
-            if (world.hasComponent<EnemyComponent>(entity))
+            if (world.hasComponent<EnemyComponent>(entity) ||
+                world.hasComponent<TowerComponent>(entity))
             {
                 if (this->animationTimers.find(entity) == this->animationTimers.end())
                 {
