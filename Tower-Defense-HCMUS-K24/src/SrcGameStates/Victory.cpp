@@ -40,7 +40,7 @@ void Victory::onEnter(World& world) {
     EntityID homeButton = world.createEntity();
     registerEntity(homeButton);
     const string buttonPath1 = "assets/Icon/Home/B_Button17.png";
-    SpriteComponent spriteComp1(buttonPath1, { 200.f, 700.f }, { 5.f, 5.f });
+    SpriteComponent spriteComp1(buttonPath1, { 681.f, 655.f }, { 10.f, 10.f});
     spriteComp1.onClick = [](EntityID entityId, World& world)
         {
             std::cout << "[Home Button] Clicked\n";
@@ -55,7 +55,7 @@ void Victory::onEnter(World& world) {
     EntityID retryButton = world.createEntity();
     registerEntity(retryButton);
     const string buttonPath2 = "assets/Icon/Restart/B_Button71.png";
-    SpriteComponent spriteComp2(buttonPath2, { 345.f, 700.f }, { 5.f, 5.f });
+    SpriteComponent spriteComp2(buttonPath2, { 1043.f, 655.f }, { 10.f, 10.f});
     spriteComp2.onClick = [](EntityID entityId, World& world)
         {
             std::cout << "[Retry Button] Clicked\n";
@@ -66,20 +66,6 @@ void Victory::onEnter(World& world) {
         };
     world.addComponent(retryButton, soundComp);
     world.addComponent(retryButton, spriteComp2);
-
-    //trophy
-    EntityID trophy = world.createEntity();
-    registerEntity(trophy);
-    const string trophyPath = "assets/Icon/trophy.png";
-    SpriteComponent spriteComp3(trophyPath, { 100.f, 200.f }, { 1.1f, 1.2f });
-    world.addComponent(trophy, spriteComp3);
-
-    //text
-    EntityID text = world.createEntity();
-    registerEntity(text);
-    const string str = "YOU WIN!";
-    TextComponent textComp(str, 100, fontPath, textColor, { 320, 600 }, false, outlineColor, thickness);
-    world.addComponent(text, textComp);
 
     //victory bgm
     EntityID bgm = world.createEntity();
