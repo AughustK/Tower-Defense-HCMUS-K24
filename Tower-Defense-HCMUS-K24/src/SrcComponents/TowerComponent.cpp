@@ -62,8 +62,8 @@ std::string TowerComponent::getAnimationPath(TowerType t, uint8_t lvl)
             : "assets/Heroes/mage_up_idle.png";
     case TowerType::Cannon:
         return (lvl == 0)
-            ? "assets/Heroes/cannon_base_idle.png"
-            : "assets/Heroes/cannon_up_idle.png";
+            ? "assets/Heroes/cannon_base.png"
+            : "assets/Heroes/cannon_up.png";
     }
     return {};
 }
