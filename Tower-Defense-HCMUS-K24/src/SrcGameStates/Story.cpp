@@ -1,13 +1,16 @@
 ﻿#include "../../header/Managers/World.h"
-#include "../../header/Components/SoundComponent.h"
-#include "../../header/Components/MusicComponent.h"
-#include "../../header/Components/ClickComponent.h"
-#include "../../header/Systems/SoundSystem.h"
-#include "../../header/Systems/MusicSystem.h"
 #include "../../header/GameStates/MainMenu.h"
 #include "../../header/GameStates/Lobby.h"
 #include "../../header/GameStates/Story.h"
 #include "../../header/GameStates/ChooseMap.h"
+
+#include "../../header/Components/SoundComponent.h"
+#include "../../header/Components/MusicComponent.h"
+#include "../../header/Components/ClickComponent.h"
+
+#include "../../header/Systems/SoundSystem.h"
+#include "../../header/Systems/MusicSystem.h"
+
 
 void Story::onEnter(World& world)
 {
@@ -59,7 +62,7 @@ void Story::onEnter(World& world)
         if (world.hasComponent<SoundComponent>(id))
             world.getComponent<SoundComponent>(id).sound->play();
         sf::sleep(sf::seconds(0.3f));
-        currentSlide = slides.size() - 1;
+        currentSlide = static_cast<int>(slides.size()) - 1;
         updateSlide(world);
         };
     world.addComponent(skip, skipComp);

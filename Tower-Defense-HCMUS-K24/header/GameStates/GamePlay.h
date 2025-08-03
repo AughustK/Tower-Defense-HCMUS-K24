@@ -1,5 +1,4 @@
-﻿// header/GameStates/GamePlay.h
-#pragma once
+﻿#pragma once
 
 #include <string>
 #include <vector>
@@ -11,7 +10,8 @@
 #include "../../header/Components/PositionComponent.h"
 #include "../../header/Components/ProjectileComponent.h"
 #include "../../header/Components/TowerComponent.h"
-#include "../Components/EnemyDef.h" // For DifficultyLevel
+#include "../Components/EnemyDef.h" 
+#include "../../header/Components/UISpriteComponent.h"
 
 class GamePlay : public GameState 
 {
@@ -61,9 +61,28 @@ private:
     EntityID castleEntity;
     bool victoryTriggered = false;
 
+    //wave info
+    EntityID waveInfoID;
+
+    //money delta
+    EntityID moneyDeltaID;
+    float deltaTextTimer = 0.f;
+    bool deltaVisible = false;
+
+    //speed info
+	EntityID speedID;
+    vector<float> speedMulti = { 1.0, 1.25,1.5,2.0 };
+    int currSpdOpt = 0;
+
+    //pause menu
+	bool showingPauseMenu = false;
+    std::vector<EntityID> pauseButtons;
+
+    //setting
+    bool showingSettingMenu = false;
+    std::vector<EntityID> settingButtons;
 
 public:
-    // construct by map filename or by index
     explicit GamePlay(const std::string& mapFilename);
     GamePlay(const std::string& mapFilename, DifficultyLevel difficulty);
 
@@ -74,6 +93,9 @@ public:
     void render(World& world, sf::RenderWindow& window) override;
     void onExit(World& world) override;
     void spawnTowerIcons(World& world);
-	void spawnWave(World& world);
-    static void updateMoney(int g);
+    void setupTowerAnimation(SpriteComponent& sprite, TowerComponent::TowerType type, int level);
+    void spawnWave(World& world);
+    void updateMoney(int g, World& world);
+    void showPauseMenu(World& world);
+    void showSettingMenu(World& world);
 };

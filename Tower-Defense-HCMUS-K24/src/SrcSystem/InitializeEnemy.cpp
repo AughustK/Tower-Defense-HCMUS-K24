@@ -1,9 +1,14 @@
-﻿#include "../../header/Systems/InitializeEnemy.h"
-#include "../../header/Components/VelocityComponent.h"
+﻿#include "../../header/Components/VelocityComponent.h"
 #include "../../header/Components/UISpriteComponent.h"
 #include "../../header/Components/PositionComponent.h"
 #include "../../header/Components/HealthComponent.h"
 #include "../../header/Components/CircleComponent.h"
+#include "../../header/Components/EnemyHPComponent.h"
+
+#include "../../header/Systems/InitializeEnemy.h"
+#include "../../header/Systems/SpriteRenderSystem.h"
+#include "../../header/Systems/EnemyHPSystem.h"
+#include "../../header/Systems/CollisionSystem.h"
 
 void EnemySpawnSystem::update(float deltaTime){}
 
@@ -20,6 +25,7 @@ void EnemySpawnSystem::initPool(World& world, std::size_t count)
         world.addComponent(e, HealthComponent());
         world.addComponent(e, CircleComponent());
         world.addComponent(e, SpriteComponent());
+        world.addComponent(e, EnemyHPComponent());
         enemyPool.push_back(e);
     }
     nextPoolIndex = 0;
@@ -31,10 +37,13 @@ EntityID EnemySpawnSystem::spawnFromPool(World& world, const std::vector<sf::Vec
     // Get entity from pool
     EntityID e = enemyPool[nextPoolIndex];
     nextPoolIndex = (nextPoolIndex + 1) % enemyPool.size();
+    cout << "[EnemySpawnSystem] Spawning enemy" << e << "\n";
+
+	world.getSystem<SpriteRenderSystem>()->showEntity(e);
 
     // Spawn enemies off-screen
     float offScreenX = -100.0f;
-    float offScreenY = 100.0f;
+    float offScreenY = -100.0f;
     
     // Position
     auto& posComp = world.getComponent<PositionComponent>(e);
@@ -58,13 +67,6 @@ EntityID EnemySpawnSystem::spawnFromPool(World& world, const std::vector<sf::Vec
     enemy.difficulty = difficulty;
     enemy.loadStats(difficulty);
     pathComp.speed = enemy.speed;
-    cout << "[EnemySpawnSystem] Spawning enemy of type: " << static_cast<int>(enemy.type) 
-		<< " with difficulty: " << static_cast<int>(difficulty) << endl;
-	cout << "[EnemySpawnSystem] Enemy stats - Health: " << enemy.health
-		<< ", Speed: " << enemy.speed
-		<< ", Damage: " << enemy.damage
-		<< ", Scale: " << enemy.scale
-		<< ", Prize: " << enemy.prize << endl;
 
     // Health
     auto& hp = world.getComponent<HealthComponent>(e);
@@ -72,7 +74,7 @@ EntityID EnemySpawnSystem::spawnFromPool(World& world, const std::vector<sf::Vec
     hp.maxHealth = static_cast<int>(enemy.health);
 
     // Circle
-    float enemyRadius = 20.0f;
+    float enemyRadius = 18.0f;
     auto& circle = world.getComponent<CircleComponent>(e);
     circle.x = posComp.x;
     circle.y = posComp.y;
@@ -84,7 +86,18 @@ EntityID EnemySpawnSystem::spawnFromPool(World& world, const std::vector<sf::Vec
     auto& spriteE = world.getComponent<SpriteComponent>(e);
     spriteE.setTxt(spritePath);
     spriteE.sprite.setPosition(posComp.x, posComp.y);
-    
+    auto spriteSystem = world.getSystem<SpriteRenderSystem>();
+    if (spriteSystem) {
+		spriteSystem->addEntityToSystem(e);
+    }
+
+    if (auto colSys = world.getSystem<CollisionSystem>()) {
+        colSys->addEntity(e);
+    }
+    if (auto hpSys = world.getSystem<EnemyHPSystem>()) {
+        hpSys->addEntity(e);
+    }
+
     float enemyScale = enemy.scale;
     int frameCount = 1;
     float frameRate = 1.0f;
@@ -92,11 +105,11 @@ EntityID EnemySpawnSystem::spawnFromPool(World& world, const std::vector<sf::Vec
     // Set animation parameters based on enemy type
     if (enemy.type == EnemyComponent::EnemyType::FireNormal1) {
         frameCount = 20;
-        frameRate = 0.05f;
+        frameRate = 0.04f;
     }
     if (enemy.type == EnemyComponent::EnemyType::FireNormal2) {
         frameCount = 6;
-        frameRate = 0.2f;
+        frameRate = 0.18f;
     }
     if (enemy.type == EnemyComponent::EnemyType::HellNormal1) {
         frameCount = 19;
@@ -155,17 +168,22 @@ EntityID EnemySpawnSystem::spawnFromPool(World& world, const std::vector<sf::Vec
         spriteE.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f + 15.f);
     }
 
-    createdEnemies.push_back(e);
+    // Health bar
+    auto& healthBar = world.getComponent<EnemyHPComponent>(e);
+    healthBar.init(hp.maxHealth, hp.currentHealth, 40.f, 5.f, sf::Vector2f(-30.f, -50.f));
+
+    activeEnemies.push_back(e);
     return e;
 }
 
 void EnemySpawnSystem::returnToPool(World& world, EntityID enemyID)
 {
+	cout << "[EnemySpawnSystem] Returning enemy " << enemyID << " to pool\n";
     // Move enemy off-screen and reset its state
     if (world.hasComponent<PositionComponent>(enemyID)) {
         auto& pos = world.getComponent<PositionComponent>(enemyID);
         pos.x = -1500;
-        pos.y = -1500;
+        pos.y = 1500;
     }
 
     if (world.hasComponent<VelocityComponent>(enemyID)) {
@@ -198,30 +216,40 @@ void EnemySpawnSystem::returnToPool(World& world, EntityID enemyID)
     if (world.hasComponent<CircleComponent>(enemyID)) {
         auto& circle = world.getComponent<CircleComponent>(enemyID);
         circle.x = -1500;
-        circle.y = -1500;
+        circle.y = 1500;
     }
 
-    if (world.hasComponent<SpriteComponent>(enemyID)) {
-        auto& sprite = world.getComponent<SpriteComponent>(enemyID);
-        sprite.sprite.setPosition(-1500, -1500);
+    if (auto colSys = world.getSystem<CollisionSystem>()) {
+        colSys->removeEntity(enemyID);
     }
 
-    // Remove from created enemies list
-    auto it = std::find(createdEnemies.begin(), createdEnemies.end(), enemyID);
-    if (it != createdEnemies.end()) {
-        createdEnemies.erase(it);
+    if (auto hpSys = world.getSystem<EnemyHPSystem>()) {
+        hpSys->removeEntity(enemyID);
+    }
+
+    // Clean up animation data for hidden enemies
+    world.getSystem<SpriteRenderSystem>()->hideEntity(enemyID);
+
+    // Remove from alive enemies list
+    auto it = std::find(activeEnemies.begin(), activeEnemies.end(), enemyID);
+    if (it != activeEnemies.end()) {
+        activeEnemies.erase(it);
     }
 }
 
 void EnemySpawnSystem::clearPool(World& world)
 {
-    for (EntityID enemyID : enemyPool) {
-        std::cout << "[EnemySpawnSystem] Destroying enemy " << enemyID << std::endl;
-        world.destroyEntity(enemyID);
+    while (!activeEnemies.empty()) {
+        EntityID enemyID = activeEnemies.back();
+        activeEnemies.pop_back();
+        returnToPool(world, enemyID);
     }
-    enemyPool.clear();
-    createdEnemies.clear();
     nextPoolIndex = 0;
+}
+
+int EnemySpawnSystem::getRemainEnemy() const
+{
+	return static_cast<int>(activeEnemies.size());
 }
 
 // Legacy spawnWave method (now uses pool)
@@ -232,14 +260,7 @@ void EnemySpawnSystem::spawnWave(World& world, const std::vector<sf::Vector2f>& 
     }
 }
 
-void EnemySpawnSystem::destroyAllEnemies(World& world)
-{
-    for (EntityID enemy : createdEnemies) {
-        std::cout << "[EnemySpawnSystem] Destroying enemy " << enemy << std::endl;
-        world.destroyEntity(enemy);
-    }
-    createdEnemies.clear();
-}
+
 
 
 

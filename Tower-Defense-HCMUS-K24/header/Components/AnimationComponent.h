@@ -5,7 +5,7 @@
 #include <vector>
 
 // Represents one frame of animation
-struct AnimationFrame 
+struct AnimationFrame
 {
     sf::IntRect rect; // Rectangle within texture
     float duration;   // Duration of this specific frame
@@ -13,7 +13,7 @@ struct AnimationFrame
 };
 
 // Represents a complete animation sequence (like "walk", "attack", etc.)
-struct Animation 
+struct Animation
 {
     std::vector<AnimationFrame> frames;
     bool loop;
@@ -22,7 +22,7 @@ struct Animation
 };
 
 // The actual ECS component
-struct AnimationComponent 
+struct AnimationComponent
 {
     std::unordered_map<std::string, Animation> animations;
     std::string currentAnimation;
@@ -33,20 +33,20 @@ struct AnimationComponent
     AnimationComponent() : currentFrame(0), elapsedTime(0.0f), isPlaying(false) {}
 
     // Add a new animation
-    void addAnimation(const std::string& name, const Animation& animation) 
+    void addAnimation(const std::string& name, const Animation& animation)
     {
         animations[name] = animation;
-        if (currentAnimation.empty()) 
+        if (currentAnimation.empty())
         {
             currentAnimation = name;
         }
     }
 
     // Play an animation (reset if switching)
-    void play(const std::string& name) 
+    void play(const std::string& name)
     {
         if (animations.find(name) != animations.end()) {
-            if (currentAnimation != name) 
+            if (currentAnimation != name)
             {
                 currentAnimation = name;
                 currentFrame = 0;
@@ -64,7 +64,7 @@ struct AnimationComponent
     void resume() { if (!isFinished()) isPlaying = true; }
 
     // Stop and reset the animation
-    void stop() 
+    void stop()
     {
         isPlaying = false;
         currentFrame = 0;
@@ -74,14 +74,14 @@ struct AnimationComponent
     }
 
     // Set whether the current animation should loop
-    void setLoop(bool loop) 
+    void setLoop(bool loop)
     {
         if (!currentAnimation.empty())
             animations[currentAnimation].loop = loop;
     }
 
     // Returns true if the current animation is finished (for non-looping)
-    bool isFinished() const 
+    bool isFinished() const
     {
         if (currentAnimation.empty() || animations.find(currentAnimation) == animations.end())
             return true;
@@ -102,7 +102,7 @@ struct AnimationComponent
     }
 
     // Update the animation based on delta time
-    void update(float deltaTime) 
+    void update(float deltaTime)
     {
         if (!isPlaying || currentAnimation.empty() || animations.find(currentAnimation) == animations.end())
             return;

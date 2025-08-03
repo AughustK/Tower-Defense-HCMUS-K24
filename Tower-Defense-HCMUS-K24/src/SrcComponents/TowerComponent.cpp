@@ -48,7 +48,25 @@ std::string TowerComponent::getSpritePath(TowerType t, uint8_t lvl)
     return {};
 }
 
-
+std::string TowerComponent::getAnimationPath(TowerType t, uint8_t lvl)
+{
+    switch (t)
+    {
+    case TowerType::Archer:
+        return (lvl == 0)
+            ? "assets/Heroes/archer_base_idle.png"
+            : "assets/Heroes/archer_up_idle.png";
+    case TowerType::Mage:
+        return (lvl == 0)
+            ? "assets/Heroes/mage_base_idle.png"
+            : "assets/Heroes/mage_up_idle.png";
+    case TowerType::Cannon:
+        return (lvl == 0)
+            ? "assets/Heroes/cannon_base_idle.png"
+            : "assets/Heroes/cannon_up_idle.png";
+    }
+    return {};
+}
 
 
 

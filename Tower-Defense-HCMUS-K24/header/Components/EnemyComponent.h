@@ -16,7 +16,8 @@ struct EnemyComponent {
         ParadiseNormal1, ParadiseNormal2, ParadiseBoss
     };
     float x = 0, y = 0;
-    float health = 0, speed = 0, damage = 0, scale = 0, prize = 0;
+    float health = 0, speed = 0, damage = 0, scale = 0;
+    int prize = 0;
     uint32_t pathIndex = 0;
     EnemyType type = EnemyType::FireNormal1;
     EntityID target = INVALID_ENTITY;

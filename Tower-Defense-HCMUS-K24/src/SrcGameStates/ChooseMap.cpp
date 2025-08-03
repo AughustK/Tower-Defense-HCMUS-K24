@@ -1,12 +1,18 @@
 #include "../../header/Managers/World.h"
+#include "../../header/GameStates/ChooseMap.h"
+#include "../../header/GameStates/Lobby.h"
+
 #include "../../header/Components/SoundComponent.h"
 #include "../../header/Components/MusicComponent.h"
 #include "../../header/Components/ClickComponent.h"
+#include "../../header/Components/UITextComponent.h"
 
 #include "../../header/Systems/SoundSystem.h"
+#include "../../header/Systems/TextRenderSystem.h"
 #include "../../header/Systems/MusicSystem.h"
-#include "../../header/GameStates/ChooseMap.h"
-#include "../../header/GameStates/Lobby.h"
+#include "../../header/Systems/InitializeEnemy.h"
+#include "../../header/Systems/InitializeProjectile.h"
+
 
 
 void ChooseMap::onEnter(World& world)
@@ -36,69 +42,82 @@ void ChooseMap::onEnter(World& world)
     EntityID blackFlag = world.createEntity();
     registerEntity(blackFlag);
     const string blackFlagPath = "assets/Bg/BlackFlag.png";
-    SpriteComponent spriteComp2(blackFlagPath, { 1100.f, 80.f }, { 0.5f, 0.5f });
+    SpriteComponent spriteComp2(blackFlagPath, { 1300.f, 190.f }, { 0.5f, 0.5f }, true);
     spriteComp2.onClick = [this](EntityID entityId, World& world)
         {
             std::cout << "[ChooseMap][HellMap] Clicked\n";
             auto& sound = world.getComponent<SoundComponent>(entityId);
             sound.sound->play();
             sf::sleep(sf::seconds(0.5f));
-            const string hellMPath = "HellMap";
-            world.setState(std::make_unique<GamePlay>(hellMPath, currentDifficulty));
+
+            pendingMap = "HellMap";
+            showDifficultyMenu(world);
         };
     world.addComponent(blackFlag, soundComp);
     world.addComponent(blackFlag, spriteComp2);
+    auto& sp1 = world.getComponent<SpriteComponent>(blackFlag);
+    sf::FloatRect b1 = sp1.sprite.getLocalBounds();
+    sp1.sprite.setOrigin(b1.width / 2.f, b1.height / 2.f);
 
     //ice map
     EntityID blueFlag = world.createEntity();
     registerEntity(blueFlag);
     const string blueFlagPath = "assets/Bg/BlueFlag.png";
-    SpriteComponent spriteComp3(blueFlagPath, { 1380.f, 400.f }, { 0.5f, 0.5f });
+    SpriteComponent spriteComp3(blueFlagPath, { 1530.f, 510.f }, { 0.5f, 0.5f }, true);
     spriteComp3.onClick = [this](EntityID entityId, World& world)
         {
             std::cout << "[ChooseMap][IceMap] Clicked\n";
             auto& sound = world.getComponent<SoundComponent>(entityId);
             sound.sound->play();
             sf::sleep(sf::seconds(0.5f));
-            const string iceMPath = "IceMap";
-            world.setState(std::make_unique<GamePlay>(iceMPath, currentDifficulty));
+            pendingMap = "IceMap";
+            showDifficultyMenu(world);
         };
     world.addComponent(blueFlag, soundComp);
     world.addComponent(blueFlag, spriteComp3);
+    auto& sp2 = world.getComponent<SpriteComponent>(blueFlag);
+    sf::FloatRect b2 = sp2.sprite.getLocalBounds();
+    sp2.sprite.setOrigin(b2.width / 2.f, b2.height / 2.f);
 
     //paradise map
     EntityID whiteFlag = world.createEntity();
     registerEntity(whiteFlag);
     const string whiteFlagPath = "assets/Bg/WhiteFlag.png";
-    SpriteComponent spriteComp4(whiteFlagPath, { 1100.f, 700.f }, { 0.5f, 0.5f });
+    SpriteComponent spriteComp4(whiteFlagPath, { 1270.f, 820.f }, { 0.5f, 0.5f }, true);
     spriteComp4.onClick = [this](EntityID entityId, World& world)
         {
             std::cout << "[ChooseMap][ParadiselMap] Clicked\n";
             auto& sound = world.getComponent<SoundComponent>(entityId);
             sound.sound->play();
             sf::sleep(sf::seconds(0.5f));
-            const string paraMPath = "ParadiseMap";
-            world.setState(std::make_unique<GamePlay>(paraMPath, currentDifficulty));
+            pendingMap = "ParadiseMap";
+            showDifficultyMenu(world);
         };
     world.addComponent(whiteFlag, soundComp);
     world.addComponent(whiteFlag, spriteComp4);
+    auto& sp3 = world.getComponent<SpriteComponent>(whiteFlag);
+    sf::FloatRect b3 = sp3.sprite.getLocalBounds();
+    sp3.sprite.setOrigin(b3.width / 2.f, b3.height / 2.f);
 
     //firemap
     EntityID redFlag = world.createEntity();
     registerEntity(redFlag);
     const string redFlagPath = "assets/Bg/redFlag.png";
-    SpriteComponent spriteComp5(redFlagPath, { 400.f, 250.f }, { 0.5f, 0.5f });
+    SpriteComponent spriteComp5(redFlagPath, { 620.f, 410.f }, { 0.5f, 0.5f }, true);
     spriteComp5.onClick = [this](EntityID entityId, World& world)
         {
             std::cout << "[ChooseMap][FireMap] Clicked\n";
             auto& sound = world.getComponent<SoundComponent>(entityId);
             sound.sound->play();
             sf::sleep(sf::seconds(0.5f));
-            const string fireMPath = "FireMap";
-            world.setState(std::make_unique<GamePlay>(fireMPath, currentDifficulty));
+            pendingMap = "FireMap";
+            showDifficultyMenu(world);
         };
     world.addComponent(redFlag, soundComp);
     world.addComponent(redFlag, spriteComp5);
+    auto& sp4 = world.getComponent<SpriteComponent>(redFlag);
+    sf::FloatRect b4 = sp4.sprite.getLocalBounds();
+    sp4.sprite.setOrigin(b4.width / 2.f, b4.height / 2.f);
 
     //button
     EntityID exitButton = world.createEntity();
@@ -121,30 +140,111 @@ void ChooseMap::render(World& world, sf::RenderWindow& window)
 {
     auto spriteSystem = world.getSystem<SpriteRenderSystem>();
     spriteSystem->render(world);
+
+    auto textSystem = world.getSystem<TextRenderSystem>();
+    textSystem->render(world);
 }
 
 void ChooseMap::handleEvent(World& world, sf::Event& event)
 {
-    auto entities = world.getEntitiesWithComponent<SpriteComponent>();
-    if (event.type == sf::Event::MouseButtonPressed &&
-        event.mouseButton.button == sf::Mouse::Left)
-    {
-        Vector2f mousePos = world.window.mapPixelToCoords(
+    sf::Vector2f mousePos;
+    if (event.type == sf::Event::MouseMoved) {
+        mousePos = world.window.mapPixelToCoords(
+            { event.mouseMove.x, event.mouseMove.y });
+    } 
+    else if (event.type == sf::Event::MouseButtonPressed) {
+        mousePos = world.window.mapPixelToCoords(
             { event.mouseButton.x, event.mouseButton.y });
-        for (EntityID e : entities)
+    }
+
+    if (showingDifficultyMenu)
+    {
+        if (event.type == sf::Event::MouseMoved)
         {
-            auto& spriteComp = world.getComponent<SpriteComponent>(e);
-            if (spriteComp.tryClick(mousePos, e, world))
+            for (EntityID btn : difficultyButtons)
             {
-                return;
+                if (world.hasComponent<TextComponent>(btn)) 
+                {
+                    auto& tc = world.getComponent<TextComponent>(btn);
+                    tc.tryHover(mousePos, btn, world);
+                }
             }
         }
+        else if (event.type == sf::Event::MouseButtonPressed &&
+            event.mouseButton.button == sf::Mouse::Left)
+        {
+            bool clickedDifficulty = false;
+            for (EntityID btn : difficultyButtons)
+            {
+                if (world.hasComponent<TextComponent>(btn)) {
+                    auto& tc = world.getComponent<TextComponent>(btn);
+                    if (tc.tryClick(mousePos, btn, world))
+                    {
+                        clickedDifficulty = true;
+                        break;
+                    }
+                }
+            }
+            if (!clickedDifficulty)
+            {
+                for (EntityID btn : difficultyButtons)
+                    world.destroyEntity(btn);
+                difficultyButtons.clear();
+                showingDifficultyMenu = false;
+                pendingMap.reset();
+            }
+        }
+        return; 
+    }
+
+    if (event.type == sf::Event::MouseMoved)
+    {
+        for (EntityID e : world.getEntitiesWithComponent<TextComponent>())
+        {
+            auto& tc = world.getComponent<TextComponent>(e);
+            tc.tryHover(mousePos, e, world);
+        }
+        for (EntityID e : world.getEntitiesWithComponent<SpriteComponent>())
+        {
+            auto& sp = world.getComponent<SpriteComponent>(e);
+
+            if (!sp.isHover) continue;
+
+            sf::FloatRect bounds = sp.sprite.getGlobalBounds();
+            if (bounds.contains(mousePos))
+            {
+                sp.sprite.setScale(0.6f, 0.6f);
+            }
+            else
+            {
+                sp.sprite.setScale(0.5f, 0.5f);
+            }
+        }
+    }
+
+    else if (event.type == sf::Event::MouseButtonPressed &&
+        event.mouseButton.button == sf::Mouse::Left)
+    {
+        // click TextComponent
+        for (EntityID e : world.getEntitiesWithComponent<TextComponent>())
+        {
+            auto& tc = world.getComponent<TextComponent>(e);
+            if (tc.tryClick(mousePos, e, world))
+                return;
+        }
+        // click SpriteComponent
+        for (EntityID e : world.getEntitiesWithComponent<SpriteComponent>())
+        {
+            auto& sp = world.getComponent<SpriteComponent>(e);
+            if (sp.tryClick(mousePos, e, world))
+                return;
+        }
+        // click ClickComponent
         for (EntityID e : world.getEntitiesWithComponent<ClickComponent>())
         {
-            auto& clickComp = world.getComponent<ClickComponent>(e);
-            if (clickComp.tryClick(mousePos, e, world)) {
+            auto& cc = world.getComponent<ClickComponent>(e);
+            if (cc.tryClick(mousePos, e, world))
                 return;
-            }
         }
     }
 }
@@ -154,3 +254,76 @@ void ChooseMap::update(World& world, float dt)
     auto musicSystem = world.getSystem<MusicSystem>();
     if (musicSystem) musicSystem->play(world);
 }
+
+
+void ChooseMap::showDifficultyMenu(World& world)
+{
+    showingDifficultyMenu = true;
+    difficultyButtons.clear();
+
+    auto winSize = world.window.getSize();        // sf::Vector2u
+    float centerX = winSize.x * 0.5f;
+    float centerY = winSize.y * 0.5f;
+
+    const string fontPath = "assets/Font/Minecraft-Regular.otf";
+    std::vector<std::pair<std::string, DifficultyLevel>> options = {
+        {"EASY",   DifficultyLevel::Easy},
+        {"NORMAL", DifficultyLevel::Normal},
+        {"HARD",   DifficultyLevel::Hard}
+    };
+
+    float spacingY = 100.f;
+    float totalSpan = spacingY * (options.size() - 1);
+    float startY = centerY - totalSpan * 0.5f;
+
+    vector<sf::Color> btnColor = { Color::Green, Color::Yellow, Color::Red };
+
+    EntityID bg = world.createEntity();
+    const std::string bgPath = "assets/Bg/FrameLevel.png";
+    SpriteComponent bgSprite(bgPath, { centerX, centerY }, { 1.f, 1.f });
+    sf::FloatRect bounds = bgSprite.sprite.getLocalBounds();
+    bgSprite.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+    world.addComponent(bg, bgSprite);
+    difficultyButtons.push_back(bg);
+
+    for (size_t i = 0; i < options.size(); ++i) {
+        EntityID btn = world.createEntity();
+
+        TextComponent tc(
+            options[i].first,
+            48,
+            fontPath,
+            Color::White,
+            { centerX, startY + spacingY * float(i) },
+            true,
+            sf::Color::Black,
+            5.f,
+            btnColor[i]
+        );
+
+
+        tc.onClick = [this, lvl = options[i].second](EntityID, World& w)
+            {
+                this->selectedDifficulty = lvl;
+
+                for (EntityID d : difficultyButtons)
+                    w.destroyEntity(d);
+                difficultyButtons.clear();
+                showingDifficultyMenu = false;
+
+                if (pendingMap.has_value()) {
+                    w.setState(
+                        std::make_unique<GamePlay>(
+                            pendingMap.value(),
+                            this->selectedDifficulty
+                        )
+                    );
+                }
+            };
+
+        world.addComponent(btn, tc);
+        difficultyButtons.push_back(btn);
+    }
+}
+
+

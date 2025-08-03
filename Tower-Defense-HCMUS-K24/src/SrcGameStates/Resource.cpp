@@ -1,14 +1,16 @@
 #include "../../header/Managers/World.h"
+#include "../../header/GameStates/MainMenu.h"
+#include "../../header/GameStates/Lobby.h"
+#include "../../header/GameStates/Resource.h"
+#include "../../header/GameStates/ChooseMap.h"
+
 #include "../../header/Components/SoundComponent.h"
 #include "../../header/Components/MusicComponent.h"
 #include "../../header/Components/ClickComponent.h"
 
 #include "../../header/Systems/SoundSystem.h"
 #include "../../header/Systems/MusicSystem.h"
-#include "../../header/GameStates/MainMenu.h"
-#include "../../header/GameStates/Lobby.h"
-#include "../../header/GameStates/Resource.h"
-#include "../../header/GameStates/ChooseMap.h"
+
 
 
 void Resource::onEnter(World& world)
@@ -71,7 +73,7 @@ void Resource::onEnter(World& world)
             std::cout << "[Left Button] Clicked\n";
             auto& sound = world.getComponent<SoundComponent>(entityID);
             sound.sound->play();
-            if (currentSlide <= 0) currentSlide = slides.size() - 1;
+            if (currentSlide <= 0) currentSlide = static_cast<int>(slides.size()) - 1;
             else
             {
                 currentSlide--;
@@ -91,7 +93,7 @@ void Resource::onEnter(World& world)
             std::cout << "[Right Button] Clicked\n";
             auto& sound = world.getComponent<SoundComponent>(entityID);
             sound.sound->play();
-            if (currentSlide >= slides.size() - 1) currentSlide = 0;
+            if (currentSlide >= static_cast<int>(slides.size()) - 1) currentSlide = 0;
             else
             {
                 currentSlide++;

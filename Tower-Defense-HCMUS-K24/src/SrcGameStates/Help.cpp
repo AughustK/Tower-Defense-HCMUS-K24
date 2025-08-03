@@ -1,8 +1,10 @@
 #include "../../header/GameStates/Help.h"
-#include "../../header/Components/SoundComponent.h"
-#include "../../header/Systems/SoundSystem.h"
 #include "../../header/GameStates/MainMenu.h"
+
+#include "../../header/Systems/SoundSystem.h"
 #include "../../header/Systems/MusicSystem.h"
+
+#include "../../header/Components/SoundComponent.h"
 
 void Help::onEnter(World& world)
 {
@@ -36,6 +38,7 @@ void Help::onEnter(World& world)
     this->slideBoxEntity = slide;
     SpriteComponent slideSprite(slidePaths[currentSlide], { 340.f, 150.f }, { 1.f, 1.f });
     world.addComponent(slide, slideSprite);
+
     //button
         //exit button
     EntityID exitButton = world.createEntity();
@@ -55,6 +58,7 @@ void Help::onEnter(World& world)
         };
     world.addComponent(exitButton, soundComp);
     world.addComponent(exitButton, spriteComp1);
+
     //left button
     EntityID leftButton = world.createEntity();
     registerEntity(leftButton);
@@ -70,6 +74,7 @@ void Help::onEnter(World& world)
         };
     world.addComponent(leftButton, spriteLeftButton);
     world.addComponent(leftButton, SoundComponent(soundPath, false, volume));
+
     //right button
     EntityID rightButton = world.createEntity();
     registerEntity(rightButton);

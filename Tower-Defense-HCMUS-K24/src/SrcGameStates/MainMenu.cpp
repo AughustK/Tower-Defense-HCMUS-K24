@@ -1,15 +1,18 @@
 #include "../../header/GameStates/MainMenu.h"
-#include "../../header/Components/SoundComponent.h"
-#include "../../header/Systems/SoundSystem.h"
-#include "../../header/GameStates/Credit.h"
-#include "../../header/GameStates/Help.h"
-#include "../../header/Components/MusicComponent.h"
-#include "../../header/Systems/MusicSystem.h"
-#include "../../header/Managers/World.h"
 #include "../../header/GameStates/Setting.h"
 #include "../../header/GameStates/Lobby.h"
 #include "../../header/GameStates/Victory.h"
 #include "../../header/GameStates/Defeat.h"
+#include "../../header/GameStates/Credit.h"
+#include "../../header/GameStates/Help.h"
+
+#include "../../header/Components/SoundComponent.h"
+#include "../../header/Components/MusicComponent.h"
+
+#include "../../header/Systems/SoundSystem.h"
+#include "../../header/Systems/MusicSystem.h"
+#include "../../header/Managers/World.h"
+
 
 void MainMenu::handleEvent(World& world, sf::Event& event)
 {

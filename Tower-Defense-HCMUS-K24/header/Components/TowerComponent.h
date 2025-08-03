@@ -48,5 +48,6 @@ struct TowerComponent
 
     // Path-based sprite lookup: use with UISpriteComponent
     static std::string getSpritePath(TowerType t, uint8_t lvl);
+    static std::string getAnimationPath(TowerType t, uint8_t lvl);
 };
 

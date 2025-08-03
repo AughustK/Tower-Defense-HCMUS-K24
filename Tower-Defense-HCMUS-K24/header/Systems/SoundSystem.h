@@ -6,7 +6,7 @@
 
 using std::cout;
 
-class SoundSystem : public System 
+class SoundSystem : public System
 {
 
 public:
@@ -19,14 +19,14 @@ public:
         for (EntityID entity : entities) {
             auto& soundComp = world.getComponent<SoundComponent>(entity);
 
-            if (soundComp.sound) 
+            if (soundComp.sound)
             {
                 soundComp.sound->setVolume(globalVolume);
             }
 
-            if (soundComp.triggered) 
+            if (soundComp.triggered)
             {
-                if (soundComp.sound->getStatus() != sf::Sound::Playing) 
+                if (soundComp.sound->getStatus() != sf::Sound::Playing)
                 {
                     soundComp.sound->play();
                 }
@@ -35,4 +35,3 @@ public:
         }
     }
 };
-

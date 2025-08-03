@@ -27,7 +27,6 @@ void GameState::onExit(World& world)
         world.destroyEntity(id);
     }
     createdEntities.clear();
-    
     cout << "Exit state and free memory successfully.\n";
 }
 

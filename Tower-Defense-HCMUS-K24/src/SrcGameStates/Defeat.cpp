@@ -32,15 +32,15 @@ void Defeat::onEnter(World& world) {
     //bg
     EntityID background = world.createEntity();
     registerEntity(background);
-    const string bgPath = "assets/Bg/DefeatBg.jpg";
-    SpriteComponent spriteComp0(bgPath, { 0.f, 0.f }, { 1.78f, 1.6f });
+    const string bgPath = "assets/Bg/DefeatBg.png";
+    SpriteComponent spriteComp0(bgPath, { 0.f, 0.f }, { 1.f, 1.f });
     world.addComponent(background, spriteComp0);
 
     //button
     EntityID homeButton = world.createEntity();
     registerEntity(homeButton);
     const string buttonPath1 = "assets/Icon/Home/B_Button16.png";
-    SpriteComponent spriteComp1(buttonPath1, { 200.f + 625, 700.f }, { 5.f, 5.f });
+    SpriteComponent spriteComp1(buttonPath1, { 681.f, 655.f }, { 10.f, 10.f });
     spriteComp1.onClick = [](EntityID entityId, World& world)
         {
             std::cout << "[Home Button] Clicked\n";
@@ -55,7 +55,7 @@ void Defeat::onEnter(World& world) {
     EntityID retryButton = world.createEntity();
     registerEntity(retryButton);
     const string buttonPath2 = "assets/Icon/Restart/B_Button70.png";
-    SpriteComponent spriteComp2(buttonPath2, { 345.f + 625, 700.f }, { 5.f, 5.f });
+    SpriteComponent spriteComp2(buttonPath2, { 1043.f, 655.f }, { 10.f, 10.f });
     spriteComp2.onClick = [](EntityID entityId, World& world)
         {
             std::cout << "[Retry Button] Clicked\n";
@@ -66,20 +66,6 @@ void Defeat::onEnter(World& world) {
         };
     world.addComponent(retryButton, soundComp);
     world.addComponent(retryButton, spriteComp2);
-
-    //skull
-    EntityID skull = world.createEntity();
-    registerEntity(skull);
-    const string skullPath = "assets/Icon/Skull.png";
-    SpriteComponent spriteComp3(skullPath, { 720.f, 150.f }, { 1.1f, 1.2f });
-    world.addComponent(skull, spriteComp3);
-
-    //text
-    EntityID text = world.createEntity();
-    registerEntity(text);
-    const string str = "DEFEATED";
-    TextComponent textComp(str, 100, fontPath, textColor, { 1920 / 2 - 15, 600 }, false, outlineColor, thickness);
-    world.addComponent(text, textComp);
 
     //victory bgm
     EntityID bgm = world.createEntity();

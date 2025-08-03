@@ -1,8 +1,8 @@
 #include <iostream>
 #include "../../header/Components/UITextComponent.h"
 
-TextComponent::TextComponent(const string& str, int n, const string& fontPath, Color color, const Vector2f& position, bool hover, sf::Color outline, float thickness)
-	:isHover(hover)
+TextComponent::TextComponent(const string& str, int n, const string& fontPath, Color color, const Vector2f& position, bool hover, sf::Color outline, float thickness, sf::Color hoverC )
+	:isHover(hover), hoverColor(hoverC)
 {
 	txt.setString(str);
 	txt.setCharacterSize(n);
@@ -20,6 +20,7 @@ TextComponent::TextComponent(const string& str, int n, const string& fontPath, C
 	txt.setPosition(position);
 	txt.setOutlineColor(outline);
 	txt.setOutlineThickness(thickness);
+	hoverColor = hoverC;
 }
 
 bool TextComponent::contains(Vector2f point) const
@@ -39,7 +40,7 @@ bool TextComponent::tryClick(Vector2f mousePos, EntityID entityId, World& world)
 
 void TextComponent::tryHover(Vector2f mousePos, EntityID entityId, World& world) {
 	if (contains(mousePos) && isHover)
-		txt.setFillColor(Color::Cyan);
+		txt.setFillColor(hoverColor);
 	else
 		txt.setFillColor(originColor);
 }

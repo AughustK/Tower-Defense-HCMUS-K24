@@ -1,7 +1,9 @@
 #include "../../header/GameStates/Credit.h"
-#include "../../header/Components/SoundComponent.h"
-#include "../../header/Systems/SoundSystem.h"
 #include "../../header/GameStates/MainMenu.h"
+
+#include "../../header/Components/SoundComponent.h"
+
+#include "../../header/Systems/SoundSystem.h"
 #include "../../header/Systems/MusicSystem.h"
 
 void Credit::onEnter(World& world)
@@ -23,6 +25,7 @@ void Credit::onEnter(World& world)
     const string bgPath = "assets/Bg/CreditBg.jpg";
     SpriteComponent spriteComp0(bgPath, { 0.f, 0.f }, { 5.f, 5.f });
     world.addComponent(background, spriteComp0);
+
 
     //button
     EntityID exitButton = world.createEntity();

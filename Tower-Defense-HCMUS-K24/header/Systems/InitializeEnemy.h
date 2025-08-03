@@ -9,7 +9,7 @@
 class EnemySpawnSystem : public System 
 {
 private:
-    std::vector<EntityID> createdEnemies;
+    std::vector<EntityID> activeEnemies;
     std::vector<EntityID> enemyPool;
     std::size_t nextPoolIndex = 0;
 
@@ -22,8 +22,8 @@ public:
                           EnemyComponent::EnemyType t, DifficultyLevel difficulty);
     void returnToPool(World& world, EntityID enemyID);
     void clearPool(World& world);
-
+    int getRemainEnemy() const;
     // Legacy methods (for backward compatibility)
     void spawnWave(World& world, const std::vector<sf::Vector2f>& path, std::size_t count, const string& map, EnemyComponent::EnemyType t, DifficultyLevel difficulty);
-    void destroyAllEnemies(World& world);
+    //void destroyAllEnemies(World& world);
 };

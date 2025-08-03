@@ -1,12 +1,16 @@
 #include "../../header/GameStates/Setting.h"
-#include "../../header/Components/SoundComponent.h"
-#include "../../header/Systems/SoundSystem.h"
 #include "../../header/GameStates/MainMenu.h"
+
 #include "../../header/Components/MusicComponent.h"
+#include "../../header/Components/SoundComponent.h"
+#include "../../header/Components/UISliderComponent.h"
+
+#include "../../header/Systems/SoundSystem.h"
+#include "../../header/Systems/UISliderSystem.h"
 #include "../../header/Systems/MusicSystem.h"
 #include "../../header/Managers/World.h"
-#include "../../header/Components/UISliderComponent.h"
-#include "../../header/Systems/UISliderSystem.h"
+
+
 
 void Setting::handleEvent(World& world, sf::Event& event) {
     auto entities = world.getEntitiesWithComponent<SpriteComponent>();
@@ -38,6 +42,7 @@ void Setting::onEnter(World& world) {
     const string musicPath = "assets/SFX/Music/Main/Main_Final.mp3";
     SoundComponent soundComp(soundPath, false);
 
+
     auto winSize = world.window.getSize();
     float centerX = static_cast<float>(winSize.x) / 2.f;
 
@@ -64,14 +69,6 @@ void Setting::onEnter(World& world) {
     const string bgPath = "assets/Bg/SettingBg.png";
     SpriteComponent spriteComp0(bgPath, { 0.f, 0.f }, { 1.f, 1.f });
     world.addComponent(background, spriteComp0);
-
-
-    ////frame
-    //EntityID frame = world.createEntity();
-    //registerEntity(frame);
-    //const string framePath = "assets/Bg/FrameForAudioSettingV2.png";
-    //SpriteComponent spriteFrame(framePath, { 50.f, 50.f }, { 1.f, 1.f });
-    //world.addComponent(frame, spriteFrame);
 
     //button
     EntityID exitButton = world.createEntity();

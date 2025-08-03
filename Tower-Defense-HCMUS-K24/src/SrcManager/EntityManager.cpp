@@ -1,11 +1,11 @@
 #include "../../header/Managers/EntityManager.h"
+#include <iostream>
 
 EntityManager::EntityManager() noexcept
 {
-    availableEntities.reserve(MAX_ENTITIES);  // Pre-allocate memory
     for (EntityID id = 0; id < MAX_ENTITIES; ++id) 
     {
-        availableEntities.push_back(id);
+        availableEntities.push(id);
     }
     livingEntity = 0;
 }
@@ -13,8 +13,10 @@ EntityManager::EntityManager() noexcept
 EntityID EntityManager::createEntity()
 {
     assert(!availableEntities.empty() && "Too many entities");
-    EntityID id = availableEntities.back();  
-    availableEntities.pop_back();
+
+	// Get the first available entity ID
+    EntityID id = availableEntities.front();  
+    availableEntities.pop();
     ++livingEntity;
     return id;
 }
@@ -22,25 +24,17 @@ EntityID EntityManager::createEntity()
 void EntityManager::destroyEntity(EntityID entity)
 {
     assert(entity < MAX_ENTITIES && "Entity out of range");
-    
-    // Clear the entity's signature to ensure no stale component references
+
+    //clear signature
     signatures[entity].reset();
-    
-    // Don't immediately make entity available for reuse
-    // This will be done by a separate call to makeEntityAvailableForReuse()
+
+    //make ID available immediately
+    availableEntities.push(entity);
+	std::cout << "[EntityManager] Entity " << entity << " is now available for reuse\n";
+    //adjust count
     --livingEntity;
 }
 
-void EntityManager::makeEntityAvailableForReuse(EntityID entity)
-{
-    assert(entity < MAX_ENTITIES && "Entity out of range");
-    
-    // Double-check that the signature is cleared
-    signatures[entity].reset();
-    
-    // Add to available entities for reuse
-    availableEntities.push_back(entity);
-}
 
 void EntityManager::addComponent(EntityID entity, ComponentID component)
 {

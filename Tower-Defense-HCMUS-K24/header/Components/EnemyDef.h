@@ -16,9 +16,9 @@ struct EnemyDef
 
     // Multipliers for each difficulty: [Easy, Normal, Hard]
     float healthMultiplier[3]   = {1.0f, 1.2f, 1.5f};
-    float speedMultiplier[3]    = {1.0f, 1.1f, 1.2f};
-    float damageMultiplier[3]   = {1.0f, 1.2f, 1.4f};
-    float prizeMultiplier[3]    = {1.0f, 1.2f, 0.8f};
+    float speedMultiplier[3]    = {1.0f, 1.1f, 1.1f};
+    float damageMultiplier[3]   = {1.0f, 1.0f, 2.0f};
+    float prizeMultiplier[3]    = {1.0f, 1.2f, 1.5f};
 
     float getHealth(DifficultyLevel diff) const {
         return baseHealth * healthMultiplier[static_cast<int>(diff)];

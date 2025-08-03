@@ -2,12 +2,17 @@
 #include "../../header/Managers/World.h"
 #include "../../header/Components/PositionComponent.h"
 #include "../../header/Components/EnemyComponent.h"
+#include "../../header/Components/TowerComponent.h"
 #include <iostream>
 
 void SpriteRenderSystem::render(World& world)
 {
     for (EntityID entity : entities)
     {
+        if (!world.hasComponent<SpriteComponent>(entity)) {
+            continue;
+        }
+        
         auto& spriteComp = world.getComponent<SpriteComponent>(entity);
         //Only set position if the entity has a PositionComponent
         if (world.hasComponent<PositionComponent>(entity)) {
@@ -18,7 +23,6 @@ void SpriteRenderSystem::render(World& world)
     }
 }
 
-
 void SpriteRenderSystem::update(float deltaTime)
 {
 }
@@ -28,28 +32,28 @@ void SpriteRenderSystem::clear()
     // Clear animation timers and current frames when the system is reset
     animationTimers.clear();
     currentFrames.clear();
-    
-    // Clear the entities list to ensure no stale references
+
     entities.clear();
-    
-    std::cout << "[SpriteRenderSystem] Cleared animation data and entity list\n";
+    std::cout << "[SpriteRenderSystem] Cleared animation data\n";
 }
 
-void SpriteRenderSystem::removeEntity(EntityID entityID)
+void SpriteRenderSystem::hideEntity(EntityID entityID)
 {
-    // Remove entity from the entities list
-    auto it = std::find(entities.begin(), entities.end(), entityID);
-    if (it != entities.end()) {
-        entities.erase(it);
-    }
-    
-    // Clean up animation data for this entity
+    // Clean up animation data for hidden entities to prevent memory leaks
     animationTimers.erase(entityID);
     currentFrames.erase(entityID);
-    
-    std::cout << "[SpriteRenderSystem] Removed entity " << entityID << " from system\n";
 }
 
+void SpriteRenderSystem::showEntity(EntityID entityID)
+{
+    animationTimers[entityID] = 0.f;
+    currentFrames[entityID] = 0;
+}
+
+void SpriteRenderSystem::addEntityToSystem(EntityID entityID)
+{
+    entities.push_back(entityID);
+}
 
 void SpriteRenderSystem::updateAnimation(float deltaTime, World& world)
 {
@@ -66,43 +70,46 @@ void SpriteRenderSystem::updateAnimation(float deltaTime, World& world)
                 sprite.sprite.setPosition(pos.x, pos.y);
             }
 
-            // Only animate entities with EnemyComponent
-            if (world.hasComponent<EnemyComponent>(entity))
+            if (world.hasComponent<EnemyComponent>(entity) ||
+                world.hasComponent<TowerComponent>(entity))
             {
-                if (this->animationTimers.find(entity) == this->animationTimers.end())
+                auto& sprite = world.getComponent<SpriteComponent>(entity);
+
+                // *** EARLY OUT IF NO TEXTURE ***
+                if (!sprite.texture)
+                    continue;
+
+                // find or create your timer & frame entries
+                float& timer = animationTimers[entity];        
+                int& frame = currentFrames[entity];          
+
+                // sanity
+                int   count = std::max(1, sprite.frameCount);
+                float rate = std::max(0.0001f, sprite.frameRate);
+
+                // grab the texture size once
+                auto sz = sprite.texture->getSize();
+                int  frameW = sz.x / count;
+
+                // ON FIRST REGISTRATION: set frame 0
+                if (timer == 0.0f && frame == 0)
                 {
-                    this->animationTimers[entity] = 0.0f;
-                    this->currentFrames[entity] = 0;
-
-                    if (sprite.texture && sprite.texture->getSize().x > 0)
-                    {
-                        int frameWidth = sprite.texture->getSize().x / sprite.frameCount;
-                        sprite.sprite.setTextureRect(sf::IntRect(0, 0, frameWidth, sprite.texture->getSize().y));
-
-                        sf::FloatRect bounds = sprite.sprite.getLocalBounds();
-                        sprite.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
-                    }
+                    sprite.sprite.setTextureRect(sf::IntRect(static_cast<int>(0), static_cast<int>(0), static_cast<int>(frameW), static_cast<int>(sz.y)));
+                    auto b = sprite.sprite.getLocalBounds();
+                    sprite.sprite.setOrigin(b.width / 2.f, b.height / 2.f);
                 }
 
-                // Update animation
-                this->animationTimers[entity] += deltaTime;
+                // accumulate time
+                timer += deltaTime;
 
-                if (animationTimers[entity] >= sprite.frameRate)
-                {
-                    this->animationTimers[entity] = 0;
-                    this->currentFrames[entity] = (this->currentFrames[entity] + 1) % sprite.frameCount;
+                // advance as many frames as needed
+                while (timer >= rate) {
+                    timer -= rate;
+                    frame = (frame + 1) % count;
 
-                    if (sprite.texture && sprite.texture->getSize().x > 0)
-                    {
-                        int frameWidth = sprite.texture->getSize().x / sprite.frameCount;
-                        sprite.sprite.setTextureRect(sf::IntRect(
-                            this->currentFrames[entity] * frameWidth, 0,
-                            frameWidth, sprite.texture->getSize().y
-                        ));
-                    }
-
-                    sf::FloatRect bounds = sprite.sprite.getLocalBounds();
-                    sprite.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+                    sprite.sprite.setTextureRect(sf::IntRect(static_cast<int>(frame) * static_cast<int>(frameW), 0, static_cast<int>(frameW), static_cast<int>(sz.y)));
+                    auto b = sprite.sprite.getLocalBounds();
+                    sprite.sprite.setOrigin(b.width / 2.f, b.height / 2.f);
                 }
             }
         }

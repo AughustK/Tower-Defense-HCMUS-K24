@@ -36,6 +36,8 @@
     <ClCompile Include="src\SrcGameStates\Defeat.cpp" />
     <ClCompile Include="src\SrcGameStates\Victory.cpp" />
     <ClCompile Include="src\SrcSystem\CastleHPSystem.cpp" />
+    <ClCompile Include="src\SrcComponents\EnemyHPComponent.cpp" />
+    <ClCompile Include="src\SrcSystem\EnemyHPSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Systems\System.h" />
@@ -94,6 +96,8 @@
     <ClInclude Include="header\Systems\CastleHPSystem.h" />
     <ClInclude Include="header\Components\DifficultyLevel.h" />
     <ClInclude Include="header\Components\Difficulty.h" />
+    <ClInclude Include="header\Components\EnemyHPComponent.h" />
+    <ClInclude Include="header\Systems\EnemyHPSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\Bg\CreditBackground2Fixed.png" />
@@ -366,6 +370,65 @@
     <Image Include="assets\Bg\HelpBg.jpg" />
     <Image Include="assets\Bg\MenuV3.png" />
     <Image Include="assets\Bg\SettingBg.jpg" />
+    <Image Include="assets\FireMap\FireBossSpritesheet\run.png" />
+    <Image Include="assets\FireMap\FireNormal1Spritesheet\1_enemies_1_attack_spritesheet.png" />
+    <Image Include="assets\FireMap\FireNormal1Spritesheet\1_enemies_1_die_spritesheet.png" />
+    <Image Include="assets\FireMap\FireNormal1Spritesheet\1_enemies_1_hurt_spritesheet.png" />
+    <Image Include="assets\FireMap\FireNormal1Spritesheet\1_enemies_1_idle_spritesheet.png" />
+    <Image Include="assets\FireMap\FireNormal1Spritesheet\run.png" />
+    <Image Include="assets\FireMap\FireNormal2Spritesheet\run.png" />
+    <Image Include="assets\FireMap\FireMap.jpg" />
+    <Image Include="assets\FireMap\FireMap.png" />
+    <Image Include="assets\Bg\BlackFlag.png" />
+    <Image Include="assets\Bg\BlueFlag.png" />
+    <Image Include="assets\Bg\ChooseMap.png" />
+    <Image Include="assets\Bg\DefeatBg.jpg" />
+    <Image Include="assets\Bg\Lobby.png" />
+    <Image Include="assets\Bg\RedFlag.png" />
+    <Image Include="assets\Bg\ResourceBg.png" />
+    <Image Include="assets\Bg\SettingBg.png" />
+    <Image Include="assets\Bg\ShopFrame.png" />
+    <Image Include="assets\Bg\VictoryBg.png" />
+    <Image Include="assets\Bg\WhiteFlag.png" />
+    <Image Include="assets\Hellmap\HellMap.jpg" />
+    <Image Include="assets\HelpSlides\slide1.png" />
+    <Image Include="assets\HelpSlides\slide3.png" />
+    <Image Include="assets\HelpSlides\slide2.png" />
+    <Image Include="assets\Heroes\Archer\Arrow.png" />
+    <Image Include="assets\Heroes\archer_base.png" />
+    <Image Include="assets\Heroes\archer_up.png" />
+    <Image Include="assets\Heroes\cannon_base.png" />
+    <Image Include="assets\Heroes\cannon_up.png" />
+    <Image Include="assets\Heroes\mage_base.png" />
+    <Image Include="assets\Heroes\mage_up.png" />
+    <Image Include="assets\Heroes\NecromancerNormal.png" />
+    <Image Include="assets\IceMap\IceBossSpritesheet\run.png" />
+    <Image Include="assets\IceMap\IceNormal1Spritesheet\run.png" />
+    <Image Include="assets\IceMap\IceNormal2Spritesheet\run.png" />
+    <Image Include="assets\IceMap\IceMap.jpg" />
+    <Image Include="assets\IceMap\IceMap.png" />
+    <Image Include="assets\Icon\Coin.png" />
+    <Image Include="assets\Icon\Skull.png" />
+    <Image Include="assets\Icon\trophy.png" />
+    <Image Include="assets\ParadiseMap\ParadiseBossSpritesheet\run.png" />
+    <Image Include="assets\ParadiseMap\ParadiseNormal1Spritesheet\run.png" />
+    <Image Include="assets\ParadiseMap\ParadiseMap.jpg" />
+    <Image Include="assets\ResourceSlides\slide1.png" />
+    <Image Include="assets\ResourceSlides\slide2.png" />
+    <Image Include="assets\ResourceSlides\slide3.png" />
+    <Image Include="assets\ResourceSlides\slide4.png" />
+    <Image Include="assets\ResourceSlides\slide5.png" />
+    <Image Include="assets\ResourceSlides\slide6.png" />
+    <Image Include="assets\ParadiseMap\ParadiseNormal2Spritesheet\run.png" />
+    <Image Include="assets\HellMap.jpg" />
+    <Image Include="assets\StorySlides\slide1.png" />
+    <Image Include="assets\StorySlides\slide2.png" />
+    <Image Include="assets\StorySlides\slide3.png" />
+    <Image Include="assets\StorySlides\slide4.png" />
+    <Image Include="assets\StorySlides\slide5.png" />
+    <Image Include="assets\StorySlides\slide6.png" />
+    <Image Include="assets\StorySlides\slide7.png" />
+    <Image Include="assets\StorySlides\slide8.png" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="assets\Font\KarmaFuture.ttf" />
@@ -373,15 +436,46 @@
     <Font Include="assets\Font\Blockstepped.ttf" />
     <Font Include="assets\Font\Lady Radical.ttf" />
     <Font Include="assets\Font\Pixel Game.otf" />
+    <Font Include="assets\Font\computer-says-no.otf" />
+    <Font Include="assets\Font\Nightmare Codehack.otf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\Forestmap\Bot1\Orc.aseprite" />
     <None Include="assets\Font\jupcrash.fon" />
+    <None Include="assets\FireMap\FireBossSpritesheet\walk.zip" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="assets\SFX\CreditBGM.mp3" />
     <Media Include="assets\SFX\HelpBGM.mp3" />
     <Media Include="assets\SFX\MainMenuBGM.mp3" />
     <Media Include="assets\SFX\MouseClick.mp3" />
+    <Media Include="assets\SFX\Music\Main\Main_Final.mp3" />
+    <Media Include="assets\SFX\Music\Main\Main1.mp3" />
+    <Media Include="assets\SFX\Music\Main\Main2.mp3" />
+    <Media Include="assets\SFX\Music\Main\Main3.mp3" />
+    <Media Include="assets\SFX\Music\Map\FireMap.mp3" />
+    <Media Include="assets\SFX\Music\Map\HellMap.mp3" />
+    <Media Include="assets\SFX\Music\Map\IceMap.mp3" />
+    <Media Include="assets\SFX\Music\Map\ParadiseMap.mp3" />
+    <Media Include="assets\SFX\Music\Defeat.mp3" />
+    <Media Include="assets\SFX\Music\Victory.mp3" />
+    <Media Include="assets\SFX\StoryVoice\1.mp3" />
+    <Media Include="assets\SFX\StoryVoice\2.mp3" />
+    <Media Include="assets\SFX\StoryVoice\3.mp3" />
+    <Media Include="assets\SFX\StoryVoice\4.mp3" />
+    <Media Include="assets\SFX\StoryVoice\5.mp3" />
+    <Media Include="assets\SFX\StoryVoice\6.mp3" />
+    <Media Include="assets\SFX\StoryVoice\7.mp3" />
+    <Media Include="assets\SFX\StoryVoice\8.mp3" />
+    <Media Include="assets\SFX\DestroyTower.mp3" />
+    <Media Include="assets\SFX\PlaceTower.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="assets\FireMap\FireMap.txt" />
+    <Text Include="assets\Font\license.txt" />
+    <Text Include="assets\Font\readme.txt" />
+    <Text Include="assets\Hellmap\HellMap.txt" />
+    <Text Include="assets\IceMap\IceMap.txt" />
+    <Text Include="assets\ParadiseMap\ParadiseMap.txt" />
   </ItemGroup>
 </Project>

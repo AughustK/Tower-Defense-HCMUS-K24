@@ -15,11 +15,11 @@ struct TextComponent
 	FloatRect bound;
 	Color originColor;
 	bool isHover;
-
+	Color hoverColor;
 
 	TextComponent() = default;
 	function<void(EntityID, World&)> onClick;
-	TextComponent(const string& str, int n, const string& fontPath, Color color, const Vector2f& position, bool hover, sf::Color outline, float thickness);
+	TextComponent(const string& str, int n, const string& fontPath, Color color, const Vector2f& position, bool hover, sf::Color outline, float thickness, sf::Color hoverC=Color::Cyan);
 	bool contains(Vector2f point) const;
 	bool tryClick(Vector2f mousePos, EntityID entityId, World& world);
 	void tryHover(Vector2f mousePos, EntityID entityId, World& world);

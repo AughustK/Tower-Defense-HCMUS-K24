@@ -30,13 +30,7 @@ private:
 public:
 	void insertData(EntityID entity, const T& component)
 	{
-		// If the entity already has this component, remove it first
-		// This can happen if the entity ID was reused too quickly
-		if (entityToIndexMap.find(entity) != entityToIndexMap.end())
-		{
-			std::cout << "[ComponentArray] Entity " << entity << " already has component, removing old data before adding new\n";
-			removeData(entity);
-		}
+		assert(entityToIndexMap.find(entity) == entityToIndexMap.end() && "Component added to same entity more than once.");
 		
 		uint32_t newIndex = size;
 
@@ -52,13 +46,11 @@ public:
 		uint32_t deleteIndexEntity = entityToIndexMap[entity];
 		uint32_t lastIndexElement = size - 1;
 
-		if (size - 1 != deleteIndexEntity)
-		{
-			componentArray[deleteIndexEntity] = componentArray[lastIndexElement]; // Move last element to deleted index
-			EntityID lastElementEntity = indexToEntityMap[lastIndexElement];  // Get the entity of the last element
-			entityToIndexMap[lastElementEntity] = deleteIndexEntity; // Update the entity to index map
-			indexToEntityMap[deleteIndexEntity] = lastElementEntity; // Update the index to entity map
-		}
+		componentArray[deleteIndexEntity] = componentArray[lastIndexElement]; // Move last element to deleted index
+		EntityID lastElementEntity = indexToEntityMap[lastIndexElement];  // Get the entity of the last element
+		entityToIndexMap[lastElementEntity] = deleteIndexEntity; // Update the entity to index map
+		indexToEntityMap[deleteIndexEntity] = lastElementEntity; // Update the index to entity map
+
 
 		entityToIndexMap.erase(entity);  // Remove the entity from the map
 		indexToEntityMap.erase(lastIndexElement);

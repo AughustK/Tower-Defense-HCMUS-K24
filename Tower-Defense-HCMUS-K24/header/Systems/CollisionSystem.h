@@ -22,6 +22,7 @@ class CollisionSystem : public System
 private: 
     std::unordered_map<std::string, sf::Vector2f> castlePos;
     sf::Vector2f currCastlePos;
+    vector<EntityID> soundEntities;
 
 public:
     void init(string name);
@@ -30,7 +31,7 @@ public:
     float computeDistanceOfTwoPoint(float dX, float dY) const;
     
     // Play collision sound effect
-    void playCollisionSound(World& world);
+    void playCollisionSound(World& world, ProjectileComponent::ProjectileType type);
 
     // Main collision check: now includes projectileArray
     void updateCheck(

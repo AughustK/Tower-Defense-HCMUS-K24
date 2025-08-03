@@ -18,5 +18,8 @@ public:
     void render(World& world);
     void updateAnimation(float deltaTime, World& world);
     void clear();
-    void removeEntity(EntityID entityID) override;
+    //void removeEntity(EntityID entityID) override;
+    void hideEntity(EntityID entityID);
+    void showEntity(EntityID entityID);
+    void addEntityToSystem(EntityID entityID);
 };

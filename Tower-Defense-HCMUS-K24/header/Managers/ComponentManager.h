@@ -19,7 +19,7 @@ private:
 	unordered_map<type_index, unique_ptr<IComponentArray>> componentArrays;
 	unordered_map<type_index, ComponentID> componentTypes;
 	ComponentID nextType = 0;
-public:
+public:	
 	template <typename T>
 	void registerComponent()
 	{

@@ -57,34 +57,43 @@ void PathFollowingSystem::update(float deltaTime, World& world)
             }
             else
             {
-                // Move toward the target
-                sf::Vector2f movement = direction / distance; // Normalize
-                float speed = pathComponent.speed;
-                positionComponent.x += movement.x * speed * deltaTime;
-                positionComponent.y += movement.y * speed * deltaTime;
+                sf::Vector2f direction = target - currentPos;
+                float distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
 
-                // Update collision circle position
-                if (world.hasComponent<CircleComponent>(entity)) {
-                    auto& circleComp = world.getComponent<CircleComponent>(entity);
-                    circleComp.x = positionComponent.x;
-                    circleComp.y = positionComponent.y;
+                if (distance < 4.f) {
+                    pathComponent.currentIndex++;
                 }
+                else {
+                    // compute desired velocity
+                    sf::Vector2f desiredVel = (direction / distance) * pathComponent.speed;
 
-                // (Optional) Flip sprite based on movement.x
-                if (world.hasComponent<SpriteComponent>(entity)) {
-                    auto& spriteComp = world.getComponent<SpriteComponent>(entity);
-                    float baseScale = 0.2f;
-                    if (world.hasComponent<EnemyComponent>(entity)) {
-                        auto& enemyComp = world.getComponent<EnemyComponent>(entity);
-                        baseScale = EnemyComponent::getEnemyDef(enemyComp.type).scale;
+                    // ease actual velocity toward desired
+                    const float accel = 10.0f;
+                    velComponent.x += (desiredVel.x - velComponent.x) * accel * deltaTime;
+                    velComponent.y += (desiredVel.y - velComponent.y) * accel * deltaTime;
+
+                    // move by smoothed velocity
+                    positionComponent.x += velComponent.x * deltaTime;
+                    positionComponent.y += velComponent.y * deltaTime;
+
+                    // update circle & sprite positions exactly once
+                    if (world.hasComponent<CircleComponent>(entity)) {
+                        auto& circleComp = world.getComponent<CircleComponent>(entity);
+                        circleComp.x = positionComponent.x;
+                        circleComp.y = positionComponent.y;
                     }
-                    if (movement.x < -0.1f)
-                        spriteComp.sprite.setScale(-baseScale, baseScale);
-                    else if (movement.x > 0.1f)
-                        spriteComp.sprite.setScale(baseScale, baseScale);
-                    
-                    // Update sprite position
-                    spriteComp.sprite.setPosition(positionComponent.x, positionComponent.y);
+                    if (world.hasComponent<SpriteComponent>(entity)) {
+                        auto& spriteComp = world.getComponent<SpriteComponent>(entity);
+                        // optional: flip based on velComponent.x
+                        float baseScale = EnemyComponent::getEnemyDef(
+                            world.getComponent<EnemyComponent>(entity).type
+                        ).scale;
+                        spriteComp.sprite.setScale(
+                            (velComponent.x < -0.1f ? -baseScale : baseScale),
+                            baseScale
+                        );
+                        spriteComp.sprite.setPosition(positionComponent.x, positionComponent.y);
+                    }
                 }
             }
         }

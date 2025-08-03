@@ -53,9 +53,6 @@ public:
 		assert(systems.find(typeName) == systems.end() && "System already registered.");
 		auto system = std::make_shared<T>();
 		systems.insert({ typeName, system });
-
-		std::cout << "[SystemManager] Registered system: " << typeid(T).name() << "\n";
-
 		return system;
 	}
 
@@ -66,7 +63,6 @@ public:
 		// make sure T was registered
 		assert(systems.count(typeName) != 0 && "System not registered");
 		signatures[typeName] = signature;
-		std::cout << "[SystemManager] Signature set for system: " << typeid(T).name() << "\n";
 	}
 
 	template<typename T>
