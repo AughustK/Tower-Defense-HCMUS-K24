@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <iostream>
 
 using EntityID = uint32_t;
 
@@ -16,5 +17,28 @@ struct CircleComponent
 	CircleComponent(float xPos, float yPos, float cRadius, EntityID cOwner, CollisionType cTag) 
 		: x(xPos), y(yPos), radius(cRadius), owner(cOwner), tag(cTag) {}
 };
+
+inline std::ostream& operator<<(std::ostream& os, const CircleComponent& c) {
+    os << "CircleComponent\n"
+        << c.x << ' '
+        << c.y << ' '
+        << c.radius << ' '
+        << c.owner << ' '
+        << static_cast<int>(c.tag)<<"\n";
+    return os;
+}
+
+inline std::istream& operator>>(std::istream& is, CircleComponent& c) {
+    is >> c.x >> c.y
+        >> c.radius
+        >> c.owner;
+
+    int tagInt;
+    is >> tagInt;
+    c.tag = static_cast<CircleComponent::CollisionType>(tagInt);
+
+    return is;
+}
+
 
  

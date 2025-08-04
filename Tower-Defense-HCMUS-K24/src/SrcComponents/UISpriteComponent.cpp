@@ -3,7 +3,7 @@
 #include "../../header/Managers/World.h"
 
 SpriteComponent::SpriteComponent(const std::string& path, const sf::Vector2f& position, const sf::Vector2f& scale, bool isHover)
-    : isHover(isHover)
+    : isHover(isHover), spritePath(path)
 {
     texture = make_shared<Texture>();
     texture->loadFromFile(path);

@@ -26,4 +26,5 @@ public:
     // Legacy methods (for backward compatibility)
     void spawnWave(World& world, const std::vector<sf::Vector2f>& path, std::size_t count, const string& map, EnemyComponent::EnemyType t, DifficultyLevel difficulty);
     //void destroyAllEnemies(World& world);
+    std::vector<EntityID> getActiveEnemies();
 };

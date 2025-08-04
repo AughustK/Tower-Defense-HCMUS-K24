@@ -17,6 +17,7 @@
 #include "../Components/ProjectileComponent.h"
 #include "../Components/CastleHPComponent.h"
 #include "../Components/EnemyHPComponent.h"
+#include "../Components/TagComponent.h"
 
 
 #include "../Systems/SpriteRenderSystem.h"
@@ -168,6 +169,7 @@ World::World() : window(sf::VideoMode(1920, 1080), "Tower Defense")
         constexpr std::size_t MAX_ENEMIES = 200;
         constexpr std::size_t MAX_PROJECTILES = 250;
 
+        registerComponent<TagComponent>();
         spawnSystem->initPool(*this, MAX_ENEMIES);
         projectileSystem->initPool(*this, MAX_PROJECTILES);
     }
@@ -201,6 +203,19 @@ void World::setState(std::unique_ptr<GameState> state)
     if (currentState)
     {
         currentState->onEnter(*this);
+    }
+}
+
+void World::setLoadedState(std::unique_ptr<GameState> state, std::string fileName) {
+    if (currentState)
+    {
+        currentState->onExit(*this);
+    }
+    currentState = std::move(state);
+
+    if (currentState)
+    {
+        currentState->loadFromFile(*this, fileName);
     }
 }
 

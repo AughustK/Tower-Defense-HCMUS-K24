@@ -59,3 +59,13 @@ uint32_t EntityManager::getLivingEntityCount() const noexcept
     return livingEntity;
 }
 
+std::vector<EntityID> EntityManager::getAliveEntities() const {
+    std::vector<EntityID> result;
+    for (EntityID id = 0; id < MAX_ENTITIES; ++id) {
+        if (signatures[id].any()) {
+            result.push_back(id);
+        }
+    }
+    return result;
+}
+

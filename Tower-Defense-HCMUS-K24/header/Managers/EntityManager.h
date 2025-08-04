@@ -37,6 +37,7 @@ public:
 	void setSignature(EntityID entity, Signature signature);
 	Signature getSignature(EntityID entity) const;
 	uint32_t getLivingEntityCount() const noexcept;
+	std::vector<EntityID> getAliveEntities() const;
 };
 
 

@@ -2,7 +2,7 @@
 #include "../../header/Components/UITextComponent.h"
 
 TextComponent::TextComponent(const string& str, int n, const string& fontPath, Color color, const Vector2f& position, bool hover, sf::Color outline, float thickness, sf::Color hoverC )
-	:isHover(hover), hoverColor(hoverC)
+	:isHover(hover), hoverColor(hoverC), fontP(fontPath)
 {
 	txt.setString(str);
 	txt.setCharacterSize(n);

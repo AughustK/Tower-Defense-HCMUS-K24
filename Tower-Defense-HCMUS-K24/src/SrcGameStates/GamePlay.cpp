@@ -22,7 +22,8 @@
 #include "../../header/Components/TowerDef.h"
 #include "../../header/Components/CastleHPComponent.h"
 #include "../../header/Components/UISliderComponent.h"
-
+#include "../../header/Components/TagComponent.h"
+#include "../../header/Components/EnemyHPComponent.h"
 
 #include "../../header/Systems/PathFindingSystem.h"
 #include "../../header/Systems/CollisionSystem.h"
@@ -43,13 +44,14 @@
 #include <iostream>
 #include <optional>
 #include <iomanip>
+#include <filesystem>
 
 EntityID moneyTextId = INVALID_ENTITY;
 int GamePlay::money = 0;
 
-GamePlay::GamePlay(const std::string& mapFilename)
-{
-}
+//GamePlay::GamePlay(const std::string& mapFilename)
+//{
+//}
 
 GamePlay::GamePlay(const std::string& mapFilename, DifficultyLevel difficulty)
     : mapFilename(mapFilename), currentDifficulty(difficulty)
@@ -151,6 +153,7 @@ void GamePlay::onEnter(World& world)
     std::string moneyStr = std::to_string(money);
     TextComponent moneyText(moneyStr, 70, fontPath, sf::Color::Yellow, { 95.f, 20.f }, false, sf::Color::Black, 4.f);
     world.addComponent(moneyTextId, moneyText);
+    world.addComponent(moneyTextId, TagComponent(TagComponent::Type::Gameplay));
 
     // difficulty info
     EntityID diffID = world.createEntity();
@@ -184,6 +187,7 @@ void GamePlay::onEnter(World& world)
     std::string waveInfoStr = "Wave: "+std::to_string(currentWave+1)+"/4";
     TextComponent waveInfoText(waveInfoStr, 40, fontPath, sf::Color::White, { 110.f, 130.f }, false, sf::Color::Black, 4.f);
     world.addComponent(waveInfoID, waveInfoText);
+    world.addComponent(waveInfoID, TagComponent(TagComponent::Type::Gameplay));
 
     //money delta
     moneyDeltaID = world.createEntity();
@@ -290,6 +294,7 @@ void GamePlay::onEnter(World& world)
     std::string spdTextStr = "Speed: x1.0";
     TextComponent spdText(spdTextStr, 40, fontPath, sf::Color::Cyan, { 125.f, 175.f }, false, sf::Color::Black, 4.f);
     world.addComponent(speedID, spdText);
+    world.addComponent(speedID, TagComponent(TagComponent::Type::Gameplay));
 
     //Notify invalid placement
     EntityID noti = world.createEntity();
@@ -298,12 +303,14 @@ void GamePlay::onEnter(World& world)
     const string str = "";
     TextComponent textComp0(str, 50, fontPath, Color(255, 215, 0), { 768, 100 }, false, sf::Color::Black, 7.f);
     world.addComponent(noti, textComp0);
+    world.addComponent(noti, TagComponent(TagComponent::Type::Gameplay));
 
     //create castle hp
     castleEntity = world.createEntity();
     registerEntity(castleEntity);
     CastleHPComponent hpComp(100, 100, castlePos[mapFilename].x, castlePos[mapFilename].y, 200.f, 20.f);
     world.addComponent<CastleHPComponent>(castleEntity, hpComp);
+    world.addComponent(castleEntity, TagComponent(TagComponent::Type::Gameplay));
 
     money = 100; // Start with 100 money
     world.getSystem<CollisionSystem>()->init(mapFilename);
@@ -1296,6 +1303,12 @@ void GamePlay::showPauseMenu(World& world) {
                 }
             }
        }},
+       {"Save", [&](EntityID, World& w) {
+            for (auto e : pauseButtons) w.destroyEntity(e);
+        std::cout << "[Pause Menu] Save game selected\n";
+        this->saveToFile(w);  
+        w.setState(std::make_unique<Lobby>());
+        }},
        {"Quit", [&](EntityID, World& w) {
             for (auto e : pauseButtons) w.destroyEntity(e);
             pauseButtons.clear();
@@ -1387,4 +1400,225 @@ void GamePlay::onExit(World& world) {
     spawnTimer = 0.f;
     money = 0;
     cout << "[Gameplay] Exit state and free memory successfully.\n";
+}
+
+void GamePlay::saveToFile(World& world) {
+    std::string folder = "SavedGames";
+    std::filesystem::create_directories(folder);
+
+    std::string fileName;
+    std::cout << "Nhập tên file save (không cần .txt): ";
+    std::cin >> fileName;
+
+    std::ofstream out(folder+ "/" + fileName + ".txt");
+    if (!out) {
+        std::cerr << "Không thể tạo file: " << fileName << "\n";
+        return;
+    }
+
+    out << "GamePlayState\n";
+
+    out << money << '\n';
+    out << isPlacingTower << ' ' << static_cast<int>(placingType) << ' ' << placingLevel << '\n';
+    out << static_cast<int>(currentDifficulty) << '\n';
+    out << mapFilename << '\n';
+
+    out << pathWaypoints.size() << '\n';
+    for (auto& pt : pathWaypoints) {
+        out << pt.x << ' ' << pt.y << '\n';
+    }
+
+    out << waveSizes.size() << '\n';
+    for (int w : waveSizes) out << w << ' ';
+    out << '\n';
+    out << waveInterval << ' ' << currentWave << ' ' << spawnTimer << '\n';
+    out << enemiesToSpawn << ' ' << enemySpawnTimer << ' ' << enemySpawnInterval << '\n';
+
+    out << currentWavePath.size() << '\n';
+    for (auto& pt : currentWavePath) {
+        out << pt.x << ' ' << pt.y << '\n';
+    }
+
+    out << currSpdOpt << '\n';
+
+    out << victoryTriggered << ' ' << showingPauseMenu << ' ' << showingSettingMenu << '\n';
+    out << notificationActive << ' ' << notificationTimer << '\n';
+    out << deltaVisible << ' ' << deltaTextTimer << '\n';
+    out << towerOptionsVisible << '\n';
+
+    auto aliveEntities = world.getAliveEntities();
+
+    //Entities belong to gameplay
+    std::vector<EntityID> gameplayEntities;
+    for (EntityID id : aliveEntities) {
+        if (world.hasComponent<TagComponent>(id)) {
+            auto& tag = world.getComponent<TagComponent>(id);
+            if (tag.tag == TagComponent::Type::Gameplay) {
+                gameplayEntities.push_back(id);
+            }
+        }
+    }
+
+    //Enemy entities
+    auto activeEnemies = world.getSystem<EnemySpawnSystem>()->getActiveEnemies();
+    
+    //other entities
+
+    out << 5 << "\n";
+    for (EntityID id : gameplayEntities) {
+        out << "EntityID: " << id << "\n";
+
+        if (world.hasComponent<TagComponent>(id)) {
+            const auto& tag = world.getComponent<TagComponent>(id);
+            out << tag;
+        }
+
+        if (world.hasComponent<TextComponent>(id)) {
+            const auto& text = world.getComponent<TextComponent>(id);
+            out << text;
+        }
+
+        if (world.hasComponent<CastleHPComponent>(id)) {
+            const auto& hpComp = world.getComponent<CastleHPComponent>(id);
+            out << hpComp;
+        }
+
+        out << "-----\n"; 
+    }
+
+    out << activeEnemies.size()<<"\n";
+    for (EntityID id : activeEnemies) {
+        out << "EntityID: " << id << "\n";
+
+        if (world.hasComponent<TagComponent>(id)) {
+            const auto& tag = world.getComponent<TagComponent>(id);
+            out << tag;
+        }
+
+        if (world.hasComponent<PositionComponent>(id)) {
+            const auto& tag = world.getComponent<PositionComponent>(id);
+            out << tag;
+        }
+
+        if (world.hasComponent<VelocityComponent>(id)) {
+            const auto& tag = world.getComponent<VelocityComponent>(id);
+            out << tag;
+        }
+        
+        if (world.hasComponent<PathComponent>(id)) {
+            const auto& tag = world.getComponent<PathComponent>(id);
+            out << tag;
+        }
+
+        if (world.hasComponent<EnemyComponent>(id)) {
+            const auto& tag = world.getComponent<TagComponent>(id);
+            out << tag;
+        }
+
+        if (world.hasComponent<HealthComponent>(id)) {
+            const auto& tag = world.getComponent<HealthComponent>(id);
+            out << tag;
+        }
+
+        if (world.hasComponent<CircleComponent>(id)) {
+            const auto& tag = world.getComponent<CircleComponent>(id);
+            out << tag;
+        }
+
+        if (world.hasComponent<SpriteComponent>(id)) {
+            const auto& tag = world.getComponent<SpriteComponent>(id);
+            out << tag;
+        }
+
+        if (world.hasComponent<EnemyHPComponent>(id)) {
+            const auto& tag = world.getComponent<EnemyHPComponent>(id);
+            out << tag;
+        }
+
+        out << "-----\n";
+    }
+
+
+    out.close();
+    std::cout << "\n[GamePlay] Saved at: " << folder + fileName + ".txt" << '\n';
+}
+
+void GamePlay::loadFromFile(World& world, const std::string &filename) {
+    std::cout << "Current working directory: "
+        << std::filesystem::current_path() << '\n';
+    std::ifstream in(filename);
+    if (!in) {
+        std::cerr << "[GamePlay] Cannot open file: " << filename << '\n';
+        return;
+    }
+
+    std::string header;
+    std::getline(in, header);
+    if (header != "GamePlayState") {
+        std::cerr << "[GamePlay] File không hợp lệ.\n";
+        return;
+    }
+
+    in >> money;
+    int placingTypeInt;
+    in >> isPlacingTower >> placingTypeInt >> placingLevel;
+    placingType = static_cast<TowerComponent::TowerType>(placingTypeInt);
+
+    int diffInt;
+    in >> diffInt;
+    currentDifficulty = static_cast<DifficultyLevel>(diffInt);
+
+    in.ignore(); 
+    std::getline(in, mapFilename);
+
+    // Path waypoints
+    size_t nPoints;
+    in >> nPoints;
+    pathWaypoints.clear();
+    for (size_t i = 0; i < nPoints; ++i) {
+        sf::Vector2f p;
+        in >> p.x >> p.y;
+        pathWaypoints.push_back(p);
+    }
+
+    // Wave sizes
+    size_t waveCount;
+    in >> waveCount;
+    waveSizes.clear();
+    for (size_t i = 0; i < waveCount; ++i) {
+        int sz;
+        in >> sz;
+        waveSizes.push_back(sz);
+    }
+
+    in >> waveInterval >> currentWave >> spawnTimer;
+    in >> enemiesToSpawn >> enemySpawnTimer >> enemySpawnInterval;
+
+    // Current wave path
+    size_t currentPathCount;
+    in >> currentPathCount;
+    currentWavePath.clear();
+    for (size_t i = 0; i < currentPathCount; ++i) {
+        sf::Vector2f p;
+        in >> p.x >> p.y;
+        currentWavePath.push_back(p);
+    }
+
+    in >> currSpdOpt;
+
+    in >> victoryTriggered >> showingPauseMenu >> showingSettingMenu;
+    in >> notificationActive >> notificationTimer;
+    in >> deltaVisible >> deltaTextTimer;
+    in >> towerOptionsVisible;
+
+
+
+    in.close();
+
+    auto musicEntities = world.getEntitiesWithComponent<MusicComponent>();
+    for (EntityID id : musicEntities) {
+        world.destroyEntity(id);
+    }
+
+    
 }

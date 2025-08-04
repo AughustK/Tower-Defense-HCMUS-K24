@@ -126,12 +126,17 @@ public:
     }
 
     void setState(std::unique_ptr<GameState> state);
+    void setLoadedState(std::unique_ptr<GameState> state, std::string fileName);
     void handleEvent(sf::Event& event);
     void render();
     const std::unique_ptr<GameState>& getCurrentState() const;
 
     EntityManager getEntityManager();
     SystemManager getSystemManager();
+
+    std::vector<EntityID> getAliveEntities() const {
+        return entityManager.getAliveEntities();
+    }
 
     // Update each time frame
     void update(float deltaTime);

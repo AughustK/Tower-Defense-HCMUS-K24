@@ -19,4 +19,5 @@ public:
     virtual void render(World& world, sf::RenderWindow& window) = 0;
     virtual void onEnter(World& world);
     virtual void onExit(World& world);
+    virtual void loadFromFile(World& world,const std::string &fileName) {};
 };

@@ -53,7 +53,7 @@ struct SliderComponent
         label.setFillColor(sf::Color::White);
         label.setOutlineThickness(2.f);
 
-        // Sau khi setString m?i l?y ?úng localBounds
+        // Get local bounds
         FloatRect labelBounds = label.getLocalBounds();
         label.setOrigin(labelBounds.width / 2.f, labelBounds.height / 2.f);
         label.setPosition(x + track.getSize().x / 2.f - 40.f, y - 50.f); // l?ch trái chút n?u c?n ch? cho %
@@ -68,7 +68,7 @@ struct SliderComponent
         valueText.setOrigin(valueBounds.width / 2.f, valueBounds.height / 2.f);
         FloatRect labelGlobal = label.getGlobalBounds();
         valueText.setPosition(
-            labelGlobal.left + labelGlobal.width + 70.f,  // 20.f là kho?ng cách tùy ch?nh
+            labelGlobal.left + labelGlobal.width + 70.f,  
             label.getPosition().y
         );
         valueText.setOutlineThickness(2.f);
@@ -97,3 +97,77 @@ struct SliderComponent
 
     }
 };
+
+inline std::ostream& operator<<(std::ostream& os, const SliderComponent& s) {
+    os << "SliderComponent\n";
+    os << "\"" << s.type << "\" "
+        << s.min << " " << s.max << " " << s.value << " "
+        << s.isDragging << " "
+        << s.track.getPosition().x << " " << s.track.getPosition().y << " "
+        << s.track.getSize().x << '\n';
+    return os;
+}
+
+inline std::istream& operator>>(std::istream& is, SliderComponent& s) {
+    std::string labelText;
+    char quote;
+    is >> std::ws >> quote;
+    std::getline(is, labelText, '"');
+
+    float min, max, value;
+    bool isDragging;
+    float x, y, width;
+
+    is >> min >> max >> value >> isDragging >> x >> y >> width;
+
+    s.type = labelText;
+    s.min = min;
+    s.max = max;
+    s.value = value;
+    s.isDragging = isDragging;
+
+    // Font
+    s.font = std::make_shared<sf::Font>();
+    if (!s.font->loadFromFile("assets/Font/Minecraft-Regular.otf")) {
+        std::cerr << "[SliderComponent] Failed to load font\n";
+    }
+
+    // Track
+    s.track.setSize({ width, 20.f });
+    s.track.setPosition(x, y);
+    s.track.setFillColor(sf::Color(60, 60, 60, 200));
+    s.track.setOutlineColor(sf::Color::White);
+    s.track.setOutlineThickness(1.f);
+
+    // Fill
+    s.fill.setSize({ width, 6.f });
+    s.fill.setPosition(x, y);
+    s.fill.setFillColor(sf::Color(100, 200, 250, 220));
+
+    // Handle
+    s.handle.setSize({ 40.f, 40.f });
+    s.handle.setOrigin(20.f, 20.f);  // center
+    s.handle.setFillColor(sf::Color::White);
+
+    // Label
+    s.label.setFont(*s.font);
+    s.label.setString(labelText);
+    s.label.setCharacterSize(40);
+    s.label.setFillColor(sf::Color::White);
+    s.label.setOutlineThickness(2.f);
+    sf::FloatRect labelBounds = s.label.getLocalBounds();
+    s.label.setOrigin(labelBounds.width / 2.f, labelBounds.height / 2.f);
+    s.label.setPosition(x + width / 2.f - 40.f, y - 50.f);
+
+    // Value text
+    s.valueText.setFont(*s.font);
+    s.valueText.setCharacterSize(40);
+    s.valueText.setFillColor(sf::Color::White);
+    s.valueText.setOutlineThickness(2.f);
+
+    s.updateHandlePosition();  
+
+    return is;
+}
+
+

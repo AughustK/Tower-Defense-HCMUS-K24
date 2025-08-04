@@ -156,6 +156,7 @@
     <ClCompile Include="src\SrcComponents\CastleHPComponent.cpp" />
     <ClCompile Include="src\SrcComponents\EnemyComponent.cpp" />
     <ClCompile Include="src\SrcComponents\EnemyHPComponent.cpp" />
+    <ClCompile Include="src\SrcGameStates\Continue.cpp" />
     <ClCompile Include="src\SrcGameStates\Defeat.cpp" />
     <ClCompile Include="src\SrcGameStates\Resource.cpp" />
     <ClCompile Include="src\SrcGameStates\Victory.cpp" />
@@ -205,8 +206,10 @@
     <ClInclude Include="header\Components\PathfindingComponent.h" />
     <ClInclude Include="header\Components\ShopComponent.h" />
     <ClInclude Include="header\Components\SoundComponent.h" />
+    <ClInclude Include="header\Components\TagComponent.h" />
     <ClInclude Include="header\Components\UISliderComponent.h" />
     <ClInclude Include="header\GameStates\ChooseMap.h" />
+    <ClInclude Include="header\GameStates\Continue.h" />
     <ClInclude Include="header\GameStates\Credit.h" />
     <ClInclude Include="header\GameStates\Defeat.h" />
     <ClInclude Include="header\GameStates\GamePlay.h" />

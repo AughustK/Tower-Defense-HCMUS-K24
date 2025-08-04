@@ -4,6 +4,7 @@
 #include "../../header/Components/HealthComponent.h"
 #include "../../header/Components/CircleComponent.h"
 #include "../../header/Components/EnemyHPComponent.h"
+#include "../../header/Components/TagComponent.h"
 
 #include "../../header/Systems/InitializeEnemy.h"
 #include "../../header/Systems/SpriteRenderSystem.h"
@@ -26,6 +27,7 @@ void EnemySpawnSystem::initPool(World& world, std::size_t count)
         world.addComponent(e, CircleComponent());
         world.addComponent(e, SpriteComponent());
         world.addComponent(e, EnemyHPComponent());
+        world.addComponent(e, TagComponent(TagComponent::Type::Enemy));
         enemyPool.push_back(e);
     }
     nextPoolIndex = 0;
@@ -258,6 +260,10 @@ void EnemySpawnSystem::spawnWave(World& world, const std::vector<sf::Vector2f>& 
     for (std::size_t i = 0; i < count; ++i) {
         spawnFromPool(world, path, map, t, difficulty);
     }
+}
+
+std::vector<EntityID> EnemySpawnSystem::getActiveEnemies() {
+    return activeEnemies;
 }
 
 

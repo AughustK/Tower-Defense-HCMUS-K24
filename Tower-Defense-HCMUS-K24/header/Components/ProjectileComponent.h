@@ -30,3 +30,30 @@ struct ProjectileComponent
 		tag(type), owner(cOwner), arrowLength(length), isActive(active)
     {}
 };
+
+inline std::ostream& operator<<(std::ostream& os, const ProjectileComponent& p) {
+    os << "ProjectileComponent\n";
+    os << p.x << " " << p.y << " "
+        << p.radius << " "
+        << static_cast<int>(p.tag) << " "
+        << p.owner << " "
+        << p.arrowLength << " "
+        << p.isActive << '\n';
+    return os;
+}
+
+inline std::istream& operator>>(std::istream& is, ProjectileComponent& p) {
+    int tagInt;
+    is >> p.x >> p.y
+        >> p.radius
+        >> tagInt
+        >> p.owner
+        >> p.arrowLength
+        >> p.isActive;
+
+    p.tag = static_cast<ProjectileComponent::ProjectileType>(tagInt);
+    return is;
+}
+
+
+
