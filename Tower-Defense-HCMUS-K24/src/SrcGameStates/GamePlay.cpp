@@ -697,11 +697,11 @@ void GamePlay::setupTowerAnimation(SpriteComponent& sprite, TowerComponent::Towe
         // No sprites for Cannons yet    
         case TowerComponent::TowerType::Cannon:
             if (level == 0) {
-                sprite.frameCount = 2;
-                sprite.frameRate = 0.5f;
+                sprite.frameCount = 1;
+                sprite.frameRate = 1.0f;
             } else {
-                sprite.frameCount = 3;
-                sprite.frameRate = 0.4f;
+                sprite.frameCount = 1;
+                sprite.frameRate = 1.0f;
             }
             break;
             
