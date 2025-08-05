@@ -87,6 +87,7 @@ EntityID EnemySpawnSystem::spawnFromPool(World& world, const std::vector<sf::Vec
     std::string spritePath = EnemyComponent::getAnimationPath(enemy.type, map);
     auto& spriteE = world.getComponent<SpriteComponent>(e);
     spriteE.setTxt(spritePath);
+    spriteE.spritePath = spritePath;
     spriteE.sprite.setPosition(posComp.x, posComp.y);
     auto spriteSystem = world.getSystem<SpriteRenderSystem>();
     if (spriteSystem) {
@@ -265,8 +266,3 @@ void EnemySpawnSystem::spawnWave(World& world, const std::vector<sf::Vector2f>& 
 std::vector<EntityID> EnemySpawnSystem::getActiveEnemies() {
     return activeEnemies;
 }
-
-
-
-
-

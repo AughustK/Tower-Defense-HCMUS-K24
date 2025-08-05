@@ -29,39 +29,46 @@ struct TextComponent
 
 inline std::ostream& operator<<(std::ostream& os, const TextComponent& t) {
     os << "TextComponent\n";
-	os << "\"" << t.txt.getString().toAnsiString() << "\" "
-		<< t.txt.getCharacterSize() << " "
-		<< "\"" << t.fontP << "\" "
-		<< t.txt.getFillColor().toInteger() << " "
-		<< t.txt.getPosition().x << " " << t.txt.getPosition().y << " "
-		<< t.txt.getOutlineColor().toInteger() << " "
-		<< t.txt.getOutlineThickness() << " "
-		<< t.isHover << " "
-		<< t.hoverColor.toInteger()<<"\n";
-	return os;
+    sf::Vector2f origin = t.txt.getOrigin();
+    os << "\"" << t.txt.getString().toAnsiString() << "\" "
+        << t.txt.getCharacterSize() << " "
+        << "\"" << t.fontP << "\" "
+        << t.txt.getFillColor().toInteger() << " "
+        << t.txt.getPosition().x << " " << t.txt.getPosition().y << " "
+        << t.txt.getOutlineColor().toInteger() << " "
+        << t.txt.getOutlineThickness() << " "
+        << t.isHover << " "
+        << t.hoverColor.toInteger() << " "
+        << origin.x << " " << origin.y << "\n";
+    return os;
 }
+
 
 inline std::istream& operator>>(std::istream& is, TextComponent& t) {
     std::string textStr, fontPath;
 
     is >> std::ws;
     char quote;
-    is >> quote; 
+    is >> quote;
     std::getline(is, textStr, '"');
 
     int size;
+    is >> size;
+
+    is >> std::ws >> quote;
+    std::getline(is, fontPath, '"');
+
     unsigned int fillColorInt;
     float posX, posY;
     unsigned int outlineColorInt;
     float outlineThickness;
     bool hover;
     unsigned int hoverColorInt;
+    float originX, originY;
 
-    is >> std::ws >> quote;
-    std::getline(is, fontPath, '"');
-
-    is >>size>> fillColorInt >> posX >> posY
-        >> outlineColorInt >> outlineThickness >> hover >> hoverColorInt;
+    is >> fillColorInt >> posX >> posY
+        >> outlineColorInt >> outlineThickness >> hover >> hoverColorInt
+        >> originX >> originY;
 
     t.txt.setString(textStr);
     t.txt.setCharacterSize(size);
@@ -77,9 +84,14 @@ inline std::istream& operator>>(std::istream& is, TextComponent& t) {
     t.txt.setPosition({ posX, posY });
     t.txt.setOutlineColor(sf::Color(outlineColorInt));
     t.txt.setOutlineThickness(outlineThickness);
+    t.txt.setOrigin({ originX, originY });
+
     t.isHover = hover;
     t.hoverColor = sf::Color(hoverColorInt);
 
     return is;
 }
+
+
+
 

@@ -64,6 +64,10 @@ private:
     //wave info
     EntityID waveInfoID;
 
+    EntityID moneyTextId;
+
+    EntityID diffID;
+
     //money delta
     EntityID moneyDeltaID;
     float deltaTextTimer = 0.f;
@@ -82,6 +86,7 @@ private:
     bool showingSettingMenu = false;
     std::vector<EntityID> settingButtons;
 
+    std::vector<EntityID> gameplayEntities = std::vector<EntityID>(7, INVALID_ENTITY);
 public:
     //explicit GamePlay(const std::string& mapFilename);
     GamePlay(const std::string& mapFilename, DifficultyLevel difficulty);

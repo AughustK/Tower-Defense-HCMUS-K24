@@ -61,7 +61,17 @@ inline std::istream& operator>>(std::istream& is, SpriteComponent& s) {
     s.sprite.setScale({ scaleX, scaleY });
     s.isHover = (isHoverInt != 0);
 
+    if (s.frameCount > 1) {
+        auto texSize = s.texture->getSize();
+        int frameWidth = texSize.x / std::max(1, s.frameCount);
+        s.sprite.setTextureRect(sf::IntRect(0, 0, frameWidth, texSize.y));
+
+        sf::FloatRect bounds = s.sprite.getLocalBounds();
+        s.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+    }
+
     return is;
 }
+
 
 

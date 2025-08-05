@@ -10,11 +10,9 @@ class Continue : public GameState {
 
     void loadSaveFiles();
     void spawnTextOptions(World& world);
-    void clearUI(World& world);
 
 public:
     void onEnter(World& world) override;
-    void onExit(World& world) override;
     void update(World& world, float dt) override;
     void handleEvent(World& world, sf::Event& event) override;
     void render(World& world, sf::RenderWindow& window) override;

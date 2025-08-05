@@ -36,6 +36,7 @@ void Continue::spawnTextOptions(World& world) {
             auto& sound = w.getComponent<SoundComponent>(eid);
             sound.sound->play();
             string savedGamePath = "SavedGames/" + textStr + ".txt";
+
             w.setLoadedState(std::make_unique<GamePlay>(), savedGamePath);
             };
 
@@ -46,21 +47,10 @@ void Continue::spawnTextOptions(World& world) {
     }
 }
 
-void Continue::clearUI(World& world) {
-    for (EntityID id : textEntities) {
-        world.destroyEntity(id);
-    }
-    textEntities.clear();
-}
-
 void Continue::onEnter(World& world) {
     std::cout << "[ContinueState] onEnter\n";
     loadSaveFiles();
     spawnTextOptions(world);
-}
-
-void Continue::onExit(World& world) {
-    clearUI(world);
 }
 
 void Continue::update(World&, float) {

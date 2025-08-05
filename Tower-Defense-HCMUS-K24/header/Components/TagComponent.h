@@ -4,10 +4,7 @@ struct TagComponent {
     enum class Type {
         Enemy,
         Gameplay, //entities belongs to gameplay
-        TowerOnTile, //placed tower
-        TowerShop,  //shop tower
-        Text, //hover text from shop
-        Sprite //button
+        Skip
     } tag;
     TagComponent() : tag(Type::Gameplay) {}
     TagComponent(Type type) : tag(type) {}

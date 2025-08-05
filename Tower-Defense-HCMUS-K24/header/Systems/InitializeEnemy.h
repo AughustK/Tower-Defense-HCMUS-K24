@@ -27,4 +27,13 @@ public:
     void spawnWave(World& world, const std::vector<sf::Vector2f>& path, std::size_t count, const string& map, EnemyComponent::EnemyType t, DifficultyLevel difficulty);
     //void destroyAllEnemies(World& world);
     std::vector<EntityID> getActiveEnemies();
+    std::vector<EntityID> getEnemyPool() {
+        return enemyPool;
+    }
+    void addActiveEnemies(EntityID id) {
+        activeEnemies.push_back(id);
+    };
+    void setIndex(size_t n) {
+        nextPoolIndex = n;
+    }
 };

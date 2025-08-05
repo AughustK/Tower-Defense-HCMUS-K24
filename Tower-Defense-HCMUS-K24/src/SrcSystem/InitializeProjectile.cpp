@@ -4,6 +4,7 @@
 #include "../../header/Components/VelocityComponent.h"
 #include "../../header/Components/CircleComponent.h"
 #include "../../header/Components/UISpriteComponent.h"
+#include "../../header/Components/TagComponent.h"
 #include "../../header/Components/TowerDef.h"
 
 inline const std::string& getProjectileSpritePath(ProjectileComponent::ProjectileType type) {
@@ -27,6 +28,7 @@ void ProjectilePoolSystem::initPool(World& world, std::size_t count)
         world.addComponent(e, ProjectileComponent());
         world.addComponent(e, CircleComponent());
         world.addComponent(e, SpriteComponent());
+        world.addComponent(e, TagComponent(TagComponent::Type::Skip));
         pool.push_back(e);
     }
     nextIndex = 0;
