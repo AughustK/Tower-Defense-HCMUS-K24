@@ -48,9 +48,27 @@
 
 int GamePlay::money = 0;
 
-//GamePlay::GamePlay(const std::string& mapFilename)
-//{
-//}
+GamePlay::GamePlay()
+{
+    validTowerSpotsPerMap["FireMap"] = { {510, 330}, {760, 330}, \
+    {992, 236}, { 828, 430 }, { 995, 430 }, { 580, 525 }, \
+    {788, 630}, { 1027, 630 } };
+
+    validTowerSpotsPerMap["HellMap"] = { {807 , 508}, {1034, 515},\
+    {463, 586}, { 410, 753 }, { 800, 748 } };
+
+    validTowerSpotsPerMap["ParadiseMap"] = { {296, 315},{557, 369},\
+    {808, 315}, { 482, 544 }, { 778, 461 }, { 1007, 640 }, { 1159, 805 } };
+
+    validTowerSpotsPerMap["IceMap"] = { {291, 492}, {603, 410}, \
+    {907, 331}, { 1182, 451 }, { 907, 764 }, { 399, 708 }, { 1084, 1000 } };
+
+    castlePos["FireMap"] = { 1252, 672 - 3 * 64 };
+    castlePos["HellMap"] = { 17 * 64 + 20, 64 - 25 };
+    castlePos["ParadiseMap"] = { 17 * 64 + 120, 75 };
+    castlePos["IceMap"] = { 1252 - 44, 672 - 3 * 64 };
+
+}
 
 GamePlay::GamePlay(const std::string& mapFilename, DifficultyLevel difficulty)
     : mapFilename(mapFilename), currentDifficulty(difficulty)
@@ -621,6 +639,7 @@ void GamePlay::update(World& world, float odt)
         return;
     }
     float dt = odt * speedMulti[currSpdOpt];
+
     auto musicSystem = world.getSystem<MusicSystem>();
     if (musicSystem) musicSystem->play(world);
 
@@ -1407,6 +1426,10 @@ void GamePlay::onExit(World& world) {
     currentWave = 0;
     spawnTimer = 0.f;
     money = 0;
+    if (gameplayEntities.size()!=0&&gameplayEntities[0]!=INVALID_ENTITY) {
+        for (int i = 0; i < gameplayEntities.size(); i++)
+            world.destroyEntity(gameplayEntities[i]);
+    }
     cout << "[Gameplay] Exit state and free memory successfully.\n";
 }
 
@@ -1415,12 +1438,12 @@ void GamePlay::saveToFile(World& world) {
     std::filesystem::create_directories(folder);
 
     std::string fileName;
-    std::cout << "Nhập tên file save (không cần .txt): ";
+    std::cout << "Enter file name: ";
     std::cin >> fileName;
 
     std::ofstream out(folder+ "/" + fileName + ".txt");
     if (!out) {
-        std::cerr << "Không thể tạo file: " << fileName << "\n";
+        std::cerr << "Cannot create file: " << fileName << "\n";
         return;
     }
 
@@ -1697,13 +1720,14 @@ void GamePlay::loadFromFile(World& world, const std::string &filename) {
     in >> currSpdOpt;
 
     in >> victoryTriggered >> showingPauseMenu >> showingSettingMenu;
+    showingPauseMenu = !showingPauseMenu;
     in >> notificationActive >> notificationTimer;
     in >> deltaVisible >> deltaTextTimer;
     in >> towerOptionsVisible;
 
     std::cout << "[Gameplay] Load successfully data from gameplay\n";
 
-    /*size_t gameplayEntityCount;
+    size_t gameplayEntityCount;
     in >> gameplayEntityCount;
     in.ignore();
     gameplayEntities.clear();
@@ -1778,80 +1802,17 @@ void GamePlay::loadFromFile(World& world, const std::string &filename) {
             else if (line == "CircleComponent") {
                 in >> world.getComponent<CircleComponent>(id);
             }
-            else if (line == "SpriteComponent") {
-                char quote;
-                in >> std::ws >> quote;
-                std::string spritePath;
-                std::getline(in, spritePath, '"');
-
-                float posX, posY, scaleX, scaleY;
-                int isHoverInt;
-                int frameCount;
-                float frameRate;
-                in >> posX >> posY
-                    >> scaleX >> scaleY
-                    >> isHoverInt
-                    >> frameCount >> frameRate;
-
-                auto& posComp = world.getComponent<PositionComponent>(id);
-                posComp.x = posX; 
-                posComp.y = posY;
-
-                auto& spriteE = world.getComponent<SpriteComponent>(id);
-                spriteE.spritePath = spritePath;
-                spriteE.isHover = (isHoverInt != 0);
-                spriteE.frameCount = frameCount;
-                spriteE.frameRate = frameRate;
-
-                spriteE.setTxt(spritePath);               
-                spriteE.spritePath = spritePath;
-
-                spriteE.sprite.setPosition(posComp.x, posComp.y);
-                auto spriteSystem = world.getSystem<SpriteRenderSystem>();
-                if (spriteSystem) {
-                    spriteSystem->addEntityToSystem(id);
-                }
-
-                if (auto colSys = world.getSystem<CollisionSystem>()) {
-                    colSys->addEntity(id);
-                }
-                if (auto hpSys = world.getSystem<EnemyHPSystem>()) {
-                    hpSys->addEntity(id);
-                }
-
-                spriteE.sprite.setPosition(posComp.x, posComp.y);
-                spriteE.sprite.setScale(scaleX, scaleY);
-
-                if (spriteE.texture && spriteE.texture->getSize().x > 0) {
-                    unsigned texW = spriteE.texture->getSize().x;
-                    unsigned texH = spriteE.texture->getSize().y;
-                    int frameW = texW / std::max(1, frameCount);
-                    spriteE.sprite.setTextureRect({ 0, 0, frameW, static_cast<int>(texH) });
-                }
-
-                sf::FloatRect bounds = spriteE.sprite.getLocalBounds();
-                spriteE.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
-                auto& enemyComp = world.getComponent<EnemyComponent>(id);
-                if (enemyComp.type == EnemyComponent::EnemyType::HellBoss) {
-                    spriteE.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f + 15.f);
-                }
-
-                auto renderSys = world.getSystem<SpriteRenderSystem>();
-                renderSys->showEntity(id);
-                renderSys->addEntityToSystem(id);
-            }
-
-
-
             else if (line == "EnemyHPComponent") {
                 in >> world.getComponent<EnemyHPComponent>(id);
             }
+            else if (line == "SpriteComponent") {
+                world.getSystem<EnemySpawnSystem>()->setupSpriteFromFile(world, in);
+            }
         }
-        world.getSystem<EnemySpawnSystem>()->addActiveEnemies(id);
     }
-    world.getSystem<EnemySpawnSystem>()->setIndex(enemyCount);
 
     std::cout << "[Gameplay] Load enemies to gameplay\n";
+
 
     size_t otherCount;
     in >> otherCount;
@@ -1866,6 +1827,7 @@ void GamePlay::loadFromFile(World& world, const std::string &filename) {
         }
 
         EntityID id = world.createEntity(); 
+        registerEntity(id);
 
         while (std::getline(in, line) && line != "-----") {
             if (line == "TagComponent") {
@@ -1913,11 +1875,6 @@ void GamePlay::loadFromFile(World& world, const std::string &filename) {
                 in >> sprite;
                 world.addComponent(id, sprite);
             }
-            else if (line == "EnemyHPComponent") {
-                EnemyHPComponent ehp;
-                in >> ehp;
-                world.addComponent(id, ehp);
-            }
             else if (line == "SoundComponent") {
                 SoundComponent sound;
                 in >> sound;
@@ -1936,7 +1893,7 @@ void GamePlay::loadFromFile(World& world, const std::string &filename) {
         }
     }
 
-    std::cout << "[Gameplay] Load other entities to gameplay\n";*/
+    std::cout << "[Gameplay] Load other entities to gameplay\n";
     world.getSystem<CollisionSystem>()->init(mapFilename);
     in.close();
 
@@ -1948,7 +1905,6 @@ void GamePlay::loadFromFile(World& world, const std::string &filename) {
 
     //tower icon
     spawnTowerIcons(world);
-
 
     //exit button
     EntityID exitButton = world.createEntity();
@@ -2035,4 +1991,5 @@ void GamePlay::loadFromFile(World& world, const std::string &filename) {
     world.addComponent(speedButton, soundComp);
     world.addComponent(speedButton, speedSprite);
     world.addComponent(speedButton, TagComponent(TagComponent::Type::Skip));
+    std::cerr << "[GamePlay] Button loaded successfully\n";
 }

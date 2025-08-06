@@ -36,4 +36,5 @@ public:
     void setIndex(size_t n) {
         nextPoolIndex = n;
     }
+    void setupSpriteFromFile(World& world, std::istream& in);
 };

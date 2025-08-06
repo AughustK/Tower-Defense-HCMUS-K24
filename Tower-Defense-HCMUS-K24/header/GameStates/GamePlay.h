@@ -90,7 +90,7 @@ private:
 public:
     //explicit GamePlay(const std::string& mapFilename);
     GamePlay(const std::string& mapFilename, DifficultyLevel difficulty);
-    GamePlay() = default;
+    GamePlay();
 
     // State interface
     void onEnter(World& world) override;

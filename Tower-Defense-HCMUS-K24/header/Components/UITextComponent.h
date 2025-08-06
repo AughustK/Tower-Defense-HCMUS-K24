@@ -48,14 +48,14 @@ inline std::istream& operator>>(std::istream& is, TextComponent& t) {
     std::string textStr, fontPath;
 
     is >> std::ws;
-    char quote;
-    is >> quote;
+    is.get();  
     std::getline(is, textStr, '"');
 
     int size;
     is >> size;
 
-    is >> std::ws >> quote;
+    is >> std::ws;
+    is.get();  
     std::getline(is, fontPath, '"');
 
     unsigned int fillColorInt;
@@ -66,8 +66,10 @@ inline std::istream& operator>>(std::istream& is, TextComponent& t) {
     unsigned int hoverColorInt;
     float originX, originY;
 
-    is >> fillColorInt >> posX >> posY
-        >> outlineColorInt >> outlineThickness >> hover >> hoverColorInt
+    is >> fillColorInt
+        >> posX >> posY
+        >> outlineColorInt >> outlineThickness
+        >> hover >> hoverColorInt
         >> originX >> originY;
 
     t.txt.setString(textStr);
@@ -78,9 +80,10 @@ inline std::istream& operator>>(std::istream& is, TextComponent& t) {
     if (!t.font->loadFromFile(fontPath)) {
         std::cerr << "[TextComponent] Failed to load font from: " << fontPath << "\n";
     }
-
     t.txt.setFont(*t.font);
-    t.txt.setFillColor(sf::Color(fillColorInt));
+
+    t.originColor = sf::Color(fillColorInt);
+    t.txt.setFillColor(t.originColor);
     t.txt.setPosition({ posX, posY });
     t.txt.setOutlineColor(sf::Color(outlineColorInt));
     t.txt.setOutlineThickness(outlineThickness);
@@ -91,6 +94,7 @@ inline std::istream& operator>>(std::istream& is, TextComponent& t) {
 
     return is;
 }
+
 
 
 

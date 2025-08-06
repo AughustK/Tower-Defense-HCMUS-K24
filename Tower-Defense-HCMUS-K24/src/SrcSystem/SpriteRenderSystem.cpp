@@ -19,6 +19,11 @@ void SpriteRenderSystem::render(World& world)
             auto& pos = world.getComponent<PositionComponent>(entity);
             spriteComp.sprite.setPosition(pos.x, pos.y);
         }
+        /*if (world.hasComponent<EnemyComponent>(entity) && spriteComp.sprite.getPosition().x!=0 && spriteComp.sprite.getPosition().y!=0) {
+            std::cout << "[SpriteRenderSystem][Render] Drawing enemy " << entity
+                << ", pos: (" << spriteComp.sprite.getPosition().x
+                << "," << spriteComp.sprite.getPosition().y << ")\n";
+        }*/
         world.window.draw(spriteComp.sprite);
     }
 }

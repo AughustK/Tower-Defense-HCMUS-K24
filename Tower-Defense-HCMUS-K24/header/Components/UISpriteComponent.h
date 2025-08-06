@@ -34,8 +34,7 @@ inline std::ostream& operator<<(std::ostream& os, const SpriteComponent& s) {
     os << "\"" << s.spritePath << "\" "
         << s.sprite.getPosition().x << " " << s.sprite.getPosition().y << " "
         << s.sprite.getScale().x << " " << s.sprite.getScale().y << " "
-        << static_cast<int>(s.isHover) << " "
-        << s.frameCount << " " << s.frameRate << "\n";
+        << static_cast<int>(s.isHover) << " " << s.frameCount << " " << s.frameRate << "\n";
     return os;
 }
 

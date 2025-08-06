@@ -212,7 +212,6 @@ void World::setLoadedState(std::unique_ptr<GameState> state, std::string fileNam
         currentState->onExit(*this);
     }
     currentState = std::move(state);
-
     if (currentState)
     {
         currentState->loadFromFile(*this, fileName);
