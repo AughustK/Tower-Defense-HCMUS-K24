@@ -16,4 +16,5 @@ public:
     void update(World& world, float dt) override;
     void handleEvent(World& world, sf::Event& event) override;
     void render(World& world, sf::RenderWindow& window) override;
+    void spawnControlButtons(World& world);
 };

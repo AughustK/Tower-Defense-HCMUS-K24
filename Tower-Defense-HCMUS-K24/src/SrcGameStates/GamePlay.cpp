@@ -1433,6 +1433,9 @@ void GamePlay::onExit(World& world) {
     cout << "[Gameplay] Exit state and free memory successfully.\n";
 }
 
+
+//save and load order: save entities with tag gameplay, save other entities
+//save enemy
 void GamePlay::saveToFile(World& world) {
     std::string folder = "SavedGames";
     std::filesystem::create_directories(folder);
@@ -1524,58 +1527,6 @@ void GamePlay::saveToFile(World& world) {
         out << "-----\n"; 
     }
 
-    out << activeEnemies.size()<<"\n";
-    for (EntityID id : activeEnemies) {
-        out << "EntityID: " << id << "\n";
-
-        if (world.hasComponent<TagComponent>(id)) {
-            const auto& tag = world.getComponent<TagComponent>(id);
-            out << tag;
-        }
-
-        if (world.hasComponent<PositionComponent>(id)) {
-            const auto& tag = world.getComponent<PositionComponent>(id);
-            out << tag;
-        }
-
-        if (world.hasComponent<VelocityComponent>(id)) {
-            const auto& tag = world.getComponent<VelocityComponent>(id);
-            out << tag;
-        }
-        
-        if (world.hasComponent<PathComponent>(id)) {
-            const auto& tag = world.getComponent<PathComponent>(id);
-            out << tag;
-        }
-
-        if (world.hasComponent<EnemyComponent>(id)) {
-            const auto& tag = world.getComponent<EnemyComponent>(id);
-            out << tag;
-        }
-
-        if (world.hasComponent<HealthComponent>(id)) {
-            const auto& tag = world.getComponent<HealthComponent>(id);
-            out << tag;
-        }
-
-        if (world.hasComponent<CircleComponent>(id)) {
-            const auto& tag = world.getComponent<CircleComponent>(id);
-            out << tag;
-        }
-
-        if (world.hasComponent<SpriteComponent>(id)) {
-            const auto& tag = world.getComponent<SpriteComponent>(id);
-            out << tag;
-        }
-
-        if (world.hasComponent<EnemyHPComponent>(id)) {
-            const auto& tag = world.getComponent<EnemyHPComponent>(id);
-            out << tag;
-        }
-
-        out << "-----\n";
-    }
-
     out << otherEntities.size() << "\n";
     for (EntityID id : otherEntities) {
         out << "EntityID: " << id << "\n";
@@ -1647,13 +1598,67 @@ void GamePlay::saveToFile(World& world) {
         out << "-----\n";
     }
 
+    out << activeEnemies.size() << "\n";
+    for (EntityID id : activeEnemies) {
+        out << "EntityID: " << id << "\n";
+
+        if (world.hasComponent<TagComponent>(id)) {
+            const auto& tag = world.getComponent<TagComponent>(id);
+            out << tag;
+        }
+
+        if (world.hasComponent<PositionComponent>(id)) {
+            const auto& tag = world.getComponent<PositionComponent>(id);
+            out << tag;
+        }
+
+        if (world.hasComponent<VelocityComponent>(id)) {
+            const auto& tag = world.getComponent<VelocityComponent>(id);
+            out << tag;
+        }
+
+        if (world.hasComponent<PathComponent>(id)) {
+            const auto& tag = world.getComponent<PathComponent>(id);
+            out << tag;
+        }
+
+        if (world.hasComponent<EnemyComponent>(id)) {
+            const auto& tag = world.getComponent<EnemyComponent>(id);
+            out << tag;
+        }
+
+        if (world.hasComponent<HealthComponent>(id)) {
+            const auto& tag = world.getComponent<HealthComponent>(id);
+            out << tag;
+        }
+
+        if (world.hasComponent<CircleComponent>(id)) {
+            const auto& tag = world.getComponent<CircleComponent>(id);
+            out << tag;
+        }
+
+        if (world.hasComponent<SpriteComponent>(id)) {
+            const auto& tag = world.getComponent<SpriteComponent>(id);
+            out << tag;
+        }
+
+        if (world.hasComponent<EnemyHPComponent>(id)) {
+            const auto& tag = world.getComponent<EnemyHPComponent>(id);
+            out << tag;
+        }
+
+        out << "-----\n";
+    }
+
 
     out.close();
     std::cout << "\n[GamePlay] Saved at: " << folder + fileName + ".txt" << '\n';
 }
 
+//load gameplay entities, load other entities, load enemy, finally load button
 void GamePlay::loadFromFile(World& world, const std::string &filename) {
     std::cout << "[Gameplay] Loading data\n";
+    
     world.getSystem<EnemySpawnSystem>()->clearPool(world);
     auto musicEntities = world.getEntitiesWithComponent<MusicComponent>();
     for (EntityID id : musicEntities) {
@@ -1768,52 +1773,6 @@ void GamePlay::loadFromFile(World& world, const std::string &filename) {
 
     std::cout << "[Gameplay] Load entities to gameplay\n";
 
-    size_t enemyCount;
-    in >> enemyCount;
-    in.ignore();
-
-    std::vector<EntityID> enemyPool = world.getSystem<EnemySpawnSystem>()->getEnemyPool();
-    for (size_t i = 0; i < enemyCount; ++i) {
-        std::string line;
-        std::getline(in, line);
-        if (line.rfind("EntityID:", 0) != 0) continue;
-
-        EntityID id = enemyPool[i];
-
-        while (std::getline(in, line) && line != "-----") {
-            if (line == "TagComponent") {
-                in >> world.getComponent<TagComponent>(id);
-            }
-            else if (line == "PositionComponent") {
-                in >> world.getComponent<PositionComponent>(id);
-            }
-            else if (line == "VelocityComponent") {
-                in >> world.getComponent<VelocityComponent>(id);
-            }
-            else if (line == "PathComponent") {
-                in >> world.getComponent<PathComponent>(id);
-            }
-            else if (line == "EnemyComponent") {
-                in >> world.getComponent<EnemyComponent>(id);
-            }
-            else if (line == "HealthComponent") {
-                in >> world.getComponent<HealthComponent>(id);
-            }
-            else if (line == "CircleComponent") {
-                in >> world.getComponent<CircleComponent>(id);
-            }
-            else if (line == "EnemyHPComponent") {
-                in >> world.getComponent<EnemyHPComponent>(id);
-            }
-            else if (line == "SpriteComponent") {
-                world.getSystem<EnemySpawnSystem>()->setupSpriteFromFile(world, in);
-            }
-        }
-    }
-
-    std::cout << "[Gameplay] Load enemies to gameplay\n";
-
-
     size_t otherCount;
     in >> otherCount;
     in.ignore();
@@ -1894,9 +1853,52 @@ void GamePlay::loadFromFile(World& world, const std::string &filename) {
     }
 
     std::cout << "[Gameplay] Load other entities to gameplay\n";
-    world.getSystem<CollisionSystem>()->init(mapFilename);
+    size_t enemyCount;
+    in >> enemyCount;
+    in.ignore();
+
+    std::vector<EntityID> enemyPool = world.getSystem<EnemySpawnSystem>()->getEnemyPool();
+    for (size_t i = 0; i < enemyCount; ++i) {
+        std::string line;
+        std::getline(in, line);
+        if (line.rfind("EntityID:", 0) != 0) continue;
+
+        EntityID id = enemyPool[i];
+
+        while (std::getline(in, line) && line != "-----") {
+            if (line == "TagComponent") {
+                in >> world.getComponent<TagComponent>(id);
+            }
+            else if (line == "PositionComponent") {
+                in >> world.getComponent<PositionComponent>(id);
+            }
+            else if (line == "VelocityComponent") {
+                in >> world.getComponent<VelocityComponent>(id);
+            }
+            else if (line == "PathComponent") {
+                in >> world.getComponent<PathComponent>(id);
+            }
+            else if (line == "EnemyComponent") {
+                in >> world.getComponent<EnemyComponent>(id);
+            }
+            else if (line == "HealthComponent") {
+                in >> world.getComponent<HealthComponent>(id);
+            }
+            else if (line == "CircleComponent") {
+                in >> world.getComponent<CircleComponent>(id);
+            }
+            else if (line == "EnemyHPComponent") {
+                in >> world.getComponent<EnemyHPComponent>(id);
+            }
+            else if (line == "SpriteComponent") {
+                world.getSystem<EnemySpawnSystem>()->setupSpriteFromFile(world, in, id);
+            }
+        }
+    }
+    std::cout << "[Gameplay] Load enemies to gameplay\n";
     in.close();
 
+    world.getSystem<CollisionSystem>()->init(mapFilename);
     const string soundPath = "assets/SFX/MouseClick.mp3";
     const string musicPath = "assets/SFX/Music/Map/" + mapFilename + ".mp3";
     SoundComponent soundComp(soundPath, false);

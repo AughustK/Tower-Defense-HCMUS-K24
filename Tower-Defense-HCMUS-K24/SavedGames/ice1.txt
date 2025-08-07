@@ -1,0 +1,694 @@
+GamePlayState
+60
+0 1 0
+0
+IceMap
+14
+480 1090
+480 1078
+480 950
+480 830
+250 825
+250 610
+440 606
+455 260
+755 265
+795 445
+1020 465
+1045 850
+1285 845
+1290 785
+4
+8 10 10 1 
+6 1 0
+2 1.44369 1.5
+14
+480 1090
+480 1078
+480 950
+480 830
+250 825
+250 610
+440 606
+455 260
+755 265
+795 445
+1020 465
+1045 850
+1285 845
+1290 785
+3
+0 1 0
+0 0
+0 0.50481
+0
+7
+EntityID: 933
+TagComponent
+1
+TextComponent
+"60" 70 "assets/Font/Minecraft-Regular.otf" 4294902015 95 20 255 4 0 16777215 17.5 24.5
+-----
+EntityID: 934
+TagComponent
+1
+TextComponent
+"Difficulty: Easy" 40 "assets/Font/Minecraft-Regular.otf" 16711935 165 88 255 4 0 16777215 148 16
+-----
+EntityID: 935
+TagComponent
+1
+TextComponent
+"Wave: 1/4" 40 "assets/Font/Minecraft-Regular.otf" 4294967295 110 130 255 4 0 16777215 94 14
+-----
+EntityID: 936
+TagComponent
+1
+TextComponent
+"" 50 "assets/Font/Minecraft-Regular.otf" 16711935 250 30 255 2 0 16777215 44.5 19.5
+-----
+EntityID: 937
+TagComponent
+1
+TextComponent
+"Speed: x2" 40 "assets/Font/Minecraft-Regular.otf" 16777215 125 175 255 4 0 16777215 110 16
+-----
+EntityID: 938
+TagComponent
+1
+TextComponent
+"" 50 "assets/Font/Minecraft-Regular.otf" 4292280575 768 100 255 7 0 16777215 0 0
+-----
+EntityID: 939
+TagComponent
+1
+CastleHPComponent
+100 100 1208 480 200 20 16711935 4294967295 2 "HP: 100" 25 4294967295 1208 445 255 2
+-----
+10
+EntityID: 617
+SoundComponent
+assets/SFX/PlaceTower.mp3
+1
+0
+-----
+EntityID: 940
+SoundComponent
+assets/SFX/PlaceTower.mp3
+1
+0
+-----
+EntityID: 941
+SpriteComponent
+"assets/IceMap/IceMap.jpg" 0 0 1 1 0 1 1
+MusicComponent
+assets/SFX/Music/Map/IceMap.mp3
+0
+1
+-----
+EntityID: 942
+SpriteComponent
+"assets/Bg/ShopFrame.png" 1613.5 0 0.5 1.18 0 1 1
+-----
+EntityID: 943
+TextComponent
+"Heroes Shop" 32 "assets/Font/Minecraft-Regular.otf" 4294967295 1750 120 255 5 1 16777215 100 12.5
+-----
+EntityID: 944
+SpriteComponent
+"assets/Icon/Coin.png" 0 5 0.28 0.28 0 1 1
+-----
+EntityID: 945
+SpriteComponent
+"assets/Heroes/archer_base_idle.png" 399 708 3.2 3.2 0 6 0.09
+TowerComponent
+0
+0
+399
+708
+1
+400
+250
+160
+7
+14
+0.849808
+20
+-1
+-----
+EntityID: 946
+SoundComponent
+assets/SFX/PlaceTower.mp3
+1
+0
+-----
+EntityID: 947
+SpriteComponent
+"assets/Heroes/mage_base_idle.png" 291 492 2.2 2.2 0 8 0.18
+TowerComponent
+1
+0
+291
+492
+0.8
+400
+300
+180
+9
+0
+0.577614
+30
+-1
+-----
+EntityID: 948
+SoundComponent
+assets/SFX/PlaceTower.mp3
+1
+0
+-----
+15
+EntityID: 1
+TagComponent
+0
+PositionComponent
+627.337 262.39 0
+VelocityComponent
+24.9948 0.511008
+PathComponent
+14
+480 1090
+480 1078
+480 950
+480 830
+250 825
+250 610
+440 606
+455 260
+755 265
+795 445
+1020 465
+1045 850
+1285 845
+1290 785
+8 25 0
+EnemyComponent
+0 0 2000 25 10 1.3 10 0 3 4294967295 0
+HealthComponent
+700 2000
+CircleComponent
+627.337 262.39 18 0 0
+SpriteComponent
+"assets/IceMap/IceNormal1Spritesheet/run.png" 627.337 262.39 1.3 1.3 0 13 0.08
+EnemyHPComponent
+2000 700 40 5 -30 -50
+-----
+EntityID: 2
+TagComponent
+0
+PositionComponent
+552.235 260.912 0
+VelocityComponent
+24.9949 0.503902
+PathComponent
+14
+480 1090
+480 1078
+480 950
+480 830
+250 825
+250 610
+440 606
+455 260
+755 265
+795 445
+1020 465
+1045 850
+1285 845
+1290 785
+8 25 0
+EnemyComponent
+0 0 2000 25 10 1.3 10 0 3 4294967295 0
+HealthComponent
+1200 2000
+CircleComponent
+552.235 260.912 18 0 0
+SpriteComponent
+"assets/IceMap/IceNormal1Spritesheet/run.png" 552.235 260.912 1.3 1.3 0 13 0.08
+EnemyHPComponent
+2000 1200 40 5 -30 -50
+-----
+EntityID: 3
+TagComponent
+0
+PositionComponent
+476.522 259.437 0
+VelocityComponent
+24.9005 0.391081
+PathComponent
+14
+480 1090
+480 1078
+480 950
+480 830
+250 825
+250 610
+440 606
+455 260
+755 265
+795 445
+1020 465
+1045 850
+1285 845
+1290 785
+8 25 0
+EnemyComponent
+0 0 2000 25 10 1.3 10 0 3 4294967295 0
+HealthComponent
+700 2000
+CircleComponent
+476.522 259.437 18 0 0
+SpriteComponent
+"assets/IceMap/IceNormal1Spritesheet/run.png" 476.522 259.437 1.3 1.3 0 13 0.08
+EnemyHPComponent
+2000 700 40 5 -30 -50
+-----
+EntityID: 4
+TagComponent
+0
+PositionComponent
+452.897 312.177 0
+VelocityComponent
+1.00693 -24.9797
+PathComponent
+14
+480 1090
+480 1078
+480 950
+480 830
+250 825
+250 610
+440 606
+455 260
+755 265
+795 445
+1020 465
+1045 850
+1285 845
+1290 785
+7 25 0
+EnemyComponent
+0 0 2000 25 10 1.3 10 0 3 4294967295 0
+HealthComponent
+900 2000
+CircleComponent
+452.897 312.177 18 0 0
+SpriteComponent
+"assets/IceMap/IceNormal1Spritesheet/run.png" 452.897 312.177 1.3 1.3 0 13 0.08
+EnemyHPComponent
+2000 900 40 5 -30 -50
+-----
+EntityID: 5
+TagComponent
+0
+PositionComponent
+449.864 386.89 0
+VelocityComponent
+1.01104 -24.9795
+PathComponent
+14
+480 1090
+480 1078
+480 950
+480 830
+250 825
+250 610
+440 606
+455 260
+755 265
+795 445
+1020 465
+1045 850
+1285 845
+1290 785
+7 25 0
+EnemyComponent
+0 0 2000 25 10 1.3 10 0 3 4294967295 0
+HealthComponent
+400 2000
+CircleComponent
+449.864 386.89 18 0 0
+SpriteComponent
+"assets/IceMap/IceNormal1Spritesheet/run.png" 449.864 386.89 1.3 1.3 0 13 0.08
+EnemyHPComponent
+2000 400 40 5 -30 -50
+-----
+EntityID: 6
+TagComponent
+0
+PositionComponent
+446.838 460.931 0
+VelocityComponent
+1.01469 -24.9794
+PathComponent
+14
+480 1090
+480 1078
+480 950
+480 830
+250 825
+250 610
+440 606
+455 260
+755 265
+795 445
+1020 465
+1045 850
+1285 845
+1290 785
+7 25 0
+EnemyComponent
+0 0 2000 25 10 1.3 10 0 3 4294967295 0
+HealthComponent
+1150 2000
+CircleComponent
+446.838 460.931 18 0 0
+SpriteComponent
+"assets/IceMap/IceNormal1Spritesheet/run.png" 446.838 460.931 1.3 1.3 0 13 0.08
+EnemyHPComponent
+2000 1150 40 5 -30 -50
+-----
+EntityID: 7
+TagComponent
+0
+PositionComponent
+443.64 537.348 0
+VelocityComponent
+1.0231 -24.9791
+PathComponent
+14
+480 1090
+480 1078
+480 950
+480 830
+250 825
+250 610
+440 606
+455 260
+755 265
+795 445
+1020 465
+1045 850
+1285 845
+1290 785
+7 25 0
+EnemyComponent
+0 0 2000 25 10 1.3 10 0 3 4294967295 0
+HealthComponent
+900 2000
+CircleComponent
+443.64 537.348 18 0 0
+SpriteComponent
+"assets/IceMap/IceNormal1Spritesheet/run.png" 443.64 537.348 1.3 1.3 0 13 0.08
+EnemyHPComponent
+2000 900 40 5 -30 -50
+-----
+EntityID: 8
+TagComponent
+0
+PositionComponent
+249.447 725.753 0
+VelocityComponent
+0.119462 -24.9997
+PathComponent
+14
+480 1090
+480 1078
+480 950
+480 830
+250 825
+250 610
+440 606
+455 260
+755 265
+795 445
+1020 465
+1045 850
+1285 845
+1290 785
+5 25 0
+EnemyComponent
+0 0 2000 25 10 1.5 10 0 4 4294967295 0
+HealthComponent
+2000 2000
+CircleComponent
+249.447 725.753 18 0 0
+SpriteComponent
+"assets/IceMap/IceNormal2Spritesheet/run.png" 249.447 725.753 1.5 1.5 0 10 0.1
+EnemyHPComponent
+2000 2000 40 5 -30 -50
+-----
+EntityID: 9
+TagComponent
+0
+PositionComponent
+249.348 798.86 0
+VelocityComponent
+0.044452 -24.9638
+PathComponent
+14
+480 1090
+480 1078
+480 950
+480 830
+250 825
+250 610
+440 606
+455 260
+755 265
+795 445
+1020 465
+1045 850
+1285 845
+1290 785
+5 25 0
+EnemyComponent
+0 0 2000 25 10 1.5 10 0 4 4294967295 0
+HealthComponent
+2000 2000
+CircleComponent
+249.348 798.86 18 0 0
+SpriteComponent
+"assets/IceMap/IceNormal2Spritesheet/run.png" 249.348 798.86 1.5 1.5 0 10 0.1
+EnemyHPComponent
+2000 2000 40 5 -30 -50
+-----
+EntityID: 10
+TagComponent
+0
+PositionComponent
+298.69 825.824 0
+VelocityComponent
+-24.9964 -0.423255
+PathComponent
+14
+480 1090
+480 1078
+480 950
+480 830
+250 825
+250 610
+440 606
+455 260
+755 265
+795 445
+1020 465
+1045 850
+1285 845
+1290 785
+4 25 0
+EnemyComponent
+0 0 2000 25 10 1.5 10 0 4 4294967295 0
+HealthComponent
+2000 2000
+CircleComponent
+298.69 825.824 18 0 0
+SpriteComponent
+"assets/IceMap/IceNormal2Spritesheet/run.png" 298.69 825.824 -1.5 1.5 0 10 0.1
+EnemyHPComponent
+2000 2000 40 5 -30 -50
+-----
+EntityID: 11
+TagComponent
+0
+PositionComponent
+373.622 827.095 0
+VelocityComponent
+-24.9964 -0.423578
+PathComponent
+14
+480 1090
+480 1078
+480 950
+480 830
+250 825
+250 610
+440 606
+455 260
+755 265
+795 445
+1020 465
+1045 850
+1285 845
+1290 785
+4 25 0
+EnemyComponent
+0 0 2000 25 10 1.5 10 0 4 4294967295 0
+HealthComponent
+1750 2000
+CircleComponent
+373.622 827.095 18 0 0
+SpriteComponent
+"assets/IceMap/IceNormal2Spritesheet/run.png" 373.622 827.095 -1.5 1.5 0 10 0.1
+EnemyHPComponent
+2000 1750 40 5 -30 -50
+-----
+EntityID: 12
+TagComponent
+0
+PositionComponent
+449.165 828.261 0
+VelocityComponent
+-24.9833 -0.42437
+PathComponent
+14
+480 1090
+480 1078
+480 950
+480 830
+250 825
+250 610
+440 606
+455 260
+755 265
+795 445
+1020 465
+1045 850
+1285 845
+1290 785
+4 25 0
+EnemyComponent
+0 0 2000 25 10 1.5 10 0 4 4294967295 0
+HealthComponent
+2000 2000
+CircleComponent
+449.165 828.261 18 0 0
+SpriteComponent
+"assets/IceMap/IceNormal2Spritesheet/run.png" 449.165 828.261 -1.5 1.5 0 10 0.1
+EnemyHPComponent
+2000 2000 40 5 -30 -50
+-----
+EntityID: 13
+TagComponent
+0
+PositionComponent
+480 873.317 0
+VelocityComponent
+0 -25
+PathComponent
+14
+480 1090
+480 1078
+480 950
+480 830
+250 825
+250 610
+440 606
+455 260
+755 265
+795 445
+1020 465
+1045 850
+1285 845
+1290 785
+3 25 0
+EnemyComponent
+0 0 2000 25 10 1.5 10 0 4 4294967295 0
+HealthComponent
+2000 2000
+CircleComponent
+480 873.317 18 0 0
+SpriteComponent
+"assets/IceMap/IceNormal2Spritesheet/run.png" 480 873.317 1.5 1.5 0 10 0.1
+EnemyHPComponent
+2000 2000 40 5 -30 -50
+-----
+EntityID: 14
+TagComponent
+0
+PositionComponent
+480 948.835 0
+VelocityComponent
+0 -25
+PathComponent
+14
+480 1090
+480 1078
+480 950
+480 830
+250 825
+250 610
+440 606
+455 260
+755 265
+795 445
+1020 465
+1045 850
+1285 845
+1290 785
+3 25 0
+EnemyComponent
+0 0 2000 25 10 1.5 10 0 4 4294967295 0
+HealthComponent
+2000 2000
+CircleComponent
+480 948.835 18 0 0
+SpriteComponent
+"assets/IceMap/IceNormal2Spritesheet/run.png" 480 948.835 1.5 1.5 0 10 0.1
+EnemyHPComponent
+2000 2000 40 5 -30 -50
+-----
+EntityID: 15
+TagComponent
+0
+PositionComponent
+480 1023.18 0
+VelocityComponent
+0 -25
+PathComponent
+14
+480 1090
+480 1078
+480 950
+480 830
+250 825
+250 610
+440 606
+455 260
+755 265
+795 445
+1020 465
+1045 850
+1285 845
+1290 785
+2 25 0
+EnemyComponent
+0 0 2000 25 10 1.5 10 0 4 4294967295 0
+HealthComponent
+2000 2000
+CircleComponent
+480 1023.18 18 0 0
+SpriteComponent
+"assets/IceMap/IceNormal2Spritesheet/run.png" 480 1023.18 1.5 1.5 0 10 0.1
+EnemyHPComponent
+2000 2000 40 5 -30 -50
+-----

@@ -267,13 +267,12 @@ std::vector<EntityID> EnemySpawnSystem::getActiveEnemies() {
     return activeEnemies;
 }
 
-void EnemySpawnSystem::setupSpriteFromFile(World& world, std::istream& in)
+void EnemySpawnSystem::setupSpriteFromFile(World& world, std::istream& in, EntityID id)
 {
-    // Đọc dữ liệu sprite từ file
-    EntityID id = enemyPool[nextPoolIndex];
-    nextPoolIndex = (nextPoolIndex + 1) % enemyPool.size();
+    std::cout << "[DEBUG] Setup sprite for EntityID: " << id << "\n";
+
     char ch;
-    in >> std::ws >> ch; // bỏ khoảng trắng và dấu "
+    in >> std::ws >> ch;
     std::string spritePath;
     std::getline(in, spritePath, '"');
 
@@ -282,30 +281,46 @@ void EnemySpawnSystem::setupSpriteFromFile(World& world, std::istream& in)
     in >> posX >> posY >> scaleX >> scaleY >> hoverFlag;
     in.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-    // Thiết lập SpriteComponent
+    std::cout << "[DEBUG] Read from file: path=" << spritePath
+        << ", pos=(" << posX << "," << posY << "), scale=("
+        << scaleX << "," << scaleY << "), hover=" << hoverFlag << "\n";
+
     auto& spriteE = world.getComponent<SpriteComponent>(id);
     spriteE.setTxt(spritePath);
     spriteE.spritePath = spritePath;
+
+    std::cout << "[DEBUG] Call setTxt, spritePath = " << spriteE.spritePath << "\n";
+    if (!spriteE.texture) {
+        std::cerr << "[ERROR] Texture not load: " << spritePath << "\n";
+    }
+    else {
+        std::cout << "[DEBUG] Texture load OK. Size = ("
+            << spriteE.texture->getSize().x << ", "
+            << spriteE.texture->getSize().y << ")\n";
+    }
+
     spriteE.sprite.setPosition(posX, posY);
+
     if (auto rs = world.getSystem<SpriteRenderSystem>()) {
         rs->addEntityToSystem(id);
-        rs->showEntity(id);
+        std::cout << "[DEBUG] Add entity to SpriteRenderSystem\n";
     }
     if (auto cs = world.getSystem<CollisionSystem>()) {
         cs->addEntity(id);
+        std::cout << "[DEBUG] Add entity to CollisionSystem\n";
     }
     if (auto hs = world.getSystem<EnemyHPSystem>()) {
         hs->addEntity(id);
+        std::cout << "[DEBUG] Add entity to EnemyHPSystem\n";
     }
 
     spriteE.isHover = (hoverFlag != 0);
 
-    // Thiết lập frameCount và frameRate dựa theo EnemyType
     auto& enemy = world.getComponent<EnemyComponent>(id);
+    using Type = EnemyComponent::EnemyType;
 
     int frameCount = 1;
     float frameRate = 1.0f;
-    using Type = EnemyComponent::EnemyType;
 
     switch (enemy.type) {
     case Type::FireNormal1:      frameCount = 20; frameRate = 0.04f; break;
@@ -330,13 +345,25 @@ void EnemySpawnSystem::setupSpriteFromFile(World& world, std::istream& in)
     if (spriteE.texture && spriteE.texture->getSize().x > 0) {
         int frameWidth = spriteE.texture->getSize().x / frameCount;
         spriteE.sprite.setTextureRect(sf::IntRect(0, 0, frameWidth, spriteE.texture->getSize().y));
+        std::cout << "[DEBUG] Texture rect: (0, 0, "
+            << frameWidth << ", " << spriteE.texture->getSize().y << ")\n";
+    }
+    else {
+        std::cerr << "[ERROR] Empty texture or not exist\n";
     }
 
     sf::FloatRect bounds = spriteE.sprite.getLocalBounds();
     spriteE.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
-    if (enemy.type == EnemyComponent::EnemyType::HellBoss) {
+    if (enemy.type == Type::HellBoss) {
         spriteE.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f + 15.f);
     }
 
+    std::cout << "[DEBUG] Origin: (" << spriteE.sprite.getOrigin().x
+        << ", " << spriteE.sprite.getOrigin().y << ")\n";
+
     activeEnemies.push_back(id);
+    nextPoolIndex = (nextPoolIndex + 1) % enemyPool.size();
+
+    std::cout << "[DEBUG] Entity " << id << " added to activeEnemies\n";
 }
+
