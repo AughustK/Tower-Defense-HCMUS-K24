@@ -23,6 +23,14 @@ void MainMenu::handleEvent(World& world, sf::Event& event)
     if (event.type == sf::Event::MouseButtonPressed &&
         event.mouseButton.button == sf::Mouse::Left)
     {
+        for (EntityID e : entities1) {
+            if (world.hasComponent<EnemyComponent>(e) || world.hasComponent<ProjectileComponent>(e))
+                continue;
+            std::cout << "[Entity] ID = " << e << "\n";
+            std::cout << "  - Has SpriteComponent: " << world.hasComponent<SpriteComponent>(e) << "\n";
+            std::cout << "  - Has TextComponent: " << world.hasComponent<TextComponent>(e) << "\n";
+            std::cout << "  - Has SoundComponent: " << world.hasComponent<SoundComponent>(e) << "\n";
+        }
         Vector2f mousePos = world.window.mapPixelToCoords(
             { event.mouseButton.x, event.mouseButton.y });
 

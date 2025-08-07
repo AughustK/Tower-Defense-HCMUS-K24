@@ -54,14 +54,14 @@ GamePlay::GamePlay()
     {992, 236}, { 828, 430 }, { 995, 430 }, { 580, 525 }, \
     {788, 630}, { 1027, 630 } };
 
-    validTowerSpotsPerMap["HellMap"] = { {807 , 508}, {1034, 515},\
-    {463, 586}, { 410, 753 }, { 800, 748 } };
+    validTowerSpotsPerMap["HellMap"] = { {758, 602}, {1135, 583},\
+    {442, 634}, {467, 848}, {801, 848}, {196, 620}, {523, 404} };
 
-    validTowerSpotsPerMap["ParadiseMap"] = { {296, 315},{557, 369},\
-    {808, 315}, { 482, 544 }, { 778, 461 }, { 1007, 640 }, { 1159, 805 } };
+    validTowerSpotsPerMap["ParadiseMap"] = { {135, 717}, {306, 283},{420, 717},\
+    {601, 400}, {911, 820}, {1176, 965}, {1166, 700} };
 
-    validTowerSpotsPerMap["IceMap"] = { {291, 492}, {603, 410}, \
-    {907, 331}, { 1182, 451 }, { 907, 764 }, { 399, 708 }, { 1084, 1000 } };
+    validTowerSpotsPerMap["IceMap"] = { {291, 479}, {603, 397}, \
+    {907, 318}, {1182, 438}, {907, 751}, {399, 695}, {1084, 987} };
 
     castlePos["FireMap"] = { 1252, 672 - 3 * 64 };
     castlePos["HellMap"] = { 17 * 64 + 20, 64 - 25 };
@@ -77,14 +77,14 @@ GamePlay::GamePlay(const std::string& mapFilename, DifficultyLevel difficulty)
     {992, 236}, { 828, 430 }, { 995, 430 }, { 580, 525 }, \
     {788, 630}, { 1027, 630 } };
 
-    validTowerSpotsPerMap["HellMap"] = { {807 , 508}, {1034, 515},\
-    {463, 586}, { 410, 753 }, { 800, 748 } };
+    validTowerSpotsPerMap["HellMap"] = { {758, 602}, {1135, 583},\
+    {442, 634}, {467, 848}, {801, 848}, {196, 620}, {523, 404} };
 
-    validTowerSpotsPerMap["ParadiseMap"] = { {296, 315},{557, 369},\
-    {808, 315}, { 482, 544 }, { 778, 461 }, { 1007, 640 }, { 1159, 805 } };
+    validTowerSpotsPerMap["ParadiseMap"] = { {135, 717}, {306, 283},{420, 717},\
+    {601, 400}, {911, 820}, {1176, 965}, {1166, 700} };
 
-    validTowerSpotsPerMap["IceMap"] = { {291, 492}, {603, 410}, \
-    {907, 331}, { 1182, 451 }, { 907, 764 }, { 399, 708 }, { 1084, 1000 } };
+    validTowerSpotsPerMap["IceMap"] = { {291, 479}, {603, 397}, \
+    {907, 318}, {1182, 438}, {907, 751}, {399, 695}, {1084, 987} };
 
     castlePos["FireMap"] = { 1252, 672 - 3 * 64 };
     castlePos["HellMap"] = { 17 * 64 + 20, 64 - 25 };
@@ -522,11 +522,18 @@ void GamePlay::handleEvent(World& world, sf::Event& event)
 
             if (towerComp.type == TowerComponent::TowerType::Mage && towerComp.level == 1)
             {
-                towerComp.y -= 45;
-                snappedPos.y -= 45;
+                towerComp.y -= 55;
+                snappedPos.y -= 55;
                 towerComp.x += 10;
                 snappedPos.x += 10;
 			}
+
+            if (towerComp.type == TowerComponent::TowerType::Cannon && towerComp.level == 1)
+            {
+                towerComp.y -= 20;
+                snappedPos.y -= 35;
+                towerComp.x += 10;
+            }
 
             std::string spritePath = TowerComponent::getAnimationPath(placingType, placingLevel);
             const TowerDef& def = TowerComponent::getTowerDef(placingType);
@@ -848,21 +855,6 @@ void GamePlay::render(World& world, sf::RenderWindow& window)
 
     auto textSystem = world.getSystem<TextRenderSystem>();
     textSystem->render(world);
-
-    const float radius = 5.f;
-    sf::CircleShape debugDot(radius);
-    debugDot.setOrigin(radius, radius);
-    debugDot.setFillColor(sf::Color::Green);
-
-    auto it = validTowerSpotsPerMap.find(mapFilename);
-    if (it != validTowerSpotsPerMap.end())
-    {
-        for (const auto& spot : it->second)
-        {
-            debugDot.setPosition(spot.x, spot.y);
-            window.draw(debugDot);
-        }
-    }
 
     auto castleHPSystem = world.getSystem<CastleHPSystem>();
     castleHPSystem->render(world);

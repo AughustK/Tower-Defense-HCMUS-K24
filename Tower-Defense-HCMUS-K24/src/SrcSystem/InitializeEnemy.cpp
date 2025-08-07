@@ -168,7 +168,7 @@ EntityID EnemySpawnSystem::spawnFromPool(World& world, const std::vector<sf::Vec
     sf::FloatRect bounds = spriteE.sprite.getLocalBounds();
     spriteE.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
     if (enemy.type == EnemyComponent::EnemyType::HellBoss) {
-        spriteE.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f + 15.f);
+        spriteE.sprite.setOrigin(bounds.width / 2.f, bounds.height *1.5f);
     }
 
     // Health bar

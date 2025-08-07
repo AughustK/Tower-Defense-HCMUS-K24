@@ -12,6 +12,8 @@ using std::string;
 
 class Setting : public GameState 
 {
+private:
+    bool shouldExit = false;
 public:
     void handleEvent(World& world, sf::Event& event) override;
     void update(World& world, float dt) override;

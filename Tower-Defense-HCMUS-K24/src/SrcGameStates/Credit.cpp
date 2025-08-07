@@ -1,9 +1,7 @@
 #include "../../header/GameStates/Credit.h"
-#include "../../header/GameStates/MainMenu.h"
-
 #include "../../header/Components/SoundComponent.h"
-
 #include "../../header/Systems/SoundSystem.h"
+#include "../../header/GameStates/MainMenu.h"
 #include "../../header/Systems/MusicSystem.h"
 
 void Credit::onEnter(World& world)
@@ -16,18 +14,18 @@ void Credit::onEnter(World& world)
     soundComp.sound->setVolume(world.getSystem<SoundSystem>()->globalVolume);
 
     sf::Color outlineColor(0, 0, 0);
-    sf::Color textColor(230, 230, 230);
+    sf::Color textColorWhite(230, 230, 230);
+    sf::Color textColorPink(255, 64, 129);
     float thickness = 2.f;
 
-    //bg
+    // Background
     EntityID background = world.createEntity();
     registerEntity(background);
     const string bgPath = "assets/Bg/CreditBg.jpg";
     SpriteComponent spriteComp0(bgPath, { 0.f, 0.f }, { 5.f, 5.f });
     world.addComponent(background, spriteComp0);
 
-
-    //button
+    // Exit Button
     EntityID exitButton = world.createEntity();
     registerEntity(exitButton);
     const string buttonPath = "assets/Icon/Left/B_Button68.png";
@@ -43,68 +41,58 @@ void Credit::onEnter(World& world)
     world.addComponent(exitButton, soundComp);
     world.addComponent(exitButton, spriteComp1);
 
-    //text
-    EntityID title = world.createEntity();
-    registerEntity(title);
-    const string str0 = "CREDITS";
-    TextComponent textComp0(str0, 80, fontPath, textColor, { 1920 / 2, 75 }, false, outlineColor, thickness);
-    world.addComponent(title, textComp0);
+    // Title
+    int y = 80;
+    int flag = false;
+    auto addText = [&](const string& str, int fontSize, int yPos) {
+        EntityID e = world.createEntity();
+        registerEntity(e);
+        if (flag == false)
+        {
+            TextComponent tc(str, fontSize, fontPath, textColorPink, { 1920 / 2, static_cast<float>(yPos) }, false, outlineColor, thickness);
+            world.addComponent(e, tc);
+            flag = true;
+        }
+        else
+        {
+            TextComponent tc(str, fontSize, fontPath, textColorWhite, { 1920 / 2, static_cast<float>(yPos) }, false, outlineColor, thickness);
+            world.addComponent(e, tc);
+            flag = false;
+        }
+        };
 
-    EntityID text0 = world.createEntity();
-    registerEntity(text0);
-    const string str1 = "A TEAM 2 PRODUCTION";
-    TextComponent textComp1(str1, 60, fontPath, textColor, { 1920 / 2, 200 }, false, outlineColor, thickness);
-    world.addComponent(text0, textComp1);
+    addText("CREDITS", 80, y);               y += 100;
+    addText("A TEAM 2 (24C11 - HCMUS) PRODUCTION", 60, y); y += 100;
 
-    EntityID text1 = world.createEntity();
-    registerEntity(text1);
-    const string str2 = "DESIGNED AND CREATED BY";
-    TextComponent textComp2(str2, 40, fontPath, textColor, { 1920 / 2, 325 + 50 }, false, outlineColor, thickness);
-    world.addComponent(text1, textComp2);
+    // Project Lead
+    addText("PROJECT LEAD", 40, y);          y += 45;
+    addText("Luong Hung Phat", 35, y);       y += 65;
 
-    EntityID text2 = world.createEntity();
-    registerEntity(text2);
-    const string str3 = "LUONG HUNG PHAT";
-    TextComponent textComp3(str3, 40, fontPath, textColor, { 1920 / 2, 375 + 50 }, false, outlineColor, thickness);
-    world.addComponent(text2, textComp3);
+    // Game Design
+    addText("GAME DESIGN", 40, y);           y += 45;
+    addText("Luong Hung Phat   Nguyen Nhut Huy   Nguyen Thanh Dat   Nguyen Anh Khoi   Nguyen Quoc Duong", 35, y); y += 65;
 
-    EntityID text3 = world.createEntity();
-    registerEntity(text3);
-    const string str4 = "PROGRAMMING";
-    TextComponent textComp4(str4, 40, fontPath, textColor, { 1920 / 2, 475 + 50 }, false, outlineColor, thickness);
-    world.addComponent(text3, textComp4);
+    // Programming
+    addText("PROGRAMMING", 40, y);           y += 45;
+    addText("Luong Hung Phat   Nguyen Nhut Huy   Nguyen Thanh Dat   Nguyen Anh Khoi   Nguyen Quoc Duong", 35, y); y += 65;
 
-    EntityID text4 = world.createEntity();
-    registerEntity(text4);
-    const string str5 = "LUONG HUNG PHAT   NGUYEN NHUT HUY   NGUYEN THANH DAT";
-    TextComponent textComp5(str5, 40, fontPath, textColor, { 1920 / 2, 525 + 50 }, false, outlineColor, thickness);
-    world.addComponent(text4, textComp5);
+    // Art / UI Design
+    addText("ART / UI DESIGN", 40, y);       y += 45;
+    addText("Luong Hung Phat   Nguyen Nhut Huy   Nguyen Thanh Dat", 35, y); y += 65;
 
-    EntityID text5 = world.createEntity();
-    registerEntity(text5);
-    const string str6 = "ART";
-    TextComponent textComp6(str6, 40, fontPath, textColor, { 1920 / 2, 625 + 50 }, false, outlineColor, thickness);
-    world.addComponent(text5, textComp6);
+    // Animation
+    addText("ANIMATION", 40, y);             y += 45;
+    addText("Nguyen Anh Khoi", 35, y);       y += 65;
 
-    EntityID text6 = world.createEntity();
-    registerEntity(text6);
-    const string str7 = "NGUYEN THANH DAT";
-    TextComponent textComp7(str7, 40, fontPath, textColor, { 1920 / 2, 675 + 50 }, false, outlineColor, thickness);
-    world.addComponent(text6, textComp7);
+    // Sound / Music
+    addText("SOUND / MUSIC", 40, y);         y += 45;
+    addText("Luong Hung Phat   Nguyen Nhut Huy", 35, y); y += 65;
 
-    EntityID text7 = world.createEntity();
-    registerEntity(text7);
-    const string str8 = "UI DESIGN";
-    TextComponent textComp8(str8, 40, fontPath, textColor, { 1920 / 2, 775 + 50 }, false, outlineColor, thickness);
-    world.addComponent(text7, textComp8);
-
-    EntityID text8 = world.createEntity();
-    registerEntity(text8);
-    const string str9 = "NGUYEN NHUT HUY   NGUYEN THANH DAT";
-    TextComponent textComp9(str9, 40, fontPath, textColor, { 1920 / 2, 825 + 50 }, false, outlineColor, thickness);
-    world.addComponent(text8, textComp9);
-
+    // Story / Writing
+    addText("STORY / WRITING", 40, y);       y += 45;
+    addText("Nguyen Thanh Dat", 35, y);
 }
+
 
 void Credit::render(World& world, sf::RenderWindow& window)
 {
