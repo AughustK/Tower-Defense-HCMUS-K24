@@ -38,6 +38,7 @@
     <ClCompile Include="src\SrcSystem\CastleHPSystem.cpp" />
     <ClCompile Include="src\SrcComponents\EnemyHPComponent.cpp" />
     <ClCompile Include="src\SrcSystem\EnemyHPSystem.cpp" />
+    <ClCompile Include="src\SrcGameStates\Continue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Systems\System.h" />
@@ -66,7 +67,6 @@
     <ClInclude Include="header\Systems\TextRenderSystem.h" />
     <ClInclude Include="header\Components\PathfindingComponent.h" />
     <ClInclude Include="header\Systems\PathFindingSystem.h" />
-    <ClInclude Include="header\Utils\PathFinding.h" />
     <ClInclude Include="header\Managers\MapLoad.h" />
     <ClInclude Include="assets\json.hpp" />
     <ClInclude Include="header\Components\MusicComponent.h" />
@@ -98,6 +98,8 @@
     <ClInclude Include="header\Components\Difficulty.h" />
     <ClInclude Include="header\Components\EnemyHPComponent.h" />
     <ClInclude Include="header\Systems\EnemyHPSystem.h" />
+    <ClInclude Include="header\Components\TagComponent.h" />
+    <ClInclude Include="header\GameStates\Continue.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\Bg\CreditBackground2Fixed.png" />

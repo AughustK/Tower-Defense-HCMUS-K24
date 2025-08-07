@@ -51,3 +51,50 @@ struct TowerComponent
     static std::string getAnimationPath(TowerType t, uint8_t lvl);
 };
 
+inline std::ostream& operator<<(std::ostream& os, const TowerComponent& t) 
+{
+    os << "TowerComponent\n";
+    os << static_cast<int>(t.type) << '\n';
+    os << static_cast<int>(t.level) << '\n';
+    os << t.x << '\n';
+    os << t.y << '\n';
+    os << t.fireRate << '\n';
+    os << t.projectileSpeed << '\n';
+    os << t.damage << '\n';
+    os << t.range << '\n';
+    os << t.projectileRadius << '\n';
+    os << t.projectileLength << '\n';
+    os << t.lastShotTimer << '\n';
+    os << t.cost << '\n';
+    os << static_cast<int>(t.target) << '\n'; // EntityID -> int
+    return os;
+}
+
+inline std::istream& operator>>(std::istream& is, TowerComponent& t) 
+{
+    int typeInt = 0;
+    int levelInt = 0;
+    int targetInt = 0;
+
+    is >> typeInt;
+    is >> levelInt;
+    t.type = static_cast<TowerComponent::TowerType>(typeInt);
+    t.level = static_cast<uint8_t>(levelInt);
+
+    is >> t.x;
+    is >> t.y;
+    is >> t.fireRate;
+    is >> t.projectileSpeed;
+    is >> t.damage;
+    is >> t.range;
+    is >> t.projectileRadius;
+    is >> t.projectileLength;
+    is >> t.lastShotTimer;
+    is >> t.cost;
+    is >> targetInt;
+    t.target = static_cast<EntityID>(targetInt);
+
+    is.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    return is;
+}

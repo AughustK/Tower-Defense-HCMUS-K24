@@ -5,6 +5,7 @@
 #include "../../header/GameStates/Defeat.h"
 #include "../../header/GameStates/Credit.h"
 #include "../../header/GameStates/Help.h"
+#include "../../header/GameStates/Continue.h"
 
 #include "../../header/Components/SoundComponent.h"
 #include "../../header/Components/MusicComponent.h"
@@ -124,6 +125,7 @@ void MainMenu::onEnter(World& world)
             std::cout << "[Continue Button] Clicked\n";
             auto& sound = world.getComponent<SoundComponent>(entityId);
             sound.sound->play();
+            world.setState(std::make_unique<Continue>());
         };
     world.addComponent(continueTxt, soundComp);
     world.addComponent(continueTxt, textComp2);

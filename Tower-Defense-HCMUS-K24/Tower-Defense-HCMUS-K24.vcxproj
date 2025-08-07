@@ -153,6 +153,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\SrcGameStates\Continue.cpp" />
     <ClCompile Include="src\SrcComponents\CastleHPComponent.cpp" />
     <ClCompile Include="src\SrcComponents\EnemyComponent.cpp" />
     <ClCompile Include="src\SrcComponents\EnemyHPComponent.cpp" />
@@ -193,6 +194,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="assets\json.hpp" />
+    <ClInclude Include="header\GameStates\Continue.h" />
     <ClInclude Include="header\Components\AnimationComponent.h" />
     <ClInclude Include="header\Components\CastleHPComponent.h" />
     <ClInclude Include="header\Components\ClickComponent.h" />
@@ -205,6 +207,7 @@
     <ClInclude Include="header\Components\PathfindingComponent.h" />
     <ClInclude Include="header\Components\ShopComponent.h" />
     <ClInclude Include="header\Components\SoundComponent.h" />
+    <ClInclude Include="header\Components\TagComponent.h" />
     <ClInclude Include="header\Components\UISliderComponent.h" />
     <ClInclude Include="header\GameStates\ChooseMap.h" />
     <ClInclude Include="header\GameStates\Credit.h" />
@@ -248,7 +251,6 @@
     <ClInclude Include="header\Managers\World.h" />
     <ClInclude Include="header\Systems\System.h" />
     <ClInclude Include="header\Systems\SpriteRenderSystem.h" />
-    <ClInclude Include="header\Utils\PathFinding.h" />
     <ClInclude Include="header\GameStates\Story.h" />
   </ItemGroup>
   <ItemGroup>

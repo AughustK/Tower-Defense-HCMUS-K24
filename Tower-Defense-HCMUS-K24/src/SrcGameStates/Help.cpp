@@ -14,7 +14,9 @@ void Help::onEnter(World& world)
     const vector<string> slidePaths = {
             "assets/HelpSlides/slide1.png",
             "assets/HelpSlides/slide2.png",
-            "assets/HelpSlides/slide3.png"
+            "assets/HelpSlides/slide3.png",
+            "assets/HelpSlides/slide4.png",
+            "assets/HelpSlides/slide5.png"
     };
 
     currentSlide = 0;
@@ -25,51 +27,30 @@ void Help::onEnter(World& world)
 
     float volume = world.getSystem<SoundSystem>()->globalVolume;
 
-    //bg
-    EntityID background = world.createEntity();
-    registerEntity(background);
-    const string bgPath = "assets/Bg/HelpBg.jpg";
-    SpriteComponent spriteTotalBG(bgPath, { 0.f, 0.f }, { 1.f, 1.f });
-    world.addComponent(background, spriteTotalBG);
-
     //slide
     EntityID slide = world.createEntity();
     registerEntity(slide);
     this->slideBoxEntity = slide;
-    SpriteComponent slideSprite(slidePaths[currentSlide], { 340.f, 150.f }, { 1.f, 1.f });
+    SpriteComponent slideSprite(slidePaths[currentSlide], { 0.f, 0.f }, { 1.f, 1.f });
     world.addComponent(slide, slideSprite);
 
     //button
-        //exit button
-    EntityID exitButton = world.createEntity();
-    registerEntity(exitButton);
-    const string buttonPath = "assets/Icon/Left/B_Button68.png";
-    SpriteComponent spriteComp1(buttonPath, { 0.f, 0.f }, { 5.f, 5.f });
-    spriteComp1.onClick = [this](EntityID entityId, World& world)
-        {
-            std::cout << "[Exit Button] Clicked\n";
-            if (world.hasComponent<SoundComponent>(entityId))
-            {
-                auto& sound = world.getComponent<SoundComponent>(entityId);
-                sound.sound->play();
-                sf::sleep(sf::seconds(0.5f));
-            }
-            shouldExit = true;
-        };
-    world.addComponent(exitButton, soundComp);
-    world.addComponent(exitButton, spriteComp1);
 
     //left button
     EntityID leftButton = world.createEntity();
     registerEntity(leftButton);
     const string leftButtonPath = "assets/Icon/Back/B_Button56.png";
-    SpriteComponent spriteLeftButton(leftButtonPath, { 230.f, 500.f }, { 5.f, 5.f });
+    SpriteComponent spriteLeftButton(leftButtonPath, { 0.f, 995.f }, { 4.f, 4.f });
     spriteLeftButton.onClick = [this](EntityID entityID, World& world)
         {
             std::cout << "[Left Button] Clicked\n";
-            auto& sound = world.getComponent<SoundComponent>(entityID);
-            sound.sound->play();
+            if (world.hasComponent<SoundComponent>(entityID))
+            {
+                auto& sound = world.getComponent<SoundComponent>(entityID);
+                sound.sound->play();
+            }
             if (currentSlide > 0) currentSlide--;
+            else shouldExit = true;
             updateSlide(world);
         };
     world.addComponent(leftButton, spriteLeftButton);
@@ -79,13 +60,17 @@ void Help::onEnter(World& world)
     EntityID rightButton = world.createEntity();
     registerEntity(rightButton);
     const string rightButtonPath = "assets/Icon/Next/B_Button59.png";
-    SpriteComponent spriteRightButton(rightButtonPath, { 1660.f, 500.f }, { 5.f, 5.f });
+    SpriteComponent spriteRightButton(rightButtonPath, { 85.f, 995.f }, { 4.f, 4.f });
     spriteRightButton.onClick = [this](EntityID entityID, World& world)
         {
             std::cout << "[Right Button] Clicked\n";
-            auto& sound = world.getComponent<SoundComponent>(entityID);
-            sound.sound->play();
+            if (world.hasComponent<SoundComponent>(entityID))
+            {
+                auto& sound = world.getComponent<SoundComponent>(entityID);
+                sound.sound->play();
+            }
             if (currentSlide < slides.size() - 1) currentSlide++;
+            else shouldExit = true;
             updateSlide(world);
         };
     world.addComponent(rightButton, spriteRightButton);
@@ -116,14 +101,25 @@ void Help::handleEvent(World& world, sf::Event& event)
     {
         Vector2f mousePos = world.window.mapPixelToCoords(
             { event.mouseButton.x, event.mouseButton.y });
+
+        // Debug: Print mouse position and button bounds
+        std::cout << "[Help] Mouse clicked at: (" << mousePos.x << ", " << mousePos.y << ")\n";
+
         for (EntityID e : entities)
         {
             auto& spriteComp = world.getComponent<SpriteComponent>(e);
+            sf::FloatRect bounds = spriteComp.sprite.getGlobalBounds();
+            std::cout << "[Help] Entity " << e << " bounds: ("
+                << bounds.left << ", " << bounds.top << ", "
+                << bounds.width << ", " << bounds.height << ")\n";
+
             if (spriteComp.tryClick(mousePos, e, world))
             {
+                std::cout << "[Help] Successfully clicked entity " << e << "\n";
                 return;
             }
         }
+        std::cout << "[Help] No entity was clicked\n";
     }
 }
 

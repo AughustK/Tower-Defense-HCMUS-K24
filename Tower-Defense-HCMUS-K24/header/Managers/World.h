@@ -126,6 +126,7 @@ public:
     }
 
     void setState(std::unique_ptr<GameState> state);
+    void setLoadedState(std::unique_ptr<GameState> state, std::string fileName);
     void handleEvent(sf::Event& event);
     void render();
     const std::unique_ptr<GameState>& getCurrentState() const;

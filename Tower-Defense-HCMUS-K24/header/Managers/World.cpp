@@ -204,6 +204,19 @@ void World::setState(std::unique_ptr<GameState> state)
     }
 }
 
+void World::setLoadedState(std::unique_ptr<GameState> state, std::string fileName)
+{
+    if (currentState)
+    {
+        currentState->onExit(*this);
+    }
+    currentState = std::move(state);
+    if (currentState)
+    {
+        currentState->loadFromFile(*this, fileName);
+    }
+}
+
 void World::handleEvent(sf::Event& event)
 {
     if (currentState) currentState->handleEvent(*this, event);

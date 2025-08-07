@@ -1,5 +1,5 @@
 #pragma once
-
+#include <iostream>
 #include <algorithm>
 
 
@@ -16,4 +16,15 @@ struct HealthComponent
     bool isDead() const;
 };
 
+inline std::ostream& operator<<(std::ostream& os, const HealthComponent& h) 
+{
+    os << "HealthComponent\n";
+    os << h.currentHealth << " " << h.maxHealth << "\n";
+    return os;
+}
 
+inline std::istream& operator>>(std::istream& is, HealthComponent& h) 
+{
+    is >> h.currentHealth >> h.maxHealth;
+    return is;
+}

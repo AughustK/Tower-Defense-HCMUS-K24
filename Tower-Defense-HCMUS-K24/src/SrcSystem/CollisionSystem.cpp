@@ -294,7 +294,7 @@ void CollisionSystem::init(string name)
     castlePos["FireMap"] = { 1320,825 };
     castlePos["HellMap"] = { 1210, 380 };
     castlePos["IceMap"] = { 1290, 785 };
-    castlePos["ParadiseMap"] = { 1160, 576 };
+    castlePos["ParadiseMap"] = { 1300, 573 };
     currCastlePos = castlePos[name];
 }
 

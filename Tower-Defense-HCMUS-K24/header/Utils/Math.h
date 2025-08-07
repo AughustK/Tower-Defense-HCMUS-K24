@@ -101,7 +101,7 @@ namespace Math
         return true;
     }
 
-    // Swept?circle vs circle
+    // Swept circle vs circle
     static inline bool sweptCircle( float x0, float y0, float x1, float y1, float r0, float cx, float cy, float radius)
     {
         Vec2 d{ x1 - x0, y1 - y0 };

@@ -83,8 +83,8 @@ private:
     std::vector<EntityID> settingButtons;
 
 public:
-    explicit GamePlay(const std::string& mapFilename);
     GamePlay(const std::string& mapFilename, DifficultyLevel difficulty);
+    GamePlay();
 
     // State interface
     void onEnter(World& world) override;
@@ -98,4 +98,6 @@ public:
     void updateMoney(int g, World& world);
     void showPauseMenu(World& world);
     void showSettingMenu(World& world);
+    void saveToFile(World& world);
+    void loadFromFile(World& world, const std::string& fileName) override;
 };

@@ -4,6 +4,7 @@
 #include "../../header/Components/HealthComponent.h"
 #include "../../header/Components/CircleComponent.h"
 #include "../../header/Components/EnemyHPComponent.h"
+#include "../../header/Components/TagComponent.h"
 
 #include "../../header/Systems/InitializeEnemy.h"
 #include "../../header/Systems/SpriteRenderSystem.h"
@@ -26,6 +27,7 @@ void EnemySpawnSystem::initPool(World& world, std::size_t count)
         world.addComponent(e, CircleComponent());
         world.addComponent(e, SpriteComponent());
         world.addComponent(e, EnemyHPComponent());
+        world.addComponent(e, TagComponent(TagComponent::Type::Enemy));
         enemyPool.push_back(e);
     }
     nextPoolIndex = 0;
@@ -260,7 +262,83 @@ void EnemySpawnSystem::spawnWave(World& world, const std::vector<sf::Vector2f>& 
     }
 }
 
+std::vector<EntityID> EnemySpawnSystem::getActiveEnemies() {
+    return activeEnemies;
+}
 
+void EnemySpawnSystem::setupSpriteFromFile(World& world, std::istream& in)
+{
+    // Đọc dữ liệu sprite từ file
+    EntityID id = enemyPool[nextPoolIndex];
+    nextPoolIndex = (nextPoolIndex + 1) % enemyPool.size();
+    char ch;
+    in >> std::ws >> ch; // bỏ khoảng trắng và dấu "
+    std::string spritePath;
+    std::getline(in, spritePath, '"');
+
+    float posX, posY, scaleX, scaleY;
+    int hoverFlag;
+    in >> posX >> posY >> scaleX >> scaleY >> hoverFlag;
+    in.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    // Thiết lập SpriteComponent
+    auto& spriteE = world.getComponent<SpriteComponent>(id);
+    spriteE.setTxt(spritePath);
+    spriteE.spritePath = spritePath;
+    spriteE.sprite.setPosition(posX, posY);
+    if (auto rs = world.getSystem<SpriteRenderSystem>()) {
+        rs->addEntityToSystem(id);
+        rs->showEntity(id);
+    }
+    if (auto cs = world.getSystem<CollisionSystem>()) {
+        cs->addEntity(id);
+    }
+    if (auto hs = world.getSystem<EnemyHPSystem>()) {
+        hs->addEntity(id);
+    }
+
+    spriteE.isHover = (hoverFlag != 0);
+
+    // Thiết lập frameCount và frameRate dựa theo EnemyType
+    auto& enemy = world.getComponent<EnemyComponent>(id);
+
+    int frameCount = 1;
+    float frameRate = 1.0f;
+    using Type = EnemyComponent::EnemyType;
+
+    switch (enemy.type) {
+    case Type::FireNormal1:      frameCount = 20; frameRate = 0.04f; break;
+    case Type::FireNormal2:      frameCount = 6;  frameRate = 0.18f; break;
+    case Type::HellNormal1:      frameCount = 19; frameRate = 0.05f; break;
+    case Type::HellNormal2:      frameCount = 6;  frameRate = 0.2f;  break;
+    case Type::IceNormal1:       frameCount = 13; frameRate = 0.08f; break;
+    case Type::IceNormal2:       frameCount = 10; frameRate = 0.1f;  break;
+    case Type::ParadiseNormal1:  frameCount = 8;  frameRate = 0.1f;  break;
+    case Type::ParadiseNormal2:  frameCount = 6;  frameRate = 0.2f;  break;
+    case Type::FireBoss:         frameCount = 4;  frameRate = 0.2f;  break;
+    case Type::HellBoss:         frameCount = 6;  frameRate = 0.1f;  break;
+    case Type::IceBoss:          frameCount = 4;  frameRate = 0.2f;  break;
+    case Type::ParadiseBoss:     frameCount = 2;  frameRate = 0.6f;  break;
+    default: break;
+    }
+
+    spriteE.frameCount = frameCount;
+    spriteE.frameRate = frameRate;
+    spriteE.sprite.setScale(scaleX, scaleY);
+
+    if (spriteE.texture && spriteE.texture->getSize().x > 0) {
+        int frameWidth = spriteE.texture->getSize().x / frameCount;
+        spriteE.sprite.setTextureRect(sf::IntRect(0, 0, frameWidth, spriteE.texture->getSize().y));
+    }
+
+    sf::FloatRect bounds = spriteE.sprite.getLocalBounds();
+    spriteE.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+    if (enemy.type == EnemyComponent::EnemyType::HellBoss) {
+        spriteE.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f + 15.f);
+    }
+
+    activeEnemies.push_back(id);
+}
 
 
 

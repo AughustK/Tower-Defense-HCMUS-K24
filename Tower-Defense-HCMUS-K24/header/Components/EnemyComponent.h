@@ -4,6 +4,7 @@
 #include <string>
 #include "../Managers/EntityManager.h"  // for EntityID, INVALID_ENTITY 
 #include "Difficulty.h" // For DifficultyLevel
+#include <iostream>
 using std::string;
 
 struct EnemyDef;  // forward decl
@@ -34,3 +35,31 @@ struct EnemyComponent {
     static const EnemyDef& getEnemyDef(EnemyType t); 
     static std::string getAnimationPath(EnemyType t, const string& map);
 };
+
+inline std::ostream& operator<<(std::ostream& os, const EnemyComponent& e) 
+{
+    os << "EnemyComponent\n";
+    os << e.x << " " << e.y << " ";
+    os << e.health << " " << e.speed << " " << e.damage << " " << e.scale << " ";
+    os << e.prize << " " << e.pathIndex << " ";
+    os << static_cast<int>(e.type) << " ";
+    os << e.target << " ";
+    os << static_cast<int>(e.difficulty) << "\n";
+    return os;
+}
+
+inline std::istream& operator>>(std::istream& is, EnemyComponent& e) 
+{
+    int typeVal, diffVal;
+    is >> e.x >> e.y
+        >> e.health >> e.speed >> e.damage >> e.scale
+        >> e.prize >> e.pathIndex
+        >> typeVal >> e.target >> diffVal;
+
+    e.type = static_cast<EnemyComponent::EnemyType>(typeVal);
+    e.difficulty = static_cast<DifficultyLevel>(diffVal);
+
+    e.loadStats(e.difficulty);
+
+    return is;
+}
