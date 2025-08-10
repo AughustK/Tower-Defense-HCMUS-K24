@@ -1,0 +1,203 @@
+GamePlayState
+80
+0 0 0
+0
+IceMap
+14
+480 1090
+480 1078
+480 950
+480 830
+250 825
+250 610
+440 606
+455 260
+755 265
+795 445
+1020 465
+1045 850
+1285 845
+1290 785
+4
+8 10 10 1 
+6 0 0
+6 0.369573 1.5
+14
+480 1090
+480 1078
+480 950
+480 830
+250 825
+250 610
+440 606
+455 260
+755 265
+795 445
+1020 465
+1045 850
+1285 845
+1290 785
+2
+0 0 0
+0 0
+0 0.517968
+0
+7
+EntityID: 478
+TagComponent
+1
+TextComponent
+"80" 70 "assets/Font/Minecraft-Regular.otf" 4294902015 95 20 255 4 0 16777215 17.5 24.5
+-----
+EntityID: 479
+TagComponent
+1
+TextComponent
+"Difficulty: Easy" 40 "assets/Font/Minecraft-Regular.otf" 16711935 165 88 255 4 0 16777215 148 16
+-----
+EntityID: 480
+TagComponent
+1
+TextComponent
+"Wave: 0/4" 40 "assets/Font/Minecraft-Regular.otf" 4294967295 110 130 255 4 0 16777215 94 14
+-----
+EntityID: 481
+TagComponent
+1
+TextComponent
+"" 50 "assets/Font/Minecraft-Regular.otf" 16711935 250 30 255 2 0 16777215 44.5 19.5
+-----
+EntityID: 505
+TagComponent
+1
+TextComponent
+"Speed: x1.50" 40 "assets/Font/Minecraft-Regular.otf" 16777215 125 175 255 4 0 16777215 110 16
+-----
+EntityID: 506
+TagComponent
+1
+TextComponent
+"" 50 "assets/Font/Minecraft-Regular.otf" 4292280575 768 100 255 7 0 16777215 0 0
+-----
+EntityID: 507
+TagComponent
+1
+CastleHPComponent
+100 100 1208 480 200 20 16711935 4294967295 2 "HP: 100" 25 4294967295 1208 445 255 2
+-----
+6
+EntityID: 475
+SpriteComponent
+"assets/IceMap/IceMap.jpg" 0 0 1 1 0 1 1
+MusicComponent
+assets/SFX/Music/Map/IceMap.mp3
+0
+1
+-----
+EntityID: 476
+SpriteComponent
+"assets/Bg/ShopFrame.png" 1613.5 0 0.5 1.18 0 1 1
+-----
+EntityID: 477
+TextComponent
+"Heroes Shop" 32 "assets/Font/Minecraft-Regular.otf" 4294967295 1750 120 255 5 1 16777215 100 12.5
+-----
+EntityID: 482
+SpriteComponent
+"assets/Icon/Coin.png" 0 5 0.28 0.28 0 1 1
+-----
+EntityID: 508
+SpriteComponent
+"assets/Heroes/archer_base_idle.png" 399 695 3.2 3.2 0 6 0.09
+TowerComponent
+0
+0
+399
+695
+1
+400
+250
+160
+7
+14
+7.92599
+20
+-1
+-----
+EntityID: 509
+SoundComponent
+assets/SFX/PlaceTower.mp3
+1
+0
+-----
+2
+EntityID: 0
+TagComponent
+0
+PositionComponent
+480 1001.38 0
+VelocityComponent
+0 -25
+PathComponent
+14
+480 1090
+480 1078
+480 950
+480 830
+250 825
+250 610
+440 606
+455 260
+755 265
+795 445
+1020 465
+1045 850
+1285 845
+1290 785
+2 25 0
+EnemyComponent
+0 0 2000 25 10 1.5 10 0 3 4294967295 0
+HealthComponent
+2000 2000
+CircleComponent
+480 1001.38 18 0 0
+SpriteComponent
+"assets/IceMap/IceNormal1Spritesheet/run.png" 480 1001.38 1.5 1.5 0 13 0.08
+EnemyHPComponent
+2000 2000 40 5 -30 -50
+-----
+EntityID: 1
+TagComponent
+0
+PositionComponent
+480 1078.24 0
+VelocityComponent
+0 -24.4135
+PathComponent
+14
+480 1090
+480 1078
+480 950
+480 830
+250 825
+250 610
+440 606
+455 260
+755 265
+795 445
+1020 465
+1045 850
+1285 845
+1290 785
+2 25 0
+EnemyComponent
+0 0 2000 25 10 1.5 10 0 3 4294967295 0
+HealthComponent
+2000 2000
+CircleComponent
+480 1078.24 18 0 0
+SpriteComponent
+"assets/IceMap/IceNormal1Spritesheet/run.png" 480 1078.24 1.5 1.5 0 13 0.08
+EnemyHPComponent
+2000 2000 40 5 -30 -50
+-----

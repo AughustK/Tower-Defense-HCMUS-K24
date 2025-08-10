@@ -1,0 +1,94 @@
+GamePlayState
+100
+0 0 0
+0
+FireMap
+13
+600 840
+670 790
+910 790
+915 560
+705 560
+705 460
+400 460
+406 260
+845 260
+890 365
+1150 380
+1160 810
+1320 825
+4
+8 10 10 1 
+6 0 3.8911
+0 0 1.5
+0
+0
+0 0 0
+0 0
+0 0
+0
+7
+EntityID: 478
+TagComponent
+1
+TextComponent
+"100" 70 "assets/Font/Minecraft-Regular.otf" 4294902015 95 20 255 4 0 16777215 17.5 24.5
+-----
+EntityID: 479
+TagComponent
+1
+TextComponent
+"Difficulty: Easy" 40 "assets/Font/Minecraft-Regular.otf" 16711935 165 88 255 4 0 16777215 148 16
+-----
+EntityID: 480
+TagComponent
+1
+TextComponent
+"Wave: 0/4" 40 "assets/Font/Minecraft-Regular.otf" 4294967295 110 130 255 4 0 16777215 94 14
+-----
+EntityID: 481
+TagComponent
+1
+TextComponent
+"" 50 "assets/Font/Minecraft-Regular.otf" 16711935 180 20 255 2 0 16777215 0 0
+-----
+EntityID: 505
+TagComponent
+1
+TextComponent
+"Speed: x1.0" 40 "assets/Font/Minecraft-Regular.otf" 16777215 125 175 255 4 0 16777215 110 16
+-----
+EntityID: 506
+TagComponent
+1
+TextComponent
+"" 50 "assets/Font/Minecraft-Regular.otf" 4292280575 768 100 255 7 0 16777215 0 0
+-----
+EntityID: 507
+TagComponent
+1
+CastleHPComponent
+100 100 1252 480 200 20 16711935 4294967295 2 "HP: 100" 25 4294967295 1252 445 255 2
+-----
+4
+EntityID: 475
+SpriteComponent
+"assets/FireMap/FireMap.jpg" 0 0 1 1 0 1 1
+MusicComponent
+assets/SFX/Music/Map/FireMap.mp3
+0
+1
+-----
+EntityID: 476
+SpriteComponent
+"assets/Bg/ShopFrame.png" 1613.5 0 0.5 1.18 0 1 1
+-----
+EntityID: 477
+TextComponent
+"Heroes Shop" 32 "assets/Font/Minecraft-Regular.otf" 4294967295 1750 120 255 5 1 16777215 100 12.5
+-----
+EntityID: 482
+SpriteComponent
+"assets/Icon/Coin.png" 0 5 0.28 0.28 0 1 1
+-----
+0

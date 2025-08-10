@@ -87,6 +87,11 @@ private:
     std::vector<EntityID> settingButtons;
 
     std::vector<EntityID> gameplayEntities = std::vector<EntityID>(7, INVALID_ENTITY);
+
+    //file name handling
+    std::string filenameBuffer;
+    std::vector<EntityID> promptEntities;
+    EntityID inputTextEntity = INVALID_ENTITY;
 public:
     //explicit GamePlay(const std::string& mapFilename);
     GamePlay(const std::string& mapFilename, DifficultyLevel difficulty);
@@ -104,6 +109,8 @@ public:
     void updateMoney(int g, World& world);
     void showPauseMenu(World& world);
     void showSettingMenu(World& world);
-    void saveToFile(World& world);
+    void saveToFile(World& world, std::string fileName);
     void loadFromFile(World& world, const std::string &fileName) override;
+    void startSaveNamePrompt(World& world);
+	void handleSaveNameEvent(World& world, sf::Event& event);
 };

@@ -133,6 +133,7 @@ void MainMenu::onEnter(World& world)
             std::cout << "[Continue Button] Clicked\n";
             auto& sound = world.getComponent<SoundComponent>(entityId);
             sound.sound->play();
+            sf::sleep(sf::seconds(0.3f));
             world.setState(std::make_unique<Continue>());
         };
     world.addComponent(continueTxt, soundComp);

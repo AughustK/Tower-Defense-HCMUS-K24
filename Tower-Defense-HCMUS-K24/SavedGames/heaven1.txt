@@ -1,0 +1,427 @@
+GamePlayState
+15
+0 1 0
+0
+ParadiseMap
+13
+430 1090
+430 1078
+430 870
+260 850
+260 620
+445 615
+455 300
+745 300
+750 500
+1050 505
+1050 855
+1300 855
+1300 573
+4
+8 10 10 1 
+6 1 1.21218
+0 0 1.5
+13
+430 1090
+430 1078
+430 870
+260 850
+260 620
+445 615
+455 300
+745 300
+750 500
+1050 505
+1050 855
+1300 855
+1300 573
+3
+0 1 0
+0 0
+0 0.50697
+0
+7
+EntityID: 918
+TagComponent
+1
+TextComponent
+"15" 70 "assets/Font/Minecraft-Regular.otf" 4294902015 95 20 255 4 0 16777215 17.5 24.5
+-----
+EntityID: 919
+TagComponent
+1
+TextComponent
+"Difficulty: Easy" 40 "assets/Font/Minecraft-Regular.otf" 16711935 165 88 255 4 0 16777215 148 16
+-----
+EntityID: 920
+TagComponent
+1
+TextComponent
+"Wave: 1/4" 40 "assets/Font/Minecraft-Regular.otf" 4294967295 110 130 255 4 0 16777215 94 14
+-----
+EntityID: 921
+TagComponent
+1
+TextComponent
+"" 50 "assets/Font/Minecraft-Regular.otf" 16711935 250 30 255 2 0 16777215 44.5 19.5
+-----
+EntityID: 945
+TagComponent
+1
+TextComponent
+"Speed: x2" 40 "assets/Font/Minecraft-Regular.otf" 16777215 125 175 255 4 0 16777215 110 16
+-----
+EntityID: 946
+TagComponent
+1
+TextComponent
+"" 50 "assets/Font/Minecraft-Regular.otf" 4292280575 768 100 255 7 0 16777215 0 0
+-----
+EntityID: 947
+TagComponent
+1
+CastleHPComponent
+100 100 1208 75 200 20 16711935 4294967295 2 "HP: 100" 25 4294967295 1208 40 255 2
+-----
+8
+EntityID: 915
+SpriteComponent
+"assets/ParadiseMap/ParadiseMap.jpg" 0 0 1 1 0 1 1
+MusicComponent
+assets/SFX/Music/Map/ParadiseMap.mp3
+0
+1
+-----
+EntityID: 916
+SpriteComponent
+"assets/Bg/ShopFrame.png" 1613.5 0 0.5 1.18 0 1 1
+-----
+EntityID: 917
+TextComponent
+"Heroes Shop" 32 "assets/Font/Minecraft-Regular.otf" 4294967295 1750 120 255 5 1 16777215 100 12.5
+-----
+EntityID: 922
+SpriteComponent
+"assets/Icon/Coin.png" 0 5 0.28 0.28 0 1 1
+-----
+EntityID: 948
+SpriteComponent
+"assets/Heroes/cannon_base.png" 420 717 0.8 0.8 0 1 1
+TowerComponent
+2
+0
+420
+717
+0.6
+400
+400
+200
+9
+0
+1.47668
+55
+-1
+-----
+EntityID: 949
+SoundComponent
+assets/SFX/PlaceTower.mp3
+1
+0
+-----
+EntityID: 950
+SpriteComponent
+"assets/Heroes/mage_base_idle.png" 135 717 2.2 2.2 0 8 0.18
+TowerComponent
+1
+0
+135
+717
+0.8
+400
+300
+180
+9
+0
+1.19457
+30
+-1
+-----
+EntityID: 951
+SoundComponent
+assets/SFX/PlaceTower.mp3
+1
+0
+-----
+8
+EntityID: 0
+TagComponent
+0
+PositionComponent
+259.819 661.974 0
+VelocityComponent
+0.107691 -24.9998
+PathComponent
+13
+430 1090
+430 1078
+430 870
+260 850
+260 620
+445 615
+455 300
+745 300
+750 500
+1050 505
+1050 855
+1300 855
+1300 573
+4 25 0
+EnemyComponent
+0 0 2000 25 10 1.1 10 0 9 4294967295 0
+HealthComponent
+300 2000
+CircleComponent
+259.819 661.974 18 0 0
+SpriteComponent
+"assets/ParadiseMap/ParadiseNormal1Spritesheet/run.png" 259.819 661.974 1.1 1.1 0 8 0.1
+EnemyHPComponent
+2000 300 40 5 -30 -50
+-----
+EntityID: 1
+TagComponent
+0
+PositionComponent
+259.459 737.115 0
+VelocityComponent
+0.115427 -24.9997
+PathComponent
+13
+430 1090
+430 1078
+430 870
+260 850
+260 620
+445 615
+455 300
+745 300
+750 500
+1050 505
+1050 855
+1300 855
+1300 573
+4 25 0
+EnemyComponent
+0 0 2000 25 10 1.1 10 0 9 4294967295 0
+HealthComponent
+1600 2000
+CircleComponent
+259.459 737.115 18 0 0
+SpriteComponent
+"assets/ParadiseMap/ParadiseNormal1Spritesheet/run.png" 259.459 737.115 1.1 1.1 0 8 0.1
+EnemyHPComponent
+2000 1600 40 5 -30 -50
+-----
+EntityID: 2
+TagComponent
+0
+PositionComponent
+259.005 812.48 0
+VelocityComponent
+0.124252 -24.9959
+PathComponent
+13
+430 1090
+430 1078
+430 870
+260 850
+260 620
+445 615
+455 300
+745 300
+750 500
+1050 505
+1050 855
+1300 855
+1300 573
+4 25 0
+EnemyComponent
+0 0 2000 25 10 1.1 10 0 9 4294967295 0
+HealthComponent
+1600 2000
+CircleComponent
+259.005 812.48 18 0 0
+SpriteComponent
+"assets/ParadiseMap/ParadiseNormal1Spritesheet/run.png" 259.005 812.48 1.1 1.1 0 8 0.1
+EnemyHPComponent
+2000 1600 40 5 -30 -50
+-----
+EntityID: 3
+TagComponent
+0
+PositionComponent
+296.199 854.022 0
+VelocityComponent
+-24.8471 -2.76072
+PathComponent
+13
+430 1090
+430 1078
+430 870
+260 850
+260 620
+445 615
+455 300
+745 300
+750 500
+1050 505
+1050 855
+1300 855
+1300 573
+3 25 0
+EnemyComponent
+0 0 2000 25 10 1.1 10 0 9 4294967295 0
+HealthComponent
+1600 2000
+CircleComponent
+296.199 854.022 18 0 0
+SpriteComponent
+"assets/ParadiseMap/ParadiseNormal1Spritesheet/run.png" 296.199 854.022 -1.1 1.1 0 8 0.1
+EnemyHPComponent
+2000 1600 40 5 -30 -50
+-----
+EntityID: 4
+TagComponent
+0
+PositionComponent
+370.789 862.335 0
+VelocityComponent
+-24.8464 -2.76647
+PathComponent
+13
+430 1090
+430 1078
+430 870
+260 850
+260 620
+445 615
+455 300
+745 300
+750 500
+1050 505
+1050 855
+1300 855
+1300 573
+3 25 0
+EnemyComponent
+0 0 2000 25 10 1.1 10 0 9 4294967295 0
+HealthComponent
+2000 2000
+CircleComponent
+370.789 862.335 18 0 0
+SpriteComponent
+"assets/ParadiseMap/ParadiseNormal1Spritesheet/run.png" 370.789 862.335 -1.1 1.1 0 8 0.1
+EnemyHPComponent
+2000 2000 40 5 -30 -50
+-----
+EntityID: 5
+TagComponent
+0
+PositionComponent
+430 884.484 0
+VelocityComponent
+0 -25
+PathComponent
+13
+430 1090
+430 1078
+430 870
+260 850
+260 620
+445 615
+455 300
+745 300
+750 500
+1050 505
+1050 855
+1300 855
+1300 573
+2 25 0
+EnemyComponent
+0 0 2000 25 10 1.1 10 0 9 4294967295 0
+HealthComponent
+2000 2000
+CircleComponent
+430 884.484 18 0 0
+SpriteComponent
+"assets/ParadiseMap/ParadiseNormal1Spritesheet/run.png" 430 884.484 1.1 1.1 0 8 0.1
+EnemyHPComponent
+2000 2000 40 5 -30 -50
+-----
+EntityID: 6
+TagComponent
+0
+PositionComponent
+430 959.699 0
+VelocityComponent
+0 -25
+PathComponent
+13
+430 1090
+430 1078
+430 870
+260 850
+260 620
+445 615
+455 300
+745 300
+750 500
+1050 505
+1050 855
+1300 855
+1300 573
+2 25 0
+EnemyComponent
+0 0 2000 25 10 1.1 10 0 9 4294967295 0
+HealthComponent
+2000 2000
+CircleComponent
+430 959.699 18 0 0
+SpriteComponent
+"assets/ParadiseMap/ParadiseNormal1Spritesheet/run.png" 430 959.699 1.1 1.1 0 8 0.1
+EnemyHPComponent
+2000 2000 40 5 -30 -50
+-----
+EntityID: 7
+TagComponent
+0
+PositionComponent
+430 1034.78 0
+VelocityComponent
+0 -24.9999
+PathComponent
+13
+430 1090
+430 1078
+430 870
+260 850
+260 620
+445 615
+455 300
+745 300
+750 500
+1050 505
+1050 855
+1300 855
+1300 573
+2 25 0
+EnemyComponent
+0 0 2000 25 10 1.1 10 0 9 4294967295 0
+HealthComponent
+2000 2000
+CircleComponent
+430 1034.78 18 0 0
+SpriteComponent
+"assets/ParadiseMap/ParadiseNormal1Spritesheet/run.png" 430 1034.78 1.1 1.1 0 8 0.1
+EnemyHPComponent
+2000 2000 40 5 -30 -50
+-----

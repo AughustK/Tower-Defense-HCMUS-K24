@@ -48,6 +48,22 @@
 
 int GamePlay::money = 0;
 
+static std::string sanitizeFilename(const std::string& s) {
+    std::string out;
+    for (char c : s) {
+        if ((c >= '0' && c <= '9') ||
+            (c >= 'A' && c <= 'Z') ||
+            (c >= 'a' && c <= 'z') ||
+            c == '-' || c == '_' || c == ' ')
+            out.push_back(c);
+        else out.push_back('_');
+    }
+    // trim
+    while (!out.empty() && out.front() == ' ') out.erase(out.begin());
+    while (!out.empty() && out.back() == ' ') out.pop_back();
+    return out;
+}
+
 GamePlay::GamePlay()
 {
     validTowerSpotsPerMap["FireMap"] = { {510, 330}, {760, 330}, \
@@ -341,6 +357,11 @@ void GamePlay::onEnter(World& world)
 
 void GamePlay::handleEvent(World& world, sf::Event& event)
 {
+    if (!promptEntities.empty()) {
+        handleSaveNameEvent(world, event);
+        return; 
+    }
+
     if (!showingPauseMenu && event.type == sf::Event::KeyPressed
         && event.key.code == sf::Keyboard::Escape) {
         showPauseMenu(world);
@@ -636,7 +657,20 @@ void GamePlay::handleEvent(World& world, sf::Event& event)
 
 void GamePlay::update(World& world, float odt)
 {
-    if (showingPauseMenu) return;
+    float dt = odt * speedMulti[currSpdOpt];
+    if (showingPauseMenu) {
+        if (notificationActive)
+        {
+            notificationTimer += dt;
+            if (notificationTimer >= 1.f)
+            {
+                auto& notif = world.getComponent<TextComponent>(notificationEntity);
+                notif.txt.setString("");
+                notificationActive = false;
+            }
+        }
+        return;
+    }
     if (showingSettingMenu) {
         auto musicSystem = world.getSystem<MusicSystem>();
         if (musicSystem) musicSystem->play(world);
@@ -645,7 +679,6 @@ void GamePlay::update(World& world, float odt)
         if (soundSystem) soundSystem->play(world);
         return;
     }
-    float dt = odt * speedMulti[currSpdOpt];
 
     auto musicSystem = world.getSystem<MusicSystem>();
     if (musicSystem) musicSystem->play(world);
@@ -859,8 +892,10 @@ void GamePlay::render(World& world, sf::RenderWindow& window)
     auto castleHPSystem = world.getSystem<CastleHPSystem>();
     castleHPSystem->render(world);
 
-    auto enemyHPSystem = world.getSystem<EnemyHPSystem>();
-    enemyHPSystem->render(world);
+    if(!showingPauseMenu && !showingSettingMenu) {
+        auto enemyHPSystem = world.getSystem<EnemyHPSystem>();
+        enemyHPSystem->render(world);
+	}
 
     if (showingSettingMenu) {
         auto sliderSystem = world.getSystem<SliderSystem>();
@@ -1301,8 +1336,8 @@ void GamePlay::showPauseMenu(World& world) {
 
     EntityID bgBoard = world.createEntity();
     SpriteComponent bgSprite("assets/Bg/FramePause.png",
-        { world.window.getSize().x / 2.f, world.window.getSize().y / 2.f },
-        { 1.0f, 1.0f });
+        { world.window.getSize().x / 2.f, world.window.getSize().y / 2.f+62 },
+        { 0.4f, 0.4f });
     sf::FloatRect bounds = bgSprite.sprite.getLocalBounds();
     bgSprite.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
     world.addComponent(bgBoard, bgSprite);
@@ -1310,7 +1345,6 @@ void GamePlay::showPauseMenu(World& world) {
 
     std::vector<std::pair<std::string, std::function<void(EntityID, World&)>>> opts = {
       {"Resume", [&](EntityID, World& w) {
-            // gỡ hết button và overlay
             for (auto e : pauseButtons) w.destroyEntity(e);
             pauseButtons.clear();
             showingPauseMenu = false;
@@ -1324,9 +1358,8 @@ void GamePlay::showPauseMenu(World& world) {
        }},
        {"Save", [&](EntityID, World& w) {
             for (auto e : pauseButtons) w.destroyEntity(e);
-        std::cout << "[Pause Menu] Save game selected\n";
-        this->saveToFile(w);  
-        w.setState(std::make_unique<Lobby>());
+            pauseButtons.clear();
+            this->startSaveNamePrompt(w);
         }},
        {"Quit", [&](EntityID, World& w) {
             for (auto e : pauseButtons) w.destroyEntity(e);
@@ -1428,13 +1461,10 @@ void GamePlay::onExit(World& world) {
 
 //save and load order: save entities with tag gameplay, save other entities
 //save enemy
-void GamePlay::saveToFile(World& world) {
+void GamePlay::saveToFile(World& world, std::string fileName) {
+    std::cout << "[Gameplay] Saving...\n";
     std::string folder = "SavedGames";
     std::filesystem::create_directories(folder);
-
-    std::string fileName;
-    std::cout << "Enter file name: ";
-    std::cin >> fileName;
 
     std::ofstream out(folder+ "/" + fileName + ".txt");
     if (!out) {
@@ -1987,3 +2017,168 @@ void GamePlay::loadFromFile(World& world, const std::string &filename) {
     world.addComponent(speedButton, TagComponent(TagComponent::Type::Skip));
     std::cerr << "[GamePlay] Button loaded successfully\n";
 }
+
+void GamePlay::startSaveNamePrompt(World& world) {
+    if (!promptEntities.empty()) return;
+
+    filenameBuffer.clear();
+
+    float cx = world.window.getSize().x / 2.f;
+    float cy = world.window.getSize().y / 2.f;
+    const std::string font = "assets/Font/Minecraft-Regular.otf";
+
+    EntityID panel = world.createEntity();
+    registerEntity(panel);
+    SpriteComponent panelSprite("assets/Bg/FramePause.png",
+        { cx, cy + 62.f }, { 0.45f, 0.45f });
+    sf::FloatRect bounds = panelSprite.sprite.getLocalBounds();
+    panelSprite.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+    world.addComponent(panel, panelSprite);
+    promptEntities.push_back(panel);
+
+    EntityID title = world.createEntity();
+    registerEntity(title);
+    TextComponent titleText("Enter save name:", 36, font, sf::Color::White, { cx, cy - 100.f }, false, sf::Color::Black, 4.f);
+    world.addComponent(title, titleText);
+    promptEntities.push_back(title);
+
+    EntityID input = world.createEntity();
+    registerEntity(input);
+    TextComponent inputText("_", 34, font, sf::Color::White, { cx - 150.f, cy - 30.f }, false, sf::Color::Black, 3.f);
+    world.addComponent(input, inputText);
+    inputTextEntity = input;
+    promptEntities.push_back(input);
+
+    EntityID cancel = world.createEntity();
+    registerEntity(cancel);
+    TextComponent cancelText("Cancel", 36, font, sf::Color::White, { 1920.f/2, 1080.f/2 +50}, true, sf::Color::Black, 4.f);
+    cancelText.onClick = [this](EntityID eid, World& w) {
+        for (EntityID e : promptEntities) w.destroyEntity(e);
+        promptEntities.clear();
+        inputTextEntity = INVALID_ENTITY;
+        filenameBuffer.clear();
+
+        auto musicEntities = w.getEntitiesWithComponent<MusicComponent>();
+        for (EntityID id : musicEntities) {
+            auto& mc = w.getComponent<MusicComponent>(id);
+            if (mc.music && mc.music->getStatus() == sf::Music::Paused) mc.music->play();
+        }
+        };
+    world.addComponent(cancel, cancelText);
+    world.addComponent(cancel, SoundComponent("assets/SFX/MouseClick.mp3", false));
+    promptEntities.push_back(cancel);
+}
+
+void GamePlay::handleSaveNameEvent(World& world, sf::Event& event) {
+    if (promptEntities.empty()) return; 
+
+    if (event.type == sf::Event::TextEntered) {
+        uint32_t code = event.text.unicode;
+        if (code >= 32 && code < 128) {
+            if (filenameBuffer.size() <10) {
+                char c = static_cast<char>(code);
+                if (c == '/') c = '_';
+                filenameBuffer.push_back(c);
+            }
+            else {
+                if (world.hasComponent<TextComponent>(notificationEntity)) {
+                    auto& notifText = world.getComponent<TextComponent>(notificationEntity).txt;
+                    notifText.setString("MAXIMUM NAME LENGTH IS 10");
+                    sf::FloatRect b = notifText.getLocalBounds();
+                    notifText.setOrigin(b.width / 2.f, b.height / 2.f);
+                    notifText.setPosition(768.f, 100.f);
+                    notificationActive = true;
+                    notificationTimer = 0.f;
+                }
+            }
+        }
+        if (world.hasComponent<TextComponent>(inputTextEntity)) {
+            auto& tc = world.getComponent<TextComponent>(inputTextEntity);
+            tc.setString(filenameBuffer.empty() ? std::string("_") : filenameBuffer + "_");
+        }
+    }
+
+    if (event.type == sf::Event::KeyPressed) {
+        if (event.key.code == sf::Keyboard::Backspace) {
+            if (!filenameBuffer.empty()) filenameBuffer.pop_back();
+            if (world.hasComponent<TextComponent>(inputTextEntity)) {
+                auto& tc = world.getComponent<TextComponent>(inputTextEntity);
+                tc.setString(filenameBuffer.empty() ? std::string("_") : filenameBuffer + "_");
+            }
+        }
+        else if (event.key.code == sf::Keyboard::Enter) {
+            std::string name = sanitizeFilename(filenameBuffer);
+            if (name.empty()) {
+                if (world.hasComponent<TextComponent>(notificationEntity)) {
+                    auto& notifText = world.getComponent<TextComponent>(notificationEntity).txt;
+                    notifText.setString("NAME MUST NOT BE EMPTY");
+                    sf::FloatRect b = notifText.getLocalBounds();
+                    notifText.setOrigin(b.width / 2.f, b.height / 2.f);
+                    notifText.setPosition(768.f, 100.f);
+                    notificationActive = true;
+                    notificationTimer = 0.f;
+                }
+                return;
+            }
+            std::string path = "SavedGames/" + name + ".txt";
+            if (std::filesystem::exists(path)) {
+                if (world.hasComponent<TextComponent>(notificationEntity)) {
+                    auto& notifText = world.getComponent<TextComponent>(notificationEntity).txt;
+                    notifText.setString("NAME ALREADY EXISTS");
+                    sf::FloatRect b = notifText.getLocalBounds();
+                    notifText.setOrigin(b.width / 2.f, b.height / 2.f);
+                    notifText.setPosition(768.f, 100.f);
+                    notificationActive = true;
+                    notificationTimer = 0.f;
+                }
+                return;
+            }
+
+            for (EntityID e : promptEntities) world.destroyEntity(e);
+            promptEntities.clear();
+            inputTextEntity = INVALID_ENTITY;
+            filenameBuffer.clear();
+            showingPauseMenu = true;
+            this->saveToFile(world, name);
+            world.setState(std::make_unique<Lobby>());
+        }
+        else if (event.key.code == sf::Keyboard::Escape) {
+            for (EntityID e : promptEntities) world.destroyEntity(e);
+            promptEntities.clear();
+            inputTextEntity = 0;
+            filenameBuffer.clear();
+            showingPauseMenu = false;
+            auto musicEntities = world.getEntitiesWithComponent<MusicComponent>();
+            for (EntityID id : musicEntities) {
+                auto& mc = world.getComponent<MusicComponent>(id);
+                if (mc.music && mc.music->getStatus() == sf::Music::Paused) mc.music->play();
+            }
+        }
+    }
+    if (event.type == sf::Event::MouseButtonPressed &&
+        event.mouseButton.button == sf::Mouse::Left) {
+        sf::Vector2f mousePos = world.window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y });
+
+        for (EntityID id : promptEntities) {
+            if (world.hasComponent<TextComponent>(id)) {
+                auto& text = world.getComponent<TextComponent>(id);
+                if (text.tryClick(mousePos, id, world)) return;
+            }
+        }
+    }
+    else if (event.type == sf::Event::MouseMoved)
+    {
+        Vector2f mousePos = world.window.mapPixelToCoords(
+            { event.mouseMove.x, event.mouseMove.y });
+
+        for (EntityID id : promptEntities) {
+            if (world.hasComponent<TextComponent>(id)) {
+                auto& text = world.getComponent<TextComponent>(id);
+                text.tryHover(mousePos, id, world);
+            }
+        }
+    }
+    (void)event;
+}
+
+

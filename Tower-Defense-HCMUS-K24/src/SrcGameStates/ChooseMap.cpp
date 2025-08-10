@@ -21,6 +21,7 @@ void ChooseMap::onEnter(World& world)
 
     const string soundPath = "assets/SFX/MouseClick.mp3";
     const string musicPath = "assets/SFX/Music/Main/Main_Final.mp3";
+    const std::string font = "assets/Font/Minecraft-Regular.otf";
     SoundComponent soundComp(soundPath, false);
     soundComp.sound->setVolume(world.getSystem<SoundSystem>()->globalVolume);
     MusicComponent musicComp(musicPath);
@@ -134,6 +135,48 @@ void ChooseMap::onEnter(World& world)
         };
     world.addComponent(exitButton, soundComp);
     world.addComponent(exitButton, spriteComp1);
+
+    //map name
+    // HellMap text
+    EntityID hellText = world.createEntity();
+    registerEntity(hellText);
+    {
+        auto& sp = world.getComponent<SpriteComponent>(blackFlag).sprite;
+        sf::Vector2f pos = { sp.getPosition().x-30, sp.getPosition().y + sp.getGlobalBounds().height / 2.f + 30.f };
+        TextComponent text("Infernal Depths", 30, font, sf::Color(128, 0, 128), pos, false, sf::Color(255, 215, 0), 2.f);
+        world.addComponent(hellText, text);
+    }
+
+    // IceMap text
+    EntityID iceText = world.createEntity();
+    registerEntity(iceText);
+    {
+        auto& sp = world.getComponent<SpriteComponent>(blueFlag).sprite;
+        sf::Vector2f pos = { sp.getPosition().x -30, sp.getPosition().y + sp.getGlobalBounds().height / 2.f + 30.f };
+        TextComponent text("Frozen Expanse", 35, font, sf::Color(173, 216, 230), pos, false, sf::Color(0, 0, 128), 2.f);
+        world.addComponent(iceText, text);
+    }
+
+    // ParadiseMap text
+    EntityID paradiseText = world.createEntity();
+    registerEntity(paradiseText);
+    {
+        auto& sp = world.getComponent<SpriteComponent>(whiteFlag).sprite;
+        sf::Vector2f pos = { sp.getPosition().x-30, sp.getPosition().y + sp.getGlobalBounds().height / 2.f + 30.f };
+        TextComponent text("Celestial Haven", 35, font, sf::Color(255, 253, 208), pos, false, sf::Color(0, 128, 128), 2.f);
+        world.addComponent(paradiseText, text);
+    }
+
+    // FireMap text
+    EntityID fireText = world.createEntity();
+    registerEntity(fireText);
+    {
+        auto& sp = world.getComponent<SpriteComponent>(redFlag).sprite;
+        sf::Vector2f pos = { sp.getPosition().x-30, sp.getPosition().y + sp.getGlobalBounds().height / 2.f + 30.f };
+        TextComponent text("Blazing Inferno", 35, font, sf::Color::Red, pos, false, sf::Color(255, 215, 0), 2.f);
+        world.addComponent(fireText, text);
+    }
+
 }
 
 void ChooseMap::render(World& world, sf::RenderWindow& window)

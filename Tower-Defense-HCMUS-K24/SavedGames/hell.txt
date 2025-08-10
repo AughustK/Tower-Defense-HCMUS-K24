@@ -1,0 +1,291 @@
+GamePlayState
+0
+0 1 1
+0
+HellMap
+13
+1500 1090
+1500 1085
+1500 1080
+1500 980
+930 970
+920 730
+310 730
+310 570
+385 560
+650 556
+650 480
+1150 480
+1210 380
+4
+8 10 10 1 
+6 0 0
+4 1.31099 1.5
+13
+1500 1090
+1500 1085
+1500 1080
+1500 980
+930 970
+920 730
+310 730
+310 570
+385 560
+650 556
+650 480
+1150 480
+1210 380
+3
+0 1 0
+0 0
+0 0.50311
+0
+7
+EntityID: 827
+TagComponent
+1
+TextComponent
+"0" 70 "assets/Font/Minecraft-Regular.otf" 4294902015 95 20 255 4 0 16777215 17.5 24.5
+-----
+EntityID: 828
+TagComponent
+1
+TextComponent
+"Difficulty: Easy" 40 "assets/Font/Minecraft-Regular.otf" 16711935 165 88 255 4 0 16777215 148 16
+-----
+EntityID: 829
+TagComponent
+1
+TextComponent
+"Wave: 0/4" 40 "assets/Font/Minecraft-Regular.otf" 4294967295 110 130 255 4 0 16777215 94 14
+-----
+EntityID: 830
+TagComponent
+1
+TextComponent
+"" 50 "assets/Font/Minecraft-Regular.otf" 16711935 250 30 255 2 0 16777215 44.5 19.5
+-----
+EntityID: 854
+TagComponent
+1
+TextComponent
+"Speed: x2" 40 "assets/Font/Minecraft-Regular.otf" 16777215 125 175 255 4 0 16777215 110 16
+-----
+EntityID: 855
+TagComponent
+1
+TextComponent
+"" 50 "assets/Font/Minecraft-Regular.otf" 4292280575 768 100 255 7 0 16777215 0 0
+-----
+EntityID: 856
+TagComponent
+1
+CastleHPComponent
+100 100 1108 39 200 20 16711935 4294967295 2 "HP: 100" 25 4294967295 1108 4 255 2
+-----
+8
+EntityID: 824
+SpriteComponent
+"assets/HellMap/HellMap.jpg" 0 0 1 1 0 1 1
+MusicComponent
+assets/SFX/Music/Map/HellMap.mp3
+0
+1
+-----
+EntityID: 825
+SpriteComponent
+"assets/Bg/ShopFrame.png" 1613.5 0 0.5 1.18 0 1 1
+-----
+EntityID: 826
+TextComponent
+"Heroes Shop" 32 "assets/Font/Minecraft-Regular.otf" 4294967295 1750 120 255 5 1 16777215 100 12.5
+-----
+EntityID: 831
+SpriteComponent
+"assets/Icon/Coin.png" 0 5 0.28 0.28 0 1 1
+-----
+EntityID: 857
+SpriteComponent
+"assets/Heroes/mage_base_idle.png" 801 848 2.2 2.2 0 8 0.18
+TowerComponent
+1
+0
+801
+848
+0.8
+400
+300
+180
+9
+0
+11.2987
+30
+-1
+-----
+EntityID: 858
+SoundComponent
+assets/SFX/PlaceTower.mp3
+1
+0
+-----
+EntityID: 859
+SpriteComponent
+"assets/Heroes/mage_up_idle.png" 768 547 2.2 2.2 0 13 0.12
+TowerComponent
+1
+1
+758
+602
+1.3
+420
+420
+220
+9
+0
+9.91472
+70
+-1
+-----
+EntityID: 860
+SoundComponent
+assets/SFX/PlaceTower.mp3
+1
+0
+-----
+4
+EntityID: 0
+TagComponent
+0
+PositionComponent
+1328.88 976.202 0
+VelocityComponent
+-24.997 -0.388682
+PathComponent
+13
+1500 1090
+1500 1085
+1500 1080
+1500 980
+930 970
+920 730
+310 730
+310 570
+385 560
+650 556
+650 480
+1150 480
+1210 380
+4 25 0
+EnemyComponent
+0 0 2000 25 10 0.2 10 0 6 4294967295 0
+HealthComponent
+2000 2000
+CircleComponent
+1328.88 976.202 18 0 0
+SpriteComponent
+"assets/HellMap/HellNormal1Spritesheet/run.png" 1328.88 976.202 -0.2 0.2 0 19 0.05
+EnemyHPComponent
+2000 2000 40 5 -30 -50
+-----
+EntityID: 1
+TagComponent
+0
+PositionComponent
+1403.69 977.487 0
+VelocityComponent
+-24.9969 -0.395117
+PathComponent
+13
+1500 1090
+1500 1085
+1500 1080
+1500 980
+930 970
+920 730
+310 730
+310 570
+385 560
+650 556
+650 480
+1150 480
+1210 380
+4 25 0
+EnemyComponent
+0 0 2000 25 10 0.2 10 0 6 4294967295 0
+HealthComponent
+2000 2000
+CircleComponent
+1403.69 977.487 18 0 0
+SpriteComponent
+"assets/HellMap/HellNormal1Spritesheet/run.png" 1403.69 977.487 -0.2 0.2 0 19 0.05
+EnemyHPComponent
+2000 2000 40 5 -30 -50
+-----
+EntityID: 2
+TagComponent
+0
+PositionComponent
+1478.71 978.706 0
+VelocityComponent
+-24.8801 -0.515915
+PathComponent
+13
+1500 1090
+1500 1085
+1500 1080
+1500 980
+930 970
+920 730
+310 730
+310 570
+385 560
+650 556
+650 480
+1150 480
+1210 380
+4 25 0
+EnemyComponent
+0 0 2000 25 10 0.2 10 0 6 4294967295 0
+HealthComponent
+2000 2000
+CircleComponent
+1478.71 978.706 18 0 0
+SpriteComponent
+"assets/HellMap/HellNormal1Spritesheet/run.png" 1478.71 978.706 -0.2 0.2 0 19 0.05
+EnemyHPComponent
+2000 2000 40 5 -30 -50
+-----
+EntityID: 3
+TagComponent
+0
+PositionComponent
+1500 1032.86 0
+VelocityComponent
+0 -24.9999
+PathComponent
+13
+1500 1090
+1500 1085
+1500 1080
+1500 980
+930 970
+920 730
+310 730
+310 570
+385 560
+650 556
+650 480
+1150 480
+1210 380
+3 25 0
+EnemyComponent
+0 0 2000 25 10 0.2 10 0 6 4294967295 0
+HealthComponent
+2000 2000
+CircleComponent
+1500 1032.86 18 0 0
+SpriteComponent
+"assets/HellMap/HellNormal1Spritesheet/run.png" 1500 1032.86 0.2 0.2 0 19 0.05
+EnemyHPComponent
+2000 2000 40 5 -30 -50
+-----

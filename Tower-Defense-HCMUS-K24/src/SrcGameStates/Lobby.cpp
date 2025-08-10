@@ -1,4 +1,4 @@
-﻿    #include "../../header/Managers/World.h"
+﻿#include "../../header/Managers/World.h"
 
 #include "../../header/Components/SoundComponent.h"
 #include "../../header/Components/MusicComponent.h"
@@ -12,7 +12,10 @@
 #include "../../header/GameStates/ChooseMap.h"
 #include "../../header/GameStates/Resource.h"
 #include "../../header/GameStates/Story.h"
+#include "../../header/GameStates/Continue.h" 
 
+#include <SFML/Graphics.hpp> 
+#include <iostream>
 
 void Lobby::onEnter(World& world)
 {
@@ -84,7 +87,7 @@ void Lobby::onEnter(World& world)
         });
 
 
-	//story zone
+    //story zone
     EntityID storyZone = world.createEntity();
     registerEntity(storyZone);
     sf::FloatRect storyRect{ 0.0f, 450.f, 500.f, 450.f };
@@ -101,7 +104,28 @@ void Lobby::onEnter(World& world)
             sf::sleep(sf::seconds(0.5f));
             world.setState(std::make_unique<Story>());
         }
-		});
+        });
+
+    sf::FloatRect continueRect{ 1400.f, 700.f, 300.f, 300.f };
+
+    EntityID continueZoneEntity = world.createEntity();
+    registerEntity(continueZoneEntity);
+    SoundComponent contZoneSound(soundPath, false);
+    contZoneSound.sound->setVolume(world.getSystem<SoundSystem>()->globalVolume);
+    world.addComponent(continueZoneEntity, contZoneSound);
+    world.addComponent<ClickComponent>(continueZoneEntity, ClickComponent{
+        continueRect,
+        [soundPath, continueZoneEntity](EntityID entityId, World& world)
+        {
+            std::cout << "[Lobby][Continue Zone] Clicked!\n";
+            if (world.hasComponent<SoundComponent>(entityId)) {
+                auto& sound = world.getComponent<SoundComponent>(entityId);
+                sound.sound->play();
+            }
+            sf::sleep(sf::seconds(0.5f));
+            world.setState(std::make_unique<Continue>());
+        }
+        });
 }
 
 void Lobby::render(World& world, sf::RenderWindow& window)
