@@ -45,10 +45,11 @@ void Continue::spawnTextOptions(World& world) {
     const std::string fontPath = "assets/Font/Minecraft-Regular.otf";
     const std::string deletePath = "assets/Icon/Close/C_Buttons41.png";
 
-    float baseY = 300.f;
-    float textX = 760.f;
-    float deleteX = 1350.f;
+    float baseY = 365.f;
     float lineSpacing = 80.f;
+    float textX = 920;
+    float deleteX = 1305;
+
 
     for (int slot = 0; slot < VISIBLE_COUNT; ++slot) {
         int idx = scrollOffset + slot;
@@ -153,7 +154,7 @@ void Continue::spawnControlButtons(World& world) {
     // Up Button
     EntityID upButton = world.createEntity();
     registerEntity(upButton);
-    SpriteComponent upSprite(upPath, { 1800.f, 180.f }, { 5.f, 5.f });
+    SpriteComponent upSprite(upPath, { 1400.f, 410.0f }, { 5.f, 5.f });
     upSprite.onClick = [this](EntityID eid, World& w) {
         if (scrollOffset > 0) {
             --scrollOffset;
@@ -171,7 +172,7 @@ void Continue::spawnControlButtons(World& world) {
     // Down Button
     EntityID downButton = world.createEntity();
     registerEntity(downButton);
-    SpriteComponent downSprite(downPath, { 1800.f, 700.f }, { 5.f, 5.f });
+    SpriteComponent downSprite(downPath, { 1400.f, 570.f }, { 5.f, 5.f });
     downSprite.onClick = [this](EntityID eid, World& w) {
         if (scrollOffset + VISIBLE_COUNT < (int)saveFiles.size()) {
             ++scrollOffset;
@@ -189,12 +190,19 @@ void Continue::spawnControlButtons(World& world) {
 
 void Continue::onEnter(World& world) {
     std::cout << "[ContinueState] onEnter\n";
+
+    EntityID background = world.createEntity();
+    registerEntity(background);
+    const string bgPath = "assets/Bg/ContinueBG.png";
+    SpriteComponent spriteComp0(bgPath, { 0.f, 0.f }, { 1.f, 1.f });
+    world.addComponent(background, spriteComp0);
+
     scrollOffset = 0;
     loadSaveFiles();
     clampScroll();
-
     spawnControlButtons(world); 
     spawnTextOptions(world);    
+
 }
 
 void Continue::update(World&, float) {
@@ -243,9 +251,9 @@ void Continue::handleEvent(World& world, sf::Event& event) {
 }
 
 void Continue::render(World& world, sf::RenderWindow& window) {
-    auto textSystem = world.getSystem<TextRenderSystem>();
-    textSystem->render(world);
-
     auto spriteSystem = world.getSystem<SpriteRenderSystem>();
     spriteSystem->render(world);
+
+    auto textSystem = world.getSystem<TextRenderSystem>();
+    textSystem->render(world);
 }

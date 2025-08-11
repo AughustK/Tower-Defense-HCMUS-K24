@@ -1,0 +1,271 @@
+GamePlayState
+130
+0 2 1
+0
+FireMap
+13
+600 840
+670 790
+910 790
+915 560
+705 560
+705 460
+400 460
+406 260
+845 260
+890 365
+1150 380
+1160 810
+1320 825
+4
+8 10 10 1 
+6 4 5.41306
+0 0 1.5
+13
+600 840
+670 790
+910 790
+915 560
+705 560
+705 460
+400 460
+406 260
+845 260
+890 365
+1150 380
+1160 810
+1320 825
+0
+0 1 0
+0 0
+1 0.093619
+0
+7
+EntityID: 894
+TagComponent
+1
+TextComponent
+"130" 70 "assets/Font/Minecraft-Regular.otf" 4294902015 95 20 255 4 0 16777215 17.5 24.5
+-----
+EntityID: 895
+TagComponent
+1
+TextComponent
+"Difficulty: Easy" 40 "assets/Font/Minecraft-Regular.otf" 16711935 165 88 255 4 0 16777215 148 16
+-----
+EntityID: 896
+TagComponent
+1
+TextComponent
+"Wave: 4/4" 40 "assets/Font/Minecraft-Regular.otf" 4294967295 110 130 255 4 0 16777215 94 14
+-----
+EntityID: 897
+TagComponent
+1
+TextComponent
+"+10" 50 "assets/Font/Minecraft-Regular.otf" 16711935 250 30 255 2 0 16777215 44.5 19.5
+-----
+EntityID: 898
+TagComponent
+1
+TextComponent
+"Speed: x1.0" 40 "assets/Font/Minecraft-Regular.otf" 16777215 125 175 255 4 0 16777215 110 16
+-----
+EntityID: 899
+TagComponent
+1
+TextComponent
+"" 50 "assets/Font/Minecraft-Regular.otf" 4292280575 768 100 255 7 0 16777215 0 0
+-----
+EntityID: 900
+TagComponent
+1
+CastleHPComponent
+100 100 1252 480 200 20 16711935 4294967295 2 "HP: 100" 25 4294967295 1252 445 255 2
+-----
+12
+EntityID: 901
+SpriteComponent
+"assets/FireMap/FireMap.jpg" 0 0 1 1 0 1 1
+MusicComponent
+assets/SFX/Music/Map/FireMap.mp3
+0
+1
+-----
+EntityID: 902
+SpriteComponent
+"assets/Bg/ShopFrame.png" 1613.5 0 0.5 1.18 0 1 1
+-----
+EntityID: 903
+TextComponent
+"Heroes Shop" 32 "assets/Font/Minecraft-Regular.otf" 4294967295 1750 120 255 5 1 16777215 100 12.5
+-----
+EntityID: 904
+SpriteComponent
+"assets/Icon/Coin.png" 0 5 0.28 0.28 0 1 1
+-----
+EntityID: 905
+SpriteComponent
+"assets/Heroes/cannon_up_idle.png" 788 595 1.2 1.2 0 11 0.1
+TowerComponent
+2
+1
+788
+630
+1
+400
+600
+260
+9
+0
+0.093619
+80
+-1
+-----
+EntityID: 906
+SoundComponent
+assets/SFX/PlaceTower.mp3
+1
+0
+-----
+EntityID: 907
+SpriteComponent
+"assets/Heroes/mage_base_idle.png" 828 430 2.2 2.2 0 8 0.18
+TowerComponent
+1
+0
+828
+430
+0.8
+400
+300
+180
+9
+0
+0.346859
+30
+-1
+-----
+EntityID: 908
+SoundComponent
+assets/SFX/PlaceTower.mp3
+1
+0
+-----
+EntityID: 909
+SpriteComponent
+"assets/Heroes/archer_up_idle.png" 590 513 2.2 2.2 0 10 0.09
+TowerComponent
+0
+1
+580
+525
+1.6
+480
+320
+240
+7
+14
+0.239179
+50
+-1
+-----
+EntityID: 910
+SoundComponent
+assets/SFX/PlaceTower.mp3
+1
+0
+-----
+EntityID: 911
+SpriteComponent
+"assets/Heroes/cannon_up_idle.png" 995 395 1.2 1.2 0 11 0.1
+TowerComponent
+2
+1
+995
+430
+1
+400
+600
+260
+9
+0
+0.720017
+80
+-1
+-----
+EntityID: 912
+SoundComponent
+assets/SFX/PlaceTower.mp3
+1
+0
+-----
+2
+EntityID: 2
+TagComponent
+0
+PositionComponent
+760.901 559.747 0
+VelocityComponent
+-24.9997 0.113102
+PathComponent
+13
+600 840
+670 790
+910 790
+915 560
+705 560
+705 460
+400 460
+406 260
+845 260
+890 365
+1150 380
+1160 810
+1320 825
+4 25 0
+EnemyComponent
+0 0 2000 25 10 0.2 10 0 0 4294967295 0
+HealthComponent
+780 2000
+CircleComponent
+760.901 559.747 18 0 0
+SpriteComponent
+"assets/FireMap/FireNormal1Spritesheet/run.png" 760.901 559.747 -0.2 0.2 0 20 0.04
+EnemyHPComponent
+2000 780 40 5 -30 -50
+-----
+EntityID: 4
+TagComponent
+0
+PositionComponent
+913.636 751.591 0
+VelocityComponent
+0.302981 -34.9533
+PathComponent
+13
+600 840
+670 790
+910 790
+915 560
+705 560
+705 460
+400 460
+406 260
+845 260
+890 365
+1150 380
+1160 810
+1320 825
+3 35 0
+EnemyComponent
+0 0 7000 35 70 1.3 100 0 2 4294967295 0
+HealthComponent
+7000 7000
+CircleComponent
+913.636 751.591 18 0 0
+SpriteComponent
+"assets/FireMap/FireBossSpritesheet/run.png" 913.636 751.591 1.3 1.3 0 4 0.2
+EnemyHPComponent
+7000 7000 40 5 -30 -50
+-----

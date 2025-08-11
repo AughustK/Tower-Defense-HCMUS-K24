@@ -1335,11 +1335,9 @@ void GamePlay::showPauseMenu(World& world) {
     }
 
     EntityID bgBoard = world.createEntity();
-    SpriteComponent bgSprite("assets/Bg/FramePause.png",
-        { world.window.getSize().x / 2.f, world.window.getSize().y / 2.f+62 },
-        { 0.4f, 0.4f });
-    sf::FloatRect bounds = bgSprite.sprite.getLocalBounds();
-    bgSprite.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+    SpriteComponent bgSprite("assets/Bg/PauseFrame.png",
+        { 0,0 },
+        { 1.f, 1.f });
     world.addComponent(bgBoard, bgSprite);
     pauseButtons.push_back(bgBoard);
 
@@ -1368,8 +1366,8 @@ void GamePlay::showPauseMenu(World& world) {
        }}
     };
 
-    float cx = world.window.getSize().x / static_cast<float>(2), cy = world.window.getSize().y / static_cast<float>(2);
-    float spacing = 100.f;
+    float cx = world.window.getSize().x / static_cast<float>(2), cy = world.window.getSize().y / static_cast<float>(2) - 30;
+    float spacing = 70.f;
     for (int i = 0; i < opts.size(); ++i) {
         EntityID btn = world.createEntity();
         TextComponent tc(
@@ -1395,11 +1393,9 @@ void GamePlay::showSettingMenu(World& world)
     float cx = world.window.getSize().x / 2.f;
 
     EntityID bgBoard = world.createEntity();
-    SpriteComponent bgSprite("assets/Bg/FrameSettinginGame.png",
-        { world.window.getSize().x / 2.f, world.window.getSize().y / 2.f },
+    SpriteComponent bgSprite("assets/Bg/SettingFrame.png",
+        { 0,0},
         { 1.0f, 1.0f });
-    sf::FloatRect bounds = bgSprite.sprite.getLocalBounds();
-    bgSprite.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
     world.addComponent(bgBoard, bgSprite);
     settingButtons.push_back(bgBoard);
 
@@ -1417,7 +1413,7 @@ void GamePlay::showSettingMenu(World& world)
 
     EntityID backBtn = world.createEntity();
     TextComponent backTC("Back", 48, "assets/Font/Minecraft-Regular.otf",
-        sf::Color::White, { cx, 650.f }, true, sf::Color::Black, 5.f);
+        sf::Color::White, { cx, 630.f }, true, sf::Color::Black, 5.f);
     backTC.onClick = [this](EntityID, World& w) {
         for (auto e : settingButtons) w.destroyEntity(e);
         settingButtons.clear();
@@ -2027,37 +2023,35 @@ void GamePlay::startSaveNamePrompt(World& world) {
     float cy = world.window.getSize().y / 2.f;
     const std::string font = "assets/Font/Minecraft-Regular.otf";
 
-    EntityID panel = world.createEntity();
-    registerEntity(panel);
-    SpriteComponent panelSprite("assets/Bg/FramePause.png",
-        { cx, cy + 62.f }, { 0.45f, 0.45f });
-    sf::FloatRect bounds = panelSprite.sprite.getLocalBounds();
-    panelSprite.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
-    world.addComponent(panel, panelSprite);
-    promptEntities.push_back(panel);
+    EntityID bgBoard = world.createEntity();
+    SpriteComponent bgSprite("assets/Bg/SaveFrame.png",
+        { 0,0 },
+        { 1.f, 1.f });
+    world.addComponent(bgBoard, bgSprite);
+    promptEntities.push_back(bgBoard);
 
     EntityID title = world.createEntity();
     registerEntity(title);
-    TextComponent titleText("Enter save name:", 36, font, sf::Color::White, { cx, cy - 100.f }, false, sf::Color::Black, 4.f);
+    TextComponent titleText("Enter save name:", 36, font, sf::Color::White, { cx, cy - 50.f}, false, sf::Color::Black, 4.f);
     world.addComponent(title, titleText);
     promptEntities.push_back(title);
 
     EntityID input = world.createEntity();
     registerEntity(input);
-    TextComponent inputText("_", 34, font, sf::Color::White, { cx - 150.f, cy - 30.f }, false, sf::Color::Black, 3.f);
+    TextComponent inputText("_", 34, font, sf::Color::White, { cx - 150.f, cy + 20.f}, false, sf::Color::Black, 3.f);
     world.addComponent(input, inputText);
     inputTextEntity = input;
     promptEntities.push_back(input);
 
     EntityID cancel = world.createEntity();
     registerEntity(cancel);
-    TextComponent cancelText("Cancel", 36, font, sf::Color::White, { 1920.f/2, 1080.f/2 +50}, true, sf::Color::Black, 4.f);
+    TextComponent cancelText("Cancel", 36, font, sf::Color::White, { cx, cy + 100.f}, true, sf::Color::Black, 4.f);
     cancelText.onClick = [this](EntityID eid, World& w) {
         for (EntityID e : promptEntities) w.destroyEntity(e);
         promptEntities.clear();
         inputTextEntity = INVALID_ENTITY;
         filenameBuffer.clear();
-
+        showingPauseMenu = false;
         auto musicEntities = w.getEntitiesWithComponent<MusicComponent>();
         for (EntityID id : musicEntities) {
             auto& mc = w.getComponent<MusicComponent>(id);

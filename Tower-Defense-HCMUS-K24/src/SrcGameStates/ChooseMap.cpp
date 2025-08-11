@@ -323,7 +323,7 @@ void ChooseMap::showDifficultyMenu(World& world)
 
     EntityID bg = world.createEntity();
     const std::string bgPath = "assets/Bg/FrameLevel.png";
-    SpriteComponent bgSprite(bgPath, { centerX, centerY }, { 1.f, 1.f });
+    SpriteComponent bgSprite(bgPath, { centerX, centerY +40 }, { 1.f, 1.f });
     sf::FloatRect bounds = bgSprite.sprite.getLocalBounds();
     bgSprite.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
     world.addComponent(bg, bgSprite);

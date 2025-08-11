@@ -11,7 +11,7 @@ static const EnemyDef ENEMY_DEFS[] = {
     { EnemyComponent::EnemyType::IceBoss,   7000.f, 35.f, 70.f, 3.5f, 100 },
     { EnemyComponent::EnemyType::ParadiseNormal1, 2000.f, 25.f,  10.f, 1.1f, 10 },
     { EnemyComponent::EnemyType::ParadiseNormal2, 2000.f, 25.f,  10.f, 1.1f, 10 },
-    { EnemyComponent::EnemyType::ParadiseBoss,   700.f, 35.f, 70.f, 1.4f, 100 },
+    { EnemyComponent::EnemyType::ParadiseBoss,   7000.f, 35.f, 70.f, 1.4f, 100 },
     { EnemyComponent::EnemyType::HellNormal1, 2000.f, 25.f,  10.f, 0.2f, 10 },
     { EnemyComponent::EnemyType::HellNormal2, 2000.f, 25.f,  10.f, 0.8f, 10 },
     { EnemyComponent::EnemyType::HellBoss,   7000.f, 35.f, 70.f, 1.0f, 100 }
