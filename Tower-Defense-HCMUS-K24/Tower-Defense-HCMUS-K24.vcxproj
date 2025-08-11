@@ -203,6 +203,7 @@
     <ClInclude Include="header\Components\EnemyDef.h" />
     <ClInclude Include="header\Components\EnemyHPComponent.h" />
     <ClInclude Include="header\Components\MusicComponent.h" />
+    <ClInclude Include="header\Components\NoDimComponent.h" />
     <ClInclude Include="header\Components\PathfindingComponent.h" />
     <ClInclude Include="header\Components\ShopComponent.h" />
     <ClInclude Include="header\Components\SoundComponent.h" />

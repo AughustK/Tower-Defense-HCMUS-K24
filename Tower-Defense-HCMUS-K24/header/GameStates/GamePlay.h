@@ -92,6 +92,8 @@ private:
     std::string filenameBuffer;
     std::vector<EntityID> promptEntities;
     EntityID inputTextEntity = INVALID_ENTITY;
+
+    bool isUpgrading = false;
 public:
     //explicit GamePlay(const std::string& mapFilename);
     GamePlay(const std::string& mapFilename, DifficultyLevel difficulty);

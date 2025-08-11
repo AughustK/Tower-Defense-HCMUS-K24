@@ -18,6 +18,7 @@
 #include "../Components/CastleHPComponent.h"
 #include "../Components/EnemyHPComponent.h"
 #include "../Components/TagComponent.h"
+#include "../Components/NoDimComponent.h"
 
 
 #include "../Systems/SpriteRenderSystem.h"
@@ -164,6 +165,8 @@ World::World() : window(sf::VideoMode(1920, 1080), "Tower Defense")
         Signature hpSig;
         hpSig.set(getComponentType<CastleHPComponent>(), true);
         setSystemSignature<CastleHPSystem>(hpSig);
+
+        registerComponent<NoDimComponent>();
 
 	    // Initialize the pool
         constexpr std::size_t MAX_ENEMIES = 200;

@@ -1,0 +1,267 @@
+GamePlayState
+80
+1 1 0
+0
+FireMap
+13
+600 840
+670 790
+910 790
+915 560
+705 560
+705 460
+400 460
+406 260
+845 260
+890 365
+1150 380
+1160 810
+1320 825
+4
+8 10 10 1 
+6 0 0
+4 1.30211 1.5
+13
+600 840
+670 790
+910 790
+915 560
+705 560
+705 460
+400 460
+406 260
+845 260
+890 365
+1150 380
+1160 810
+1320 825
+0
+0 1 0
+0 0
+0 0.537038
+0
+7
+EntityID: 482
+TagComponent
+1
+TextComponent
+"80" 70 "assets/Font/Minecraft-Regular.otf" 4294901860 95 20 255 4 0 16777215 17.5 24.5
+-----
+EntityID: 483
+TagComponent
+1
+TextComponent
+"Difficulty: Easy" 40 "assets/Font/Minecraft-Regular.otf" 16711780 165 88 255 4 0 16777215 148 16
+-----
+EntityID: 484
+TagComponent
+1
+TextComponent
+"Wave: 0/4" 40 "assets/Font/Minecraft-Regular.otf" 4294967140 110 130 255 4 0 16777215 94 14
+-----
+EntityID: 485
+TagComponent
+1
+TextComponent
+"" 50 "assets/Font/Minecraft-Regular.otf" 16711780 250 30 255 2 0 16777215 44.5 19.5
+-----
+EntityID: 509
+TagComponent
+1
+TextComponent
+"Speed: x1.0" 40 "assets/Font/Minecraft-Regular.otf" 16777060 125 175 255 4 0 16777215 110 16
+-----
+EntityID: 510
+TagComponent
+1
+TextComponent
+"" 50 "assets/Font/Minecraft-Regular.otf" 4292280575 768 100 255 7 0 16777215 0 0
+-----
+EntityID: 511
+TagComponent
+1
+CastleHPComponent
+100 100 1252 480 200 20 16711935 4294967295 2 "HP: 100" 25 4294967295 1252 445 255 2
+-----
+6
+EntityID: 479
+SpriteComponent
+"assets/FireMap/FireMap.jpg" 0 0 1 1 0 1 1
+MusicComponent
+assets/SFX/Music/Map/FireMap.mp3
+0
+1
+-----
+EntityID: 480
+SpriteComponent
+"assets/Bg/ShopFrame.png" 1613.5 0 0.5 1.18 0 1 1
+-----
+EntityID: 481
+TextComponent
+"Heroes Shop" 32 "assets/Font/Minecraft-Regular.otf" 4294967140 1750 120 255 5 1 16777215 100 12.5
+-----
+EntityID: 486
+SpriteComponent
+"assets/Icon/Coin.png" 0 5 0.28 0.28 0 1 1
+-----
+EntityID: 516
+SpriteComponent
+"assets/Heroes/archer_base_idle.png" 995 430 3.2 3.2 0 6 0.09
+TowerComponent
+0
+0
+995
+430
+1
+400
+250
+160
+7
+14
+3.68481
+20
+-1
+-----
+EntityID: 517
+SoundComponent
+assets/SFX/PlaceTower.mp3
+1
+0
+-----
+4
+EntityID: 0
+TagComponent
+0
+PositionComponent
+868.802 789.845 0
+VelocityComponent
+24.9998 0.0938787
+PathComponent
+13
+600 840
+670 790
+910 790
+915 560
+705 560
+705 460
+400 460
+406 260
+845 260
+890 365
+1150 380
+1160 810
+1320 825
+2 25 0
+EnemyComponent
+0 0 2000 25 10 0.2 10 0 0 4294967295 0
+HealthComponent
+2000 2000
+CircleComponent
+868.802 789.845 18 0 0
+SpriteComponent
+"assets/FireMap/FireNormal1Spritesheet/run.png" 868.802 789.845 0.2 0.2 0 20 0.04
+EnemyHPComponent
+2000 2000 40 5 -30 -50
+-----
+EntityID: 1
+TagComponent
+0
+PositionComponent
+793.431 789.813 0
+VelocityComponent
+25 0.0401163
+PathComponent
+13
+600 840
+670 790
+910 790
+915 560
+705 560
+705 460
+400 460
+406 260
+845 260
+890 365
+1150 380
+1160 810
+1320 825
+2 25 0
+EnemyComponent
+0 0 2000 25 10 0.2 10 0 0 4294967295 0
+HealthComponent
+2000 2000
+CircleComponent
+793.431 789.813 18 0 0
+SpriteComponent
+"assets/FireMap/FireNormal1Spritesheet/run.png" 793.431 789.813 0.2 0.2 0 20 0.04
+EnemyHPComponent
+2000 2000 40 5 -30 -50
+-----
+EntityID: 2
+TagComponent
+0
+PositionComponent
+716.944 789.842 0
+VelocityComponent
+25 0.0203692
+PathComponent
+13
+600 840
+670 790
+910 790
+915 560
+705 560
+705 460
+400 460
+406 260
+845 260
+890 365
+1150 380
+1160 810
+1320 825
+2 25 0
+EnemyComponent
+0 0 2000 25 10 0.2 10 0 0 4294967295 0
+HealthComponent
+2000 2000
+CircleComponent
+716.944 789.842 18 0 0
+SpriteComponent
+"assets/FireMap/FireNormal1Spritesheet/run.png" 716.944 789.842 0.2 0.2 0 20 0.04
+EnemyHPComponent
+2000 2000 40 5 -30 -50
+-----
+EntityID: 3
+TagComponent
+0
+PositionComponent
+647.215 806.275 0
+VelocityComponent
+20.3433 -14.5311
+PathComponent
+13
+600 840
+670 790
+910 790
+915 560
+705 560
+705 460
+400 460
+406 260
+845 260
+890 365
+1150 380
+1160 810
+1320 825
+1 25 0
+EnemyComponent
+0 0 2000 25 10 0.2 10 0 0 4294967295 0
+HealthComponent
+2000 2000
+CircleComponent
+647.215 806.275 18 0 0
+SpriteComponent
+"assets/FireMap/FireNormal1Spritesheet/run.png" 647.215 806.275 0.2 0.2 0 20 0.04
+EnemyHPComponent
+2000 2000 40 5 -30 -50
+-----
