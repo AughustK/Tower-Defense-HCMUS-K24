@@ -18,6 +18,7 @@
 #include "../Components/CastleHPComponent.h"
 #include "../Components/EnemyHPComponent.h"
 #include "../Components/TagComponent.h"
+#include "../Components/NoDimComponent.h"
 
 
 #include "../Systems/SpriteRenderSystem.h"
@@ -50,129 +51,131 @@ World::World() : window(sf::VideoMode(1920, 1080), "Tower Defense")
     systemManager.init(&entityManager);
 }
 
-    void World::init()
-    {
-        std::cout << "Init called\n";
-        systemManager.init(&entityManager);
+void World::init()
+{
+    std::cout << "Init called\n";
+    systemManager.init(&entityManager);
 
-        //set up for sprite
-        registerComponent<SpriteComponent>();
-        auto spriteRenderSystem = registerSystem<SpriteRenderSystem>();
-        Signature renderSig0;
-        renderSig0.set(getComponentType<SpriteComponent>(), true);
-        setSystemSignature<SpriteRenderSystem>(renderSig0);
+    //set up for sprite
+    registerComponent<SpriteComponent>();
+    auto spriteRenderSystem = registerSystem<SpriteRenderSystem>();
+    Signature renderSig0;
+    renderSig0.set(getComponentType<SpriteComponent>(), true);
+    setSystemSignature<SpriteRenderSystem>(renderSig0);
 
-        //set up for text
-        registerComponent<TextComponent>();
-        auto textRenderSystem = registerSystem<TextRenderSystem>();
-        Signature renderSig1;
-        renderSig1.set(getComponentType<TextComponent>(), true);
-        setSystemSignature<TextRenderSystem>(renderSig1);
+    //set up for text
+    registerComponent<TextComponent>();
+    auto textRenderSystem = registerSystem<TextRenderSystem>();
+    Signature renderSig1;
+    renderSig1.set(getComponentType<TextComponent>(), true);
+    setSystemSignature<TextRenderSystem>(renderSig1);
 
-        //set up for sound
-        registerComponent<SoundComponent>();
-        auto soundSystem = registerSystem<SoundSystem>();
-        Signature soundSig;
-        soundSig.set(getComponentType<SoundComponent>(), true);
-        setSystemSignature<SoundSystem>(soundSig);
+    //set up for sound
+    registerComponent<SoundComponent>();
+    auto soundSystem = registerSystem<SoundSystem>();
+    Signature soundSig;
+    soundSig.set(getComponentType<SoundComponent>(), true);
+    setSystemSignature<SoundSystem>(soundSig);
 
-        //set up for music
-        registerComponent<MusicComponent>();
-        auto musicSystem = registerSystem<MusicSystem>();
-        Signature musicSig;
-        musicSig.set(getComponentType<MusicComponent>(), true);
-        setSystemSignature<MusicSystem>(musicSig);
+    //set up for music
+    registerComponent<MusicComponent>();
+    auto musicSystem = registerSystem<MusicSystem>();
+    Signature musicSig;
+    musicSig.set(getComponentType<MusicComponent>(), true);
+    setSystemSignature<MusicSystem>(musicSig);
 
-        //set up for volume
-        registerComponent<SliderComponent>();
-        auto sliderSystem = registerSystem<SliderSystem>();
-        Signature sliderSig;
-        sliderSig.set(getComponentType<SliderComponent>(), true);
-        setSystemSignature<SliderSystem>(sliderSig);
+    //set up for volume
+    registerComponent<SliderComponent>();
+    auto sliderSystem = registerSystem<SliderSystem>();
+    Signature sliderSig;
+    sliderSig.set(getComponentType<SliderComponent>(), true);
+    setSystemSignature<SliderSystem>(sliderSig);
 
-        //set up for physic
-        registerComponent<PositionComponent>();
-        registerComponent<VelocityComponent>();
-        auto physicSystem = registerSystem<PhysicSystem>();
-        Signature physicSig;
-        physicSig.set(getComponentType<PositionComponent>(), true);
-        physicSig.set(getComponentType<VelocityComponent>(), true);
-        setSystemSignature<PhysicSystem>(physicSig);
+    //set up for physic
+    registerComponent<PositionComponent>();
+    registerComponent<VelocityComponent>();
+    auto physicSystem = registerSystem<PhysicSystem>();
+    Signature physicSig;
+    physicSig.set(getComponentType<PositionComponent>(), true);
+    physicSig.set(getComponentType<VelocityComponent>(), true);
+    setSystemSignature<PhysicSystem>(physicSig);
 
-        //set up for click
-        registerComponent<ClickComponent>();
+    //set up for click
+    registerComponent<ClickComponent>();
 
-        //set up for enemy spawning
-        registerComponent<EnemyHPComponent>();
-        registerComponent<EnemyComponent>();
-        registerComponent<PathComponent>();
-        auto enemyHPSystem = registerSystem<EnemyHPSystem>();
-        auto spawnSystem = registerSystem<EnemySpawnSystem>();
-        Signature spawnSig;
-        spawnSig.set(getComponentType<EnemyComponent>(), true);
-        spawnSig.set(getComponentType<PathComponent>(), true);
-        spawnSig.set(getComponentType<EnemyHPComponent>(), true);
-        setSystemSignature<EnemySpawnSystem>(spawnSig);
+    //set up for enemy spawning
+    registerComponent<EnemyHPComponent>();
+    registerComponent<EnemyComponent>();
+    registerComponent<PathComponent>();
+    auto enemyHPSystem = registerSystem<EnemyHPSystem>();
+    auto spawnSystem = registerSystem<EnemySpawnSystem>();
+    Signature spawnSig;
+    spawnSig.set(getComponentType<EnemyComponent>(), true);
+    spawnSig.set(getComponentType<PathComponent>(), true);
+    spawnSig.set(getComponentType<EnemyHPComponent>(), true);
+    setSystemSignature<EnemySpawnSystem>(spawnSig);
 
-        //set up for path system
-        auto pathSystem = registerSystem<PathFollowingSystem>();
-        Signature pathSig;
-        pathSig.set(getComponentType<PathComponent>(), true);
-        pathSig.set(getComponentType<PositionComponent>(), true);
-        pathSig.set(getComponentType<VelocityComponent>(), true);
-        setSystemSignature<PathFollowingSystem>(pathSig);
+    //set up for path system
+    auto pathSystem = registerSystem<PathFollowingSystem>();
+    Signature pathSig;
+    pathSig.set(getComponentType<PathComponent>(), true);
+    pathSig.set(getComponentType<PositionComponent>(), true);
+    pathSig.set(getComponentType<VelocityComponent>(), true);
+    setSystemSignature<PathFollowingSystem>(pathSig);
 
-        //set up for collision
-        registerComponent<HealthComponent>();
-        registerComponent<CircleComponent>();
-        registerComponent<TowerComponent>();
-        registerComponent<ProjectileComponent>();
+    //set up for collision
+    registerComponent<HealthComponent>();
+    registerComponent<CircleComponent>();
+    registerComponent<TowerComponent>();
+    registerComponent<ProjectileComponent>();
 
-        auto colSystem = registerSystem<CollisionSystem>();
-        Signature colSig;
-        colSig.set(getComponentType<VelocityComponent>(), true);
-        colSig.set(getComponentType<CircleComponent>(), true);
-        colSig.set(getComponentType<ProjectileComponent>(), true);
-        colSig.set(getComponentType<TowerComponent>(), true);
-        colSig.set(getComponentType<HealthComponent>(), true);
-        setSystemSignature<CollisionSystem>(colSig);
+    auto colSystem = registerSystem<CollisionSystem>();
+    Signature colSig;
+    colSig.set(getComponentType<VelocityComponent>(), true);
+    colSig.set(getComponentType<CircleComponent>(), true);
+    colSig.set(getComponentType<ProjectileComponent>(), true);
+    colSig.set(getComponentType<TowerComponent>(), true);
+    colSig.set(getComponentType<HealthComponent>(), true);
+    setSystemSignature<CollisionSystem>(colSig);
 
-        //set up for tower spawning
-        registerComponent<TowerIconComponent>();
+    //set up for tower spawning
+    registerComponent<TowerIconComponent>();
 
-        //tower system
-        auto towerSystem = registerSystem<TowerSystem>();
-        Signature towerSig;
-        towerSig.set(getComponentType<TowerComponent>(), true);
-        towerSig.set(getComponentType<PositionComponent>(), true);
-        towerSig.set(getComponentType<VelocityComponent>(), true);
-        towerSig.set(getComponentType<CircleComponent>(), true);
-        setSystemSignature<TowerSystem>(towerSig);
+    //tower system
+    auto towerSystem = registerSystem<TowerSystem>();
+    Signature towerSig;
+    towerSig.set(getComponentType<TowerComponent>(), true);
+    towerSig.set(getComponentType<PositionComponent>(), true);
+    towerSig.set(getComponentType<VelocityComponent>(), true);
+    towerSig.set(getComponentType<CircleComponent>(), true);
+    setSystemSignature<TowerSystem>(towerSig);
 
-        //set up for projectile spawning
-        auto projectileSystem = registerSystem<ProjectilePoolSystem>();
-        Signature projectileSig;
-        projectileSig.set(getComponentType<ProjectileComponent>(), true);
-        projectileSig.set(getComponentType<PositionComponent>(), true);
-        projectileSig.set(getComponentType<VelocityComponent>(), true);
-        projectileSig.set(getComponentType<CircleComponent>(), true);
-        setSystemSignature<ProjectilePoolSystem>(projectileSig);
+    //set up for projectile spawning
+    auto projectileSystem = registerSystem<ProjectilePoolSystem>();
+    Signature projectileSig;
+    projectileSig.set(getComponentType<ProjectileComponent>(), true);
+    projectileSig.set(getComponentType<PositionComponent>(), true);
+    projectileSig.set(getComponentType<VelocityComponent>(), true);
+    projectileSig.set(getComponentType<CircleComponent>(), true);
+    setSystemSignature<ProjectilePoolSystem>(projectileSig);
 
-        //set up for castle health
-        registerComponent<CastleHPComponent>();
-        auto castleHPSystem = registerSystem<CastleHPSystem>();
-        Signature hpSig;
-        hpSig.set(getComponentType<CastleHPComponent>(), true);
-        setSystemSignature<CastleHPSystem>(hpSig);
+    //set up for castle health
+    registerComponent<CastleHPComponent>();
+    auto castleHPSystem = registerSystem<CastleHPSystem>();
+    Signature hpSig;
+    hpSig.set(getComponentType<CastleHPComponent>(), true);
+    setSystemSignature<CastleHPSystem>(hpSig);
 
-	    // Initialize the pool
-        constexpr std::size_t MAX_ENEMIES = 200;
-        constexpr std::size_t MAX_PROJECTILES = 250;
+    registerComponent<NoDimComponent>();
 
-        registerComponent<TagComponent>();
-        spawnSystem->initPool(*this, MAX_ENEMIES);
-        projectileSystem->initPool(*this, MAX_PROJECTILES);
-    }
+    // Initialize the pool
+    constexpr std::size_t MAX_ENEMIES = 200;
+    constexpr std::size_t MAX_PROJECTILES = 250;
+
+    registerComponent<TagComponent>();
+    spawnSystem->initPool(*this, MAX_ENEMIES);
+    projectileSystem->initPool(*this, MAX_PROJECTILES);
+}
 
 EntityID World::createEntity()
 {
@@ -183,12 +186,12 @@ void World::destroyEntity(EntityID entityID)
 {
     // Remove entity from all systems
     systemManager.removeEntitySystem(entityID);
-    
+
     // Remove all components from the entity
     componentManager.removeEntityComponent(entityID);
-    
+
     // Destroy the entity in the entity manager
-	std::cout << "[World] destroyEntity(" << entityID << "): about to destroy entity\n";
+    std::cout << "[World] destroyEntity(" << entityID << "): about to destroy entity\n";
     entityManager.destroyEntity(entityID);
 }
 

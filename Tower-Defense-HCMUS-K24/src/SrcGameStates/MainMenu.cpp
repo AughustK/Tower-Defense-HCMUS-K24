@@ -165,7 +165,6 @@ void MainMenu::onEnter(World& world)
             auto& sound = world.getComponent<SoundComponent>(entityId);
             sound.sound->play();
             world.setState(std::make_unique<Setting>());
-
         };
     world.addComponent(setting, soundComp);
     world.addComponent(setting, spriteComp0);

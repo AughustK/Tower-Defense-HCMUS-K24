@@ -39,6 +39,7 @@
     <ClCompile Include="src\SrcComponents\EnemyHPComponent.cpp" />
     <ClCompile Include="src\SrcSystem\EnemyHPSystem.cpp" />
     <ClCompile Include="src\SrcGameStates\Continue.cpp" />
+    <ClCompile Include="src\SrcComponents\TagComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Systems\System.h" />
@@ -101,6 +102,7 @@
     <ClInclude Include="header\Systems\EnemyHPSystem.h" />
     <ClInclude Include="header\GameStates\Continue.h" />
     <ClInclude Include="header\Components\TagComponent.h" />
+    <ClInclude Include="header\Components\NoDimComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\Bg\CreditBackground2Fixed.png" />

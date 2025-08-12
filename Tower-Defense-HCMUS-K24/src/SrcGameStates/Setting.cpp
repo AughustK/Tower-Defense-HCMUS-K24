@@ -85,7 +85,11 @@ void Setting::onEnter(World& world) {
             std::cout << "[Exit Button] Clicked\n";
             if (world.hasComponent<SoundComponent>(entityId)) {
                 auto& sound = world.getComponent<SoundComponent>(entityId);
-                if (sound.sound) sound.sound->play();
+                if (sound.sound)
+                {
+                    sound.sound->play();
+                    sf::sleep(sf::seconds(0.5f));
+                }
             }
             shouldExit = true;
         };

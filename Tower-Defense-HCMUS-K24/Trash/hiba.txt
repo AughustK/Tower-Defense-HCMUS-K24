@@ -1,0 +1,291 @@
+GamePlayState
+48
+0 1 0
+1
+FireMap
+13
+600 840
+670 790
+910 790
+915 560
+705 560
+705 460
+400 460
+406 260
+845 260
+890 365
+1150 380
+1160 810
+1320 825
+4
+8 10 10 1 
+6 1 0
+10 0.49684 1.5
+13
+600 840
+670 790
+910 790
+915 560
+705 560
+705 460
+400 460
+406 260
+845 260
+890 365
+1150 380
+1160 810
+1320 825
+2
+0 1 0
+0 1.01012
+1 0.0317385
+0
+7
+EntityID: 1041
+TagComponent
+1
+TextComponent
+"48" 70 "assets/Font/Minecraft-Regular.otf" 4294902015 95 20 255 4 0 16777215 17.5 24.5
+-----
+EntityID: 1042
+TagComponent
+1
+TextComponent
+"Difficulty: Normal" 40 "assets/Font/Minecraft-Regular.otf" 4294902015 165 88 255 4 0 16777215 166 16
+-----
+EntityID: 1043
+TagComponent
+1
+TextComponent
+"Wave: 1/4" 40 "assets/Font/Minecraft-Regular.otf" 4294967295 110 130 255 4 0 16777215 94 14
+-----
+EntityID: 1044
+TagComponent
+1
+TextComponent
+"+12" 50 "assets/Font/Minecraft-Regular.otf" 16711935 250 30 255 2 0 16777215 44.5 19.5
+-----
+EntityID: 1045
+TagComponent
+1
+TextComponent
+"Speed: x1.50" 40 "assets/Font/Minecraft-Regular.otf" 16777215 125 175 255 4 0 16777215 110 16
+-----
+EntityID: 1046
+TagComponent
+1
+TextComponent
+"" 50 "assets/Font/Minecraft-Regular.otf" 4292280575 768 100 255 7 0 16777215 314.5 24.5
+-----
+EntityID: 1047
+TagComponent
+1
+CastleHPComponent
+100 100 1252 480 200 20 16711935 4294967295 2 "HP: 100" 25 4294967295 1252 445 255 2
+-----
+8
+EntityID: 1048
+SpriteComponent
+"assets/FireMap/FireMap.jpg" 0 0 1 1 0 1 1
+MusicComponent
+assets/SFX/Music/Map/FireMap.mp3
+0
+1
+-----
+EntityID: 1049
+SpriteComponent
+"assets/Bg/ShopFrame.png" 1613.5 0 0.5 1.18 0 1 1
+-----
+EntityID: 1050
+TextComponent
+"Heroes Shop" 32 "assets/Font/Minecraft-Regular.otf" 4294967295 1750 120 255 5 1 16777215 100 12.5
+-----
+EntityID: 1051
+SpriteComponent
+"assets/Icon/Coin.png" 0 5 0.28 0.28 0 1 1
+-----
+EntityID: 1052
+SpriteComponent
+"assets/Heroes/mage_up_idle.png" 798 575 2.2 2.2 0 13 0.12
+TowerComponent
+1
+1
+788
+630
+1.3
+420
+420
+220
+9
+0
+0.138285
+70
+-1
+-----
+EntityID: 1053
+SoundComponent
+assets/SFX/PlaceTower.mp3
+1
+0
+-----
+EntityID: 1086
+SpriteComponent
+"assets/Heroes/mage_base_idle.png" 828 430 2.2 2.2 0 8 0.18
+TowerComponent
+1
+0
+828
+430
+0.8
+400
+300
+180
+9
+0
+0.355307
+30
+-1
+-----
+EntityID: 1087
+SoundComponent
+assets/SFX/PlaceTower.mp3
+1
+0
+-----
+4
+EntityID: 4
+TagComponent
+0
+PositionComponent
+880.035 558.55 0
+VelocityComponent
+-27.4847 0.21074
+PathComponent
+13
+600 840
+670 790
+910 790
+915 560
+705 560
+705 460
+400 460
+406 260
+845 260
+890 365
+1150 380
+1160 810
+1320 825
+4 27.5 0
+EnemyComponent
+0 0 2400 27.5 10 0.2 12 0 0 4294967295 1
+HealthComponent
+2400 2400
+CircleComponent
+880.035 558.55 18 0 0
+SpriteComponent
+"assets/FireMap/FireNormal1Spritesheet/run.png" 880.035 558.55 -0.2 0.2 0 20 0.04
+EnemyHPComponent
+2400 2400 40 5 -30 -50
+-----
+EntityID: 5
+TagComponent
+0
+PositionComponent
+914.301 605.8 0
+VelocityComponent
+0.41971 -27.4968
+PathComponent
+13
+600 840
+670 790
+910 790
+915 560
+705 560
+705 460
+400 460
+406 260
+845 260
+890 365
+1150 380
+1160 810
+1320 825
+3 27.5 0
+EnemyComponent
+0 0 2400 27.5 10 0.2 12 0 0 4294967295 1
+HealthComponent
+2400 2400
+CircleComponent
+914.301 605.8 18 0 0
+SpriteComponent
+"assets/FireMap/FireNormal1Spritesheet/run.png" 914.301 605.8 0.2 0.2 0 20 0.04
+EnemyHPComponent
+2400 2400 40 5 -30 -50
+-----
+EntityID: 6
+TagComponent
+0
+PositionComponent
+913.013 688.913 0
+VelocityComponent
+0.423796 -27.4967
+PathComponent
+13
+600 840
+670 790
+910 790
+915 560
+705 560
+705 460
+400 460
+406 260
+845 260
+890 365
+1150 380
+1160 810
+1320 825
+3 27.5 0
+EnemyComponent
+0 0 2400 27.5 10 0.2 12 0 0 4294967295 1
+HealthComponent
+2400 2400
+CircleComponent
+913.013 688.913 18 0 0
+SpriteComponent
+"assets/FireMap/FireNormal1Spritesheet/run.png" 913.013 688.913 0.2 0.2 0 20 0.04
+EnemyHPComponent
+2400 2400 40 5 -30 -50
+-----
+EntityID: 7
+TagComponent
+0
+PositionComponent
+911.842 771.396 0
+VelocityComponent
+0.748054 -27.1809
+PathComponent
+13
+600 840
+670 790
+910 790
+915 560
+705 560
+705 460
+400 460
+406 260
+845 260
+890 365
+1150 380
+1160 810
+1320 825
+3 27.5 0
+EnemyComponent
+0 0 2400 27.5 10 0.2 12 0 0 4294967295 1
+HealthComponent
+2400 2400
+CircleComponent
+911.842 771.396 18 0 0
+SpriteComponent
+"assets/FireMap/FireNormal1Spritesheet/run.png" 911.842 771.396 0.2 0.2 0 20 0.04
+EnemyHPComponent
+2400 2400 40 5 -30 -50
+-----

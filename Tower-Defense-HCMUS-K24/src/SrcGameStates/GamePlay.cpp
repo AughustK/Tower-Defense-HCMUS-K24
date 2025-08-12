@@ -4,7 +4,6 @@
 #include "../../header/GameStates/ChooseMap.h"
 #include "../../header/GameStates/Victory.h"
 #include "../../header/GameStates/Defeat.h"
-#include "../../header/GameStates/PauseGame.h"
 #include "../../header/GameStates/Lobby.h"
 
 #include "../../header/Components/PositionComponent.h"
@@ -24,6 +23,7 @@
 #include "../../header/Components/UISliderComponent.h"
 #include "../../header/Components/TagComponent.h"
 #include "../../header/Components/EnemyHPComponent.h"
+#include "../../header/Components/NoDimComponent.h"
 
 #include "../../header/Systems/PathFindingSystem.h"
 #include "../../header/Systems/CollisionSystem.h"
@@ -47,6 +47,7 @@
 #include <filesystem>
 
 int GamePlay::money = 0;
+NoDimComponent noDimComp;
 
 static std::string sanitizeFilename(const std::string& s) {
     std::string out;
@@ -240,24 +241,6 @@ void GamePlay::onEnter(World& world)
     //tower icon
     spawnTowerIcons(world);
 
-
-    //exit button
-    EntityID exitButton = world.createEntity();
-    registerEntity(exitButton);
-    const string buttonPath = "assets/Icon/Left/B_Button68.png";
-    SpriteComponent spriteComp1(buttonPath, { 0.f, 980.f }, { 5.f, 5.f });
-    spriteComp1.onClick = [](EntityID entityId, World& world)
-        {
-            std::cout << "[Exit Button] Clicked\n";
-            auto& sound = world.getComponent<SoundComponent>(entityId);
-            sound.sound->play();
-            sf::sleep(sf::seconds(0.5f));
-            world.setState(std::make_unique<ChooseMap>());
-        };
-    world.addComponent(exitButton, soundComp);
-    world.addComponent(exitButton, spriteComp1);
-    world.addComponent(exitButton, TagComponent(TagComponent::Type::Skip));
-
     //pause button
     EntityID pauseButton = world.createEntity();
     registerEntity(pauseButton);
@@ -343,7 +326,8 @@ void GamePlay::onEnter(World& world)
     TextComponent textComp0(str, 50, fontPath, Color(255, 215, 0), { 768, 100 }, false, sf::Color::Black, 7.f);
     world.addComponent(noti, textComp0);
     world.addComponent(noti, TagComponent(TagComponent::Type::Gameplay));
-
+    world.addComponent(noti, noDimComp);
+        
     //create castle hp
     castleEntity = world.createEntity();
     registerEntity(castleEntity);
@@ -438,12 +422,15 @@ void GamePlay::handleEvent(World& world, sf::Event& event)
             { event.mouseButton.x, event.mouseButton.y });
 
         // First, check if any UI element was clicked
-        for (EntityID e : entities)
+        if (!isUpgrading) 
         {
-            auto& spriteComp = world.getComponent<SpriteComponent>(e);
-            if (spriteComp.tryClick(mousePos, e, world))
+            for (EntityID e : entities)
             {
-                return; // UI was clicked, so don't place a tower
+                auto& spriteComp = world.getComponent<SpriteComponent>(e);
+                if (spriteComp.tryClick(mousePos, e, world))
+                {
+                    return; // UI was clicked, so don't place a tower
+                }
             }
         }
 
@@ -552,8 +539,9 @@ void GamePlay::handleEvent(World& world, sf::Event& event)
             if (towerComp.type == TowerComponent::TowerType::Cannon && towerComp.level == 1)
             {
                 towerComp.y -= 20;
-                snappedPos.y -= 35;
+                snappedPos.y -= 20;
                 towerComp.x += 10;
+                snappedPos.x += 10;
             }
 
             std::string spritePath = TowerComponent::getAnimationPath(placingType, placingLevel);
@@ -573,7 +561,7 @@ void GamePlay::handleEvent(World& world, sf::Event& event)
                 sf::FloatRect bounds = dtxt.txt.getLocalBounds();
                 dtxt.txt.setOrigin(bounds.width / 2.f,
                     bounds.height / 2.f);
-                dtxt.txt.setPosition(250.f, 30.f);
+                dtxt.txt.setPosition(265.f, 30.f);
                 dtxt.txt.setFillColor(sf::Color::Red);
                 deltaTextTimer = 0.f;
                 deltaVisible = true;
@@ -602,6 +590,7 @@ void GamePlay::handleEvent(World& world, sf::Event& event)
         EntityID clickedTower = findTowerAtPosition(world, mousePos);
         if (clickedTower != INVALID_ENTITY)
         {
+            isUpgrading = false;
             showTowerOptions(world, clickedTower, mousePos);
         }
         else
@@ -767,9 +756,16 @@ void GamePlay::update(World& world, float odt)
 
 
 	// Check for victory or defeat conditions
+    auto& hpComp = world.getComponent<CastleHPComponent>(castleEntity);
+    if (hpComp.currentHP == 0) {
+        sf::sleep(sf::seconds(1.f));
+        world.setState(std::make_unique<Defeat>());
+        return;
+    }
+
     if (!victoryTriggered &&
         currentWave >= static_cast<int>(waveSizes.size()) &&
-        world.getSystem<EnemySpawnSystem>()->getRemainEnemy() == 0)
+        world.getSystem<EnemySpawnSystem>()->getRemainEnemy() == 0 && hpComp.currentHP != 0)
     {
         std::cout << "[GamePlay] Player wins!\n";
         victoryTriggered = true;
@@ -779,12 +775,7 @@ void GamePlay::update(World& world, float odt)
         return;
     }
 
-    auto& hpComp = world.getComponent<CastleHPComponent>(castleEntity);
-    if (hpComp.currentHP == 0) {
-        sf::sleep(sf::seconds(1.f));
-        world.setState(std::make_unique<Defeat>());
-        return;
-    }
+
 
 
     auto pathSys = world.getSystem<PathFollowingSystem>();
@@ -829,7 +820,7 @@ void GamePlay::update(World& world, float odt)
     if (world.hasComponent<TextComponent>(waveInfoID))
     {
         auto& waveText = world.getComponent<TextComponent>(waveInfoID);
-        waveText.setString("Wave: " + std::to_string(currentWave) + "/4");
+        waveText.setString("Wave: " + std::to_string(currentWave) + "/5");
     }
 
     //show money
@@ -886,13 +877,19 @@ void GamePlay::render(World& world, sf::RenderWindow& window)
     auto spriteSystem = world.getSystem<SpriteRenderSystem>();
     spriteSystem->render(world);
 
-    auto textSystem = world.getSystem<TextRenderSystem>();
-    textSystem->render(world);
+    bool dim = (showingPauseMenu || showingSettingMenu);
 
-    auto castleHPSystem = world.getSystem<CastleHPSystem>();
-    castleHPSystem->render(world);
+    auto textSystem = world.getSystem<TextRenderSystem>();
+    textSystem->renderGameplay(world, dim);
+
+
 
     if(!showingPauseMenu && !showingSettingMenu) {
+
+        auto castleHPSystem = world.getSystem<CastleHPSystem>();
+        castleHPSystem->render(world);
+
+
         auto enemyHPSystem = world.getSystem<EnemyHPSystem>();
         enemyHPSystem->render(world);
 	}
@@ -1072,9 +1069,8 @@ void GamePlay::showTowerOptions(World& world, EntityID towerId, const sf::Vector
     // Check if tower can be upgraded
     auto& towerComp = world.getComponent<TowerComponent>(towerId);
     bool canUpgrade = (towerComp.level < 1);
-    int upgradeCost = canUpgrade ? TowerComponent::getTowerDef(towerComp.type).cost[1] : 0;
+    int upgradeCost = canUpgrade ? static_cast<int>(std::floor((2.0 / 3.0) * TowerComponent::getTowerDef(towerComp.type).cost[1])) : 0;
 
- 
     upgradeButton = world.createEntity();
     towerOptionEntities.push_back(upgradeButton);
 
@@ -1096,6 +1092,7 @@ void GamePlay::showTowerOptions(World& world, EntityID towerId, const sf::Vector
 
     if (canUpgrade)
     {
+        isUpgrading = false;
         upgradeTextComp.onClick = [this, towerId](EntityID entityId, World& world) {
             this->upgradeTower(world, towerId);
             };
@@ -1114,6 +1111,7 @@ void GamePlay::showTowerOptions(World& world, EntityID towerId, const sf::Vector
     deleteTextComp.originColor = sf::Color::Red;
 
     deleteTextComp.onClick = [this, towerId](EntityID entityId, World& world) {
+        isUpgrading = false;
         this->deleteTower(world, towerId);
         };
 
@@ -1132,6 +1130,7 @@ void GamePlay::showTowerOptions(World& world, EntityID towerId, const sf::Vector
         if (canUpgrade)
         {
             coinSprite.onClick = [this, towerId](EntityID entityId, World& world) {
+                isUpgrading = false;
                 this->upgradeTower(world, towerId);
                 };
         }
@@ -1192,7 +1191,7 @@ void GamePlay::upgradeTower(World& world, EntityID towerId)
     }
 
     // Check if player has enough money
-    int upgradeCost = TowerComponent::getTowerDef(towerComp.type).cost[1];
+    int upgradeCost = static_cast<int>(std::floor((2.0 / 3.0) * TowerComponent::getTowerDef(towerComp.type).cost[1]));
     if (money < upgradeCost)
     {
         auto& notifText = world.getComponent<TextComponent>(notificationEntity).txt;
@@ -1214,7 +1213,7 @@ void GamePlay::upgradeTower(World& world, EntityID towerId)
         sf::FloatRect bounds = dtxt.txt.getLocalBounds();
         dtxt.txt.setOrigin(bounds.width / 2.f,
             bounds.height / 2.f);
-        dtxt.txt.setPosition(250.f, 30.f);
+        dtxt.txt.setPosition(265.f, 30.f);
         dtxt.txt.setFillColor(sf::Color::Red);
         deltaTextTimer = 0.f;
         deltaVisible = true;
@@ -1242,10 +1241,21 @@ void GamePlay::upgradeTower(World& world, EntityID towerId)
 
     // Handle position adjustments for specific tower types
     sf::Vector2f spritePos = { towerComp.x, towerComp.y };
-    if ((towerComp.type == TowerComponent::TowerType::Archer && towerComp.level == 1) ||
-        (towerComp.type == TowerComponent::TowerType::Mage && towerComp.level == 1))
+    if (towerComp.type == TowerComponent::TowerType::Archer && towerComp.level == 1)
     {
-        spritePos.y -= 14;
+        spritePos.y -= 12;
+        spritePos.x += 10;
+    }
+
+    if (towerComp.type == TowerComponent::TowerType::Mage && towerComp.level == 1)
+    {
+        spritePos.y -= 55;
+        spritePos.x += 10;
+    }
+
+    if (towerComp.type == TowerComponent::TowerType::Cannon && towerComp.level == 1)
+    {
+        spritePos.y -= 20;
         spritePos.x += 10;
     }
 
@@ -1291,7 +1301,7 @@ void GamePlay::deleteTower(World& world, EntityID towerId)
         sf::FloatRect bounds = dtxt.txt.getLocalBounds();
         dtxt.txt.setOrigin(bounds.width / 2.f,
             bounds.height / 2.f);
-        dtxt.txt.setPosition(250.f, 30.f);
+        dtxt.txt.setPosition(265.f, 30.f);
         dtxt.txt.setFillColor(sf::Color::Green);
         deltaTextTimer = 0.f;
         deltaVisible = true;
@@ -1366,7 +1376,7 @@ void GamePlay::showPauseMenu(World& world) {
        }}
     };
 
-    float cx = world.window.getSize().x / static_cast<float>(2), cy = world.window.getSize().y / static_cast<float>(2) - 30;
+    float cx = world.window.getSize().x / static_cast<float>(2), cy = world.window.getSize().y / static_cast<float>(2) - 75;
     float spacing = 70.f;
     for (int i = 0; i < opts.size(); ++i) {
         EntityID btn = world.createEntity();
@@ -1379,6 +1389,7 @@ void GamePlay::showPauseMenu(World& world) {
         );
         tc.onClick = opts[i].second;
         world.addComponent(btn, tc);
+        world.addComponent(btn, noDimComp);
         pauseButtons.push_back(btn);
     }
 }
@@ -1420,6 +1431,7 @@ void GamePlay::showSettingMenu(World& world)
         showingSettingMenu = false;
         };
     world.addComponent(backBtn, backTC);
+    world.addComponent(backBtn, noDimComp);
     settingButtons.push_back(backBtn);
 }
 
@@ -1788,6 +1800,7 @@ void GamePlay::loadFromFile(World& world, const std::string &filename) {
     speedID = gameplayEntities[4];
     notificationEntity = gameplayEntities[5];
     castleEntity = gameplayEntities[6];
+    world.addComponent(notificationEntity, noDimComp);
 
     std::cout << "[Gameplay] Load entities to gameplay\n";
 
@@ -2034,12 +2047,14 @@ void GamePlay::startSaveNamePrompt(World& world) {
     registerEntity(title);
     TextComponent titleText("Enter save name:", 36, font, sf::Color::White, { cx, cy - 50.f}, false, sf::Color::Black, 4.f);
     world.addComponent(title, titleText);
+    world.addComponent(title, noDimComp);
     promptEntities.push_back(title);
 
     EntityID input = world.createEntity();
     registerEntity(input);
     TextComponent inputText("_", 34, font, sf::Color::White, { cx - 150.f, cy + 20.f}, false, sf::Color::Black, 3.f);
     world.addComponent(input, inputText);
+    world.addComponent(input, noDimComp);
     inputTextEntity = input;
     promptEntities.push_back(input);
 
@@ -2060,6 +2075,7 @@ void GamePlay::startSaveNamePrompt(World& world) {
         };
     world.addComponent(cancel, cancelText);
     world.addComponent(cancel, SoundComponent("assets/SFX/MouseClick.mp3", false));
+    world.addComponent(cancel, noDimComp);
     promptEntities.push_back(cancel);
 }
 
@@ -2080,7 +2096,7 @@ void GamePlay::handleSaveNameEvent(World& world, sf::Event& event) {
                     notifText.setString("MAXIMUM NAME LENGTH IS 10");
                     sf::FloatRect b = notifText.getLocalBounds();
                     notifText.setOrigin(b.width / 2.f, b.height / 2.f);
-                    notifText.setPosition(768.f, 100.f);
+                    notifText.setPosition(1920 / 2, 1080 / 2 - 250);
                     notificationActive = true;
                     notificationTimer = 0.f;
                 }
@@ -2108,7 +2124,7 @@ void GamePlay::handleSaveNameEvent(World& world, sf::Event& event) {
                     notifText.setString("NAME MUST NOT BE EMPTY");
                     sf::FloatRect b = notifText.getLocalBounds();
                     notifText.setOrigin(b.width / 2.f, b.height / 2.f);
-                    notifText.setPosition(768.f, 100.f);
+                    notifText.setPosition(1920 / 2, 1080 / 2 - 250);
                     notificationActive = true;
                     notificationTimer = 0.f;
                 }
@@ -2121,7 +2137,8 @@ void GamePlay::handleSaveNameEvent(World& world, sf::Event& event) {
                     notifText.setString("NAME ALREADY EXISTS");
                     sf::FloatRect b = notifText.getLocalBounds();
                     notifText.setOrigin(b.width / 2.f, b.height / 2.f);
-                    notifText.setPosition(768.f, 100.f);
+                    /*notifText.setPosition(768.f, 100.f);*/
+                    notifText.setPosition(1920 / 2, 1080 / 2 - 250);
                     notificationActive = true;
                     notificationTimer = 0.f;
                 }

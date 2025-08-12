@@ -13,7 +13,7 @@
 #include "../Components/EnemyDef.h" 
 #include "../../header/Components/UISpriteComponent.h"
 
-class GamePlay : public GameState 
+class GamePlay : public GameState
 {
     static int money;
 private:
@@ -27,7 +27,7 @@ private:
 
 
     // enemy‐wave control
-    std::vector<int>            waveSizes = { 8, 10, 10, 1 };
+    std::vector<int>            waveSizes = { 8, 10, 10, 10, 1 };
     float                       waveInterval = 6.0f;   // secs between waves
     int                         currentWave = 0;
     float                       spawnTimer = 0.f;
@@ -57,7 +57,7 @@ private:
     void upgradeTower(World& world, EntityID towerId);
     void deleteTower(World& world, EntityID towerId);
 
-	//Victory and Defeat conditions
+    //Victory and Defeat conditions
     EntityID castleEntity;
     bool victoryTriggered = false;
 
@@ -74,12 +74,12 @@ private:
     bool deltaVisible = false;
 
     //speed info
-	EntityID speedID;
+    EntityID speedID;
     vector<float> speedMulti = { 1.0, 1.25,1.5,2.0 };
     int currSpdOpt = 0;
 
     //pause menu
-	bool showingPauseMenu = false;
+    bool showingPauseMenu = false;
     std::vector<EntityID> pauseButtons;
 
     //setting
@@ -92,6 +92,9 @@ private:
     std::string filenameBuffer;
     std::vector<EntityID> promptEntities;
     EntityID inputTextEntity = INVALID_ENTITY;
+
+    bool isUpgrading = false;
+    EntityID rangeCircleEntity;
 public:
     //explicit GamePlay(const std::string& mapFilename);
     GamePlay(const std::string& mapFilename, DifficultyLevel difficulty);
@@ -110,7 +113,7 @@ public:
     void showPauseMenu(World& world);
     void showSettingMenu(World& world);
     void saveToFile(World& world, std::string fileName);
-    void loadFromFile(World& world, const std::string &fileName) override;
+    void loadFromFile(World& world, const std::string& fileName) override;
     void startSaveNamePrompt(World& world);
-	void handleSaveNameEvent(World& world, sf::Event& event);
+    void handleSaveNameEvent(World& world, sf::Event& event);
 };
