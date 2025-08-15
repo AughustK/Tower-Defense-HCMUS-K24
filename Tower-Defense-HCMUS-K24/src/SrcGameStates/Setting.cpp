@@ -47,15 +47,10 @@ void Setting::onEnter(World& world) {
     const string musicPath = "assets/SFX/Music/Main/Main_Final.mp3";
     SoundComponent soundComp(soundPath, false);
 
+    const float centerX = 960.f;      
+    const float sliderWidth = 600.f;  
+    const float sliderX = 660.f;      
 
-    auto winSize = world.window.getSize();
-    float centerX = static_cast<float>(winSize.x) / 2.f;
-
-
-    float sliderWidth = 600.f;
-    float sliderX = centerX - sliderWidth / 2.f;
-
-    //slider
     EntityID soundSlider = world.createEntity();
     registerEntity(soundSlider);
     float soundVolume = world.getSystem<SoundSystem>()->globalVolume;
@@ -68,14 +63,14 @@ void Setting::onEnter(World& world) {
     SliderComponent sliderComp1(sliderWidth, sliderX, 600.f, "Music:", musicVolume);
     world.addComponent(musicSlider, sliderComp1);
 
-    //bg
+    // bg
     EntityID background = world.createEntity();
     registerEntity(background);
     const string bgPath = "assets/Bg/SettingBg.png";
     SpriteComponent spriteComp0(bgPath, { 0.f, 0.f }, { 1.f, 1.f });
     world.addComponent(background, spriteComp0);
 
-    //button
+    // button
     EntityID exitButton = world.createEntity();
     registerEntity(exitButton);
     const string buttonPath = "assets/Icon/Left/B_Button68.png";
@@ -85,8 +80,7 @@ void Setting::onEnter(World& world) {
             std::cout << "[Exit Button] Clicked\n";
             if (world.hasComponent<SoundComponent>(entityId)) {
                 auto& sound = world.getComponent<SoundComponent>(entityId);
-                if (sound.sound)
-                {
+                if (sound.sound) {
                     sound.sound->play();
                     sf::sleep(sf::seconds(0.5f));
                 }
@@ -94,8 +88,9 @@ void Setting::onEnter(World& world) {
             shouldExit = true;
         };
     world.addComponent(exitButton, spriteComp1);
-	world.addComponent(exitButton, soundComp);
+    world.addComponent(exitButton, soundComp);
 }
+
 
 void Setting::update(World& world, float dt) {
     if (shouldExit) {

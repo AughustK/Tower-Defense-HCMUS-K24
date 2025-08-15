@@ -1336,23 +1336,8 @@ void GamePlay::showPauseMenu(World& world) {
     showingPauseMenu = true;
     pauseButtons.clear();
 
-    auto musicEntities = world.getEntitiesWithComponent<MusicComponent>();
-    for (EntityID id : musicEntities) {
-        auto& musicComp = world.getComponent<MusicComponent>(id);
-        if (musicComp.music && musicComp.music->getStatus() == sf::Music::Playing) {
-            musicComp.music->pause();
-        }
-    }
-
-    EntityID bgBoard = world.createEntity();
-    SpriteComponent bgSprite("assets/Bg/PauseFrame.png",
-        { 0,0 },
-        { 1.f, 1.f });
-    world.addComponent(bgBoard, bgSprite);
-    pauseButtons.push_back(bgBoard);
-
     std::vector<std::pair<std::string, std::function<void(EntityID, World&)>>> opts = {
-      {"Resume", [&](EntityID, World& w) {
+        {"Resume", [&](EntityID, World& w) {
             for (auto e : pauseButtons) w.destroyEntity(e);
             pauseButtons.clear();
             showingPauseMenu = false;
@@ -1363,28 +1348,42 @@ void GamePlay::showPauseMenu(World& world) {
                     mc.music->play();
                 }
             }
-       }},
-       {"Save", [&](EntityID, World& w) {
+        }},
+        {"Save", [&](EntityID, World& w) {
             for (auto e : pauseButtons) w.destroyEntity(e);
             pauseButtons.clear();
             this->startSaveNamePrompt(w);
         }},
-       {"Quit", [&](EntityID, World& w) {
+        {"Quit", [&](EntityID, World& w) {
             for (auto e : pauseButtons) w.destroyEntity(e);
             pauseButtons.clear();
             w.setState(std::make_unique<Lobby>());
-       }}
+        }}
     };
 
-    float cx = world.window.getSize().x / static_cast<float>(2), cy = world.window.getSize().y / static_cast<float>(2) - 75;
-    float spacing = 70.f;
-    for (int i = 0; i < opts.size(); ++i) {
+    // Background
+    EntityID bgBoard = world.createEntity();
+    SpriteComponent bgSprite(
+        "assets/Bg/PauseFrame.png",
+        { 0.f, 0.f },
+        { 1.f, 1.f }
+    );
+    world.addComponent(bgBoard, bgSprite);
+    pauseButtons.push_back(bgBoard);
+
+    float centerX = 960.f;
+    float startY = 430.f; 
+    float spacing = 70.f; 
+
+
+    for (size_t i = 0; i < opts.size(); ++i) {
         EntityID btn = world.createEntity();
+        sf::Vector2f pos(centerX, startY + i * spacing);
         TextComponent tc(
             opts[i].first, 48,
             "assets/Font/Minecraft-Regular.otf",
             sf::Color::White,
-            { cx, cy + (i - 0.5f) * spacing },
+            pos,
             true, sf::Color::Black, 5.f
         );
         tc.onClick = opts[i].second;
@@ -1394,37 +1393,56 @@ void GamePlay::showPauseMenu(World& world) {
     }
 }
 
-
-
-void GamePlay::showSettingMenu(World& world) 
+void GamePlay::showSettingMenu(World& world)
 {
     showingSettingMenu = true;
     settingButtons.clear();
 
-    float cx = world.window.getSize().x / 2.f;
+    float cx = 960.f; 
 
+    // Background
     EntityID bgBoard = world.createEntity();
     SpriteComponent bgSprite("assets/Bg/SettingFrame.png",
-        { 0,0},
+        { 0.f, 0.f },
         { 1.0f, 1.0f });
     world.addComponent(bgBoard, bgSprite);
     settingButtons.push_back(bgBoard);
 
+    // SFX Slider
     EntityID sfxSlider = world.createEntity();
     float sfxVol = world.getSystem<SoundSystem>()->globalVolume;
-    SliderComponent sfxComp(400.f, cx - 200.f, 400.f, "SFX:", sfxVol);
+    SliderComponent sfxComp(
+        400.f,        
+        760.f,         
+        400.f,         
+        "SFX:",
+        sfxVol
+    );
     world.addComponent(sfxSlider, sfxComp);
     settingButtons.push_back(sfxSlider);
 
+    // Music Slider
     EntityID musicSlider = world.createEntity();
     float musicVol = world.getSystem<MusicSystem>()->globalVolume;
-    SliderComponent musicComp(400.f, cx - 200.f, 550.f, "Music:", musicVol);
+    SliderComponent musicComp(
+        400.f,
+        760.f,         
+        520.f,         
+        "Music:",
+        musicVol
+    );
     world.addComponent(musicSlider, musicComp);
     settingButtons.push_back(musicSlider);
 
+    // Back Button
     EntityID backBtn = world.createEntity();
-    TextComponent backTC("Back", 48, "assets/Font/Minecraft-Regular.otf",
-        sf::Color::White, { cx, 630.f }, true, sf::Color::Black, 5.f);
+    TextComponent backTC(
+        "Back", 48,
+        "assets/Font/Minecraft-Regular.otf",
+        sf::Color::White,
+        { 960.f, 600.f }, 
+        true, sf::Color::Black, 5.f
+    );
     backTC.onClick = [this](EntityID, World& w) {
         for (auto e : settingButtons) w.destroyEntity(e);
         settingButtons.clear();
@@ -1434,6 +1452,7 @@ void GamePlay::showSettingMenu(World& world)
     world.addComponent(backBtn, noDimComp);
     settingButtons.push_back(backBtn);
 }
+
 
 void GamePlay::onExit(World& world) {
     // Hide tower options before exiting
@@ -2032,27 +2051,27 @@ void GamePlay::startSaveNamePrompt(World& world) {
 
     filenameBuffer.clear();
 
-    float cx = world.window.getSize().x / 2.f;
-    float cy = world.window.getSize().y / 2.f;
+    const float cx = 960.f;  
+    const float cy = 540.f;  
     const std::string font = "assets/Font/Minecraft-Regular.otf";
 
     EntityID bgBoard = world.createEntity();
     SpriteComponent bgSprite("assets/Bg/SaveFrame.png",
-        { 0,0 },
+        { 0.f, 0.f },
         { 1.f, 1.f });
     world.addComponent(bgBoard, bgSprite);
     promptEntities.push_back(bgBoard);
 
     EntityID title = world.createEntity();
     registerEntity(title);
-    TextComponent titleText("Enter save name:", 36, font, sf::Color::White, { cx, cy - 50.f}, false, sf::Color::Black, 4.f);
+    TextComponent titleText("Enter save name:", 36, font, sf::Color::White, { cx, cy - 80.f }, false, sf::Color::Black, 4.f);
     world.addComponent(title, titleText);
     world.addComponent(title, noDimComp);
     promptEntities.push_back(title);
 
     EntityID input = world.createEntity();
     registerEntity(input);
-    TextComponent inputText("_", 34, font, sf::Color::White, { cx - 150.f, cy + 20.f}, false, sf::Color::Black, 3.f);
+    TextComponent inputText("_", 34, font, sf::Color::White, { cx - 150.f, cy  }, false, sf::Color::Black, 3.f);
     world.addComponent(input, inputText);
     world.addComponent(input, noDimComp);
     inputTextEntity = input;
@@ -2060,7 +2079,7 @@ void GamePlay::startSaveNamePrompt(World& world) {
 
     EntityID cancel = world.createEntity();
     registerEntity(cancel);
-    TextComponent cancelText("Cancel", 36, font, sf::Color::White, { cx, cy + 100.f}, true, sf::Color::Black, 4.f);
+    TextComponent cancelText("Cancel", 36, font, sf::Color::White, { cx, cy + 70.f }, true, sf::Color::Black, 4.f);
     cancelText.onClick = [this](EntityID eid, World& w) {
         for (EntityID e : promptEntities) w.destroyEntity(e);
         promptEntities.clear();
@@ -2078,6 +2097,7 @@ void GamePlay::startSaveNamePrompt(World& world) {
     world.addComponent(cancel, noDimComp);
     promptEntities.push_back(cancel);
 }
+
 
 void GamePlay::handleSaveNameEvent(World& world, sf::Event& event) {
     if (promptEntities.empty()) return; 

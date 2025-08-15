@@ -304,9 +304,8 @@ void ChooseMap::showDifficultyMenu(World& world)
     showingDifficultyMenu = true;
     difficultyButtons.clear();
 
-    auto winSize = world.window.getSize();        // sf::Vector2u
-    float centerX = winSize.x * 0.5f;
-    float centerY = winSize.y * 0.5f;
+    float centerX = 960.f;
+    float centerY = 540.f;
 
     const string fontPath = "assets/Font/Minecraft-Regular.otf";
     std::vector<std::pair<std::string, DifficultyLevel>> options = {
@@ -316,14 +315,14 @@ void ChooseMap::showDifficultyMenu(World& world)
     };
 
     float spacingY = 100.f;
-    float totalSpan = spacingY * (options.size() - 1);
-    float startY = centerY - totalSpan * 0.5f;
+    float totalSpan = spacingY * (options.size() - 1); // 200.f
+    float startY = centerY - totalSpan * 0.5f;         // 440.f
 
     vector<sf::Color> btnColor = { Color::Green, Color::Yellow, Color::Red };
 
     EntityID bg = world.createEntity();
     const std::string bgPath = "assets/Bg/FrameLevel.png";
-    SpriteComponent bgSprite(bgPath, { centerX, centerY +40 }, { 1.f, 1.f });
+    SpriteComponent bgSprite(bgPath, { centerX, centerY + 40.f }, { 1.f, 1.f });
     sf::FloatRect bounds = bgSprite.sprite.getLocalBounds();
     bgSprite.sprite.setOrigin(bounds.width / 2.f, bounds.height / 2.f);
     world.addComponent(bg, bgSprite);
@@ -343,7 +342,6 @@ void ChooseMap::showDifficultyMenu(World& world)
             5.f,
             btnColor[i]
         );
-
 
         tc.onClick = [this, lvl = options[i].second](EntityID, World& w)
             {
@@ -368,5 +366,6 @@ void ChooseMap::showDifficultyMenu(World& world)
         difficultyButtons.push_back(btn);
     }
 }
+
 
 
